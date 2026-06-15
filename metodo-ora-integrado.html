@@ -231,7 +231,9 @@ async function sbDel(table,id){
 }
 
 async function loadData(){
-  document.getElementById('app').innerHTML='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--tx3)"><div style="font-size:32px">🌱</div><div style="font-size:13px">Carregando...</div></div>';
+  try{
+    document.getElementById('root').innerHTML='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--tx3)"><div style="font-size:32px">🌱</div><div style="font-size:13px">Carregando...</div></div>';
+  }catch(e){}
   try{
     const [cls,prs,avs,dgs]=await Promise.all([
       sb('rxr_clients?select=*&order=id'),
