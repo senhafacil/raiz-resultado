@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raiz × Resultado · Vanessa de Oliveira</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --nv:#1C1F5A;--nv2:#2D3180;--nvf:#EEEEF9;
+  --pu:#7B2F8A;--puf:#F5EEF8;
+  --go:#9A6C00;--gof:#FDF7E8;
+  --gr:#1A6B40;--grf:#EAF5EE;
+  --rd:#9B2020;--rdf:#FCEAEA;
+  --bg:#F4F4F9;--sf:#FFF;--sf2:#F0F0F8;
+  --bd:rgba(28,31,90,.09);--bd2:rgba(28,31,90,.15);
+  --tx:#1C1F5A;--tx2:#565888;--tx3:#9898BB;
+  --r:12px;--rs:8px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5;min-height:100vh}
+.wrap{max-width:900px;margin:0 auto;padding-bottom:60px}
+
+/* HDR */
+.hdr{background:var(--nv);display:flex;align-items:center;justify-content:space-between;padding:13px 24px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(28,31,90,.2)}
+.ln{color:#fff;font-size:15px;font-weight:800}.lt{color:rgba(255,255,255,.4);font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-top:1px}
+.ops{display:flex;gap:3px}
+.op{padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.04em}
+.o1{background:rgba(100,110,255,.25);color:#C0C4FF}
+.o2{background:rgba(180,80,220,.25);color:#E0A8F8}
+.o3{background:rgba(200,160,40,.25);color:#F5D880}
+.rsw{display:flex;gap:2px;background:rgba(255,255,255,.08);border-radius:7px;padding:3px}
+.rb{padding:5px 14px;border-radius:5px;border:none;background:transparent;font-size:11px;font-weight:700;cursor:pointer;color:rgba(255,255,255,.45);font-family:inherit;transition:all .15s}
+.rb.on{background:rgba(255,255,255,.18);color:#fff}
+
+/* LAYOUT */
+.ct{padding:20px 24px}
+.row{display:flex;align-items:center;gap:8px}
+.rwb{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.f1{flex:1;min-width:0}
+
+/* TABS */
+.tabs{display:flex;border-bottom:.5px solid var(--bd2);padding:0 24px;background:var(--sf)}
+.tab{padding:11px 14px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--tx3);border:none;background:transparent;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-.5px;font-family:inherit;transition:all .15s}
+.tab.on{color:var(--nv);border-bottom-color:var(--nv)}
+
+/* ETAPAS NAV */
+.enav{display:grid;grid-template-columns:repeat(4,1fr);background:var(--sf);border:.5px solid var(--bd2);border-radius:var(--r) var(--r) 0 0;border-bottom:none}
+.et{padding:11px 8px;text-align:center;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;border-right:.5px solid var(--bd)}
+.et:last-child{border-right:none}
+.et.on{border-bottom-color:var(--nv2);background:var(--nvf)}
+.etnum{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;margin:0 auto 3px}
+.n1{background:var(--nvf);color:var(--nv2)}.n2{background:var(--puf);color:var(--pu)}.n3{background:var(--gof);color:var(--go)}.n4{background:var(--grf);color:var(--gr)}
+.etname{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--tx3)}
+.et.on .etname{color:var(--nv2)}
+.etpct{font-size:9px;color:var(--tx3);margin-top:2px}
+
+/* ETAPA DETAIL */
+.etdet{background:var(--sf);border:.5px solid var(--bd2);border-top:none;border-radius:0 0 var(--r) var(--r);padding:16px 20px;margin-bottom:10px}
+
+/* CARDS */
+.card{background:var(--sf);border:.5px solid var(--bd2);border-radius:var(--r);padding:16px 20px;margin-bottom:8px}
+
+/* ACTIVITY */
+.ac{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--rs);padding:13px 16px;margin-bottom:7px;transition:border-color .15s}
+.ac:hover{border-color:var(--bd2)}
+.at{font-size:13px;font-weight:700}
+.ad{font-size:12px;color:var(--tx2);margin-top:3px;line-height:1.45}
+.am{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+.rep{background:var(--grf);border:.5px solid rgba(26,107,64,.15);border-radius:6px;padding:8px 11px;margin-top:8px;font-size:12px;color:var(--gr);line-height:1.45}
+.fb2{background:var(--nvf);border:.5px solid rgba(44,49,128,.12);border-radius:6px;padding:8px 11px;margin-top:5px;font-size:12px;color:var(--nv2);line-height:1.45}
+
+/* BADGES */
+.b{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap}
+.bg2{background:var(--sf2);color:var(--tx2)}.bgr{background:var(--grf);color:var(--gr)}.bnv{background:var(--nvf);color:var(--nv2)}.bpu{background:var(--puf);color:var(--pu)}.bgo{background:var(--gof);color:var(--go)}.brd{background:var(--rdf);color:var(--rd)}
+.ptO{background:var(--nvf);color:var(--nv2)}.ptR{background:var(--puf);color:var(--pu)}.ptA{background:var(--gof);color:var(--go)}
+.pt{display:inline-flex;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:800}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--rs);border:.5px solid var(--bd2);background:var(--sf);font-size:12px;font-weight:700;cursor:pointer;color:var(--tx);font-family:inherit;transition:all .15s}
+.btn:hover{background:var(--sf2)}
+.bnav{background:var(--nv);color:#fff;border-color:var(--nv)}.bnav:hover{background:var(--nv2)}
+.bgrn{background:var(--gr);color:#fff;border-color:var(--gr)}.bgrn:hover{opacity:.9}
+.bsm{padding:5px 10px;font-size:11px}
+.bgh{border:none;background:transparent;padding:4px;cursor:pointer;border-radius:4px;font-family:inherit;font-size:12px}
+.bgh:hover{background:var(--sf2)}
+.lbtn{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--rs);border:1.5px solid;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.llk{background:var(--sf2);border-color:var(--bd2);color:var(--tx3)}.llk:hover{border-color:var(--gr);color:var(--gr);background:var(--grf)}
+.lok{background:var(--grf);border-color:var(--gr);color:var(--gr)}.lok:hover{background:var(--rdf);border-color:var(--rd);color:var(--rd)}
+
+/* FORM */
+.fg{margin-bottom:12px}
+.fl{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
+input,textarea,select{width:100%;padding:8px 12px;border:.5px solid var(--bd2);border-radius:var(--rs);font-size:13px;font-family:inherit;color:var(--tx);background:var(--sf);outline:none;transition:border-color .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--nv2)}
+textarea{resize:vertical;min-height:75px;line-height:1.5}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* MODAL */
+.mbg{position:fixed;inset:0;background:rgba(20,22,70,.4);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
+.modal{background:var(--sf);border-radius:16px;padding:24px;width:100%;max-width:490px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(28,31,90,.2)}
+.mtt{font-size:16px;font-weight:800;margin-bottom:16px;color:var(--nv)}
+
+/* PROGRESS */
+.pb{height:5px;background:var(--sf2);border-radius:999px;overflow:hidden}
+.pf{height:100%;border-radius:999px;background:var(--nv2);transition:width .4s}
+.pbg{height:7px;background:var(--sf2);border-radius:999px;overflow:hidden}
+
+/* SESSIONS */
+.sdots{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.sd{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:pointer;transition:all .15s;user-select:none}
+.sdon{background:var(--nv2);color:#fff}.stod{background:var(--sf2);color:var(--tx3);border:.5px solid var(--bd2)}
+.sd:hover{transform:scale(1.1)}
+
+/* AV */
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.av0{background:var(--nvf);color:var(--nv2)}.av1{background:var(--puf);color:var(--pu)}.av2{background:var(--gof);color:var(--go)}.av3{background:var(--grf);color:var(--gr)}
+
+/* STATS */
+.st3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stc{background:var(--sf);border:.5px solid var(--bd2);border-radius:var(--rs);padding:12px 14px;text-align:center}
+.stn{font-size:22px;font-weight:800}
+.stl{font-size:9px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+
+/* CLIENT STAGE */
+.cstage{background:var(--sf);border:.5px solid var(--bd2);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.csh{padding:14px 18px;display:flex;align-items:center;gap:12px}
+.csb{padding:2px 18px 16px}
+.lock-msg{padding:14px 18px;text-align:center;color:var(--tx3);font-size:12px;font-style:italic;border-top:.5px solid var(--bd)}
+
+.div{border:none;border-top:.5px solid var(--bd);margin:10px 0}
+.empty{text-align:center;padding:36px 20px;color:var(--tx3);font-size:13px}
+.info-box{background:var(--nvf);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--nv2);line-height:1.5;margin-bottom:12px}
+
+@media(max-width:600px){
+  .st3{grid-template-columns:repeat(3,1fr)}
+  .enav{grid-template-columns:repeat(2,1fr)}
+  .g2{grid-template-columns:1fr}
+  .hdr{padding:11px 16px}
+  .ct{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="root"></div>
+
+<script>
+const TPL=[
+  {e:0,t:'Mapeamento da sua rotina atual',d:'Durante 3 dias, anote tudo que você faz e o tempo de cada tarefa. Sem filtro, sem julgamento. O objetivo é enxergar onde o tempo está sendo gasto.',p:'O',days:7},
+  {e:0,t:'Roda da vida empresarial',d:'Avalie de 0 a 10 cada área: Financeiro, Equipe, Atendimento, Marketing, Processos e Vida Pessoal. Identifique onde está o maior desequilíbrio hoje.',p:'O',days:7},
+  {e:0,t:'Missão, visão e valores do negócio',d:'Escreva em 1 frase: o que você faz, para quem e qual transformação gera. Depois liste 3 valores inegociáveis do seu negócio.',p:'R',days:10},
+  {e:0,t:'Os 3 maiores desafios hoje',d:'Liste os 3 problemas que mais travam o crescimento agora. Seja honesta e específica. Esses desafios vão guiar toda a jornada.',p:'A',days:5},
+  {e:1,t:'Organograma atual e ideal',d:'Desenhe como está hoje: você faz tudo? Tem equipe? Em seguida, desenhe o ideal. Identifique o primeiro papel que você precisa delegar.',p:'O',days:10},
+  {e:1,t:'Mapeamento dos processos repetitivos',d:'Liste os 5 processos que você mais repete no negócio. Para cada um: quem faz, como faz e quanto tempo leva. Primeiro passo para delegar.',p:'O',days:12},
+  {e:1,t:'Criação de checklists operacionais',d:'Crie um checklist de abertura, fechamento e atendimento ao cliente. O objetivo é que qualquer pessoa consiga seguir sem depender de você.',p:'R',days:15},
+  {e:1,t:'Padronização da comunicação',d:'Defina: como você atende no WhatsApp, qual linguagem usa, como responde orçamentos e como faz follow-up com clientes.',p:'A',days:15},
+  {e:2,t:'Levantamento completo de custos',d:'Liste todos os custos fixos (mensais, sempre existem) e variáveis (dependem do movimento). Seja detalhada — até os pequenos custos impactam a precificação.',p:'O',days:7},
+  {e:2,t:'Fluxo de caixa do mês',d:'Registre todas as entradas e saídas do mês atual. Use a planilha que você recebeu. O objetivo é ter clareza real sobre o dinheiro que entra e sai.',p:'O',days:10},
+  {e:2,t:'Precificação correta dos serviços',d:'Aplique a fórmula: custos diretos + custos indiretos + pró-labore desejado + margem de lucro. Revise o preço atual de cada serviço.',p:'R',days:12},
+  {e:2,t:'Meta financeira de 90 dias',d:'Com base no custo de vida + custo do negócio + lucro desejado: qual o faturamento mínimo e ideal para os próximos 90 dias? Escreva os dois números.',p:'A',days:12},
+  {e:3,t:'Plano de ação de 90 dias',d:'Crie seu plano: 3 metas principais, as ações necessárias para cada uma, responsável e prazo. Uma página. Simples e direto ao ponto.',p:'O',days:7},
+  {e:3,t:'Estratégias de aumento de faturamento',d:'Liste 3 ações concretas para aumentar o faturamento: novo serviço, reativação de clientes, parceria, aumento de ticket médio. Escolha 1 para começar essa semana.',p:'R',days:10},
+  {e:3,t:'Ritual semanal de revisão',d:'Defina um horário fixo por semana (sugestão: sexta, 30 min) para revisar: O que foi feito? O que ficou? O que precisa ajustar? Esse hábito separa quem cresce de quem trava.',p:'A',days:12},
+  {e:3,t:'Indicadores do meu negócio',d:'Defina quais números você vai acompanhar toda semana: faturamento, clientes atendidos, taxa de retorno, ticket médio. Crie o hábito de decidir com base em dados.',p:'A',days:14},
+];
+
+const ETS=[
+  {n:'Base',nc:'n1',cv:'var(--nv2)',ds:'Autoconhecimento e diagnóstico do negócio'},
+  {n:'Estruturação',nc:'n2',cv:'var(--pu)',ds:'Processos, padronização e delegação'},
+  {n:'Financeiro',nc:'n3',cv:'var(--go)',ds:'Custos, precificação e metas financeiras'},
+  {n:'Plano Estratégico',nc:'n4',cv:'var(--gr)',ds:'Plano de 90 dias e crescimento'},
+];
+
+/* ── MODALIDADES ── */
+const MODALIDADES={
+  completa:{
+    label:'Mentoria Completa',
+    desc:'Raiz × Resultado · 4 fases · 16 atividades',
+    fases:[0,1,2,3],
+    temDiag:true,
+    icon:'🌱',
+    cor:'var(--nv2)',
+  },
+  processos:{
+    label:'Processos e Estrutura',
+    desc:'Raiz × Resultado · 2 fases · 8 atividades',
+    fases:[0,1],
+    temDiag:true,
+    icon:'⚙️',
+    cor:'var(--pu)',
+    ets:['Fase 1 — Raiz','Fase 2 — Estruturação'],
+  },
+  diagnostico:{
+    label:'Diagnóstico R$ 147',
+    desc:'Raiz × Resultado · Estruturação + Plano Estratégico',
+    fases:[1,3],
+    temDiag:true,
+    icon:'🔍',
+    cor:'var(--go)',
+    ets:['Fase 1 — Estruturação','Fase 2 — Plano Estratégico'],
+  },
+};
+
+function getMod(cli){return MODALIDADES[cli.mod||'completa']||MODALIDADES.completa;}
+function getFasesVisiveis(cli){return getMod(cli).fases;}
+function getNomeFase(cli,eIdx){
+  const mod=getMod(cli);
+  if(mod.ets){const pos=mod.fases.indexOf(eIdx);if(pos>=0)return mod.ets[pos]||ETS[eIdx].n;}
+  return ETS[eIdx].n;
+}
+const AVCLS=['av0','av1','av2','av3'];
+const STM={pending:['bg2','Pendente'],submitted:['bnv','Enviada'],done:['bgr','Concluída']};
+const PNM={O:'Organização',R:'Resultado',A:'Ação'};
+
+// ── SUPABASE CONFIG ──
+function gLS(k,def){try{const v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch(e){return def;}}
+function sLS(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+function loadData(){R();}
+
+async function sv(){
+  sLS('rxr-clients',S.clients);
+  sLS('rxr-procs',S.procs);
+  sLS('rxr-ativs',S.ativs);
+  sLS('rxr-diags',S.diags);
+}
+
+async function sbDel(table,id){} // placeholder para quando migrar pro Supabase
+
+let S={
+  role:'login',tab:'j',etapa:0,modal:null,form:{},subId:null,fbId:null,addEt:null,curCli:0,
+  diagStep:0,diagRoda:{},diagData:{},diagEditando:false,
+  loginCode:'',loginErr:'',
+  clients:gLS('rxr-clients',[]),
+  procs:gLS('rxr-procs',[]),
+  ativs:gLS('rxr-ativs',[]),
+  diags:gLS('rxr-diags',[]),
+};
+const MENTOR_CODE='vanessa2026';
+
+if(S.ativs.length===0&&S.procs.length>0){
+  S.procs.forEach(proc=>{initJornada(proc.id,proc.cid);});
+  sv();
+}
+
+function initJornada(pid,cid,mod){
+  const base=new Date();
+  const mobj=MODALIDADES[mod||'completa']||MODALIDADES.completa;
+  const fases=mobj.fases;
+  if(fases.length===0) return; // diagnóstico: sem atividades
+  TPL.filter(t=>fases.includes(t.e)).forEach(t=>{
+    const pr=new Date(base);pr.setDate(pr.getDate()+t.days);
+    S.ativs.push({id:Date.now()+Math.floor(Math.random()*1000),pid,cid,e:t.e,ti:t.t,de:t.d,pi:t.p,pr:pr.toISOString().split('T')[0],st:'pending',res:'',fb:''});
+  });
+}
+
+function sv(){sLS('ora-clients',S.clients);sLS('ora-procs',S.procs);sLS('ora-ativs',S.ativs);sLS('ora-diags',S.diags);sLS('ora-nid',S.nid);}
+function gProc(cid){return S.procs.find(p=>p.cid===cid);}
+function gAtivs(pid,e){return S.ativs.filter(a=>a.pid===pid&&a.e===e);}
+function gAll(pid){return S.ativs.filter(a=>a.pid===pid);}
+function fmt(d){if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m}`;}
+function ovr(d,st){return st!=='done'&&d&&new Date(d)<new Date();}
+function pct(list){const t=list.length;return t?Math.round(list.filter(a=>a.st==='done').length/t*100):0;}
+function ini(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
+function avc(id){return AVCLS[(id-1)%4];}
+
+function R(){document.getElementById('root').innerHTML=H();}
+
+function H(){
+  if(S.role==='login') return bLogin();
+  return`${S.modal?bModal():''}${S.subId!==null?bSub():''}${S.fbId!==null?bFb():''}${S.addEt!==null?bAddAtiv():''}
+<div class="hdr">
+  <div><div class="ln">Raiz \xd7 Resultado</div><div class="lt">Vanessa de Oliveira \xb7 M\xe3e CEO</div></div>
+  <div class="row" style="gap:10px">
+    <div class="ops"><span class="op o1">R</span><span class="op o2">\xd7</span><span class="op o3">R</span></div>
+    <button class="btn" style="font-size:11px;padding:4px 10px" onclick="doLogout()">Sair</button>
+  </div>
+</div>
+${S.role==='mentor'?bMentor():bCliente()}`;
+}
+
+function bLogin(){
+  const err=S.loginErr||'';
+  return`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg)">
+<div style="width:100%;max-width:340px">
+  <div style="text-align:center;margin-bottom:32px">
+    <div style="font-size:26px;font-weight:900;color:var(--nv2);letter-spacing:-.5px">Raiz × Resultado</div>
+    <div style="font-size:12px;color:var(--tx3);margin-top:4px">Vanessa de Oliveira · Mãe CEO</div>
+  </div>
+  <div class="card" style="padding:24px">
+    <div class="fg"><label class="fl">Código de acesso</label>
+    <input id="lcode" type="password" placeholder="Digite seu código..." style="font-family:monospace;font-size:15px;text-align:center;letter-spacing:2px" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    ${err?`<div style="font-size:12px;color:var(--rd);margin-bottom:10px;text-align:center">${err}</div>`:''}
+    <button class="btn bnav" style="width:100%;margin-top:4px" onclick="doLogin()">Entrar</button>
+  </div>
+  <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--tx3)">Primeira vez? Cole o código de ativação que a Vanessa enviou.</div>
+  <div style="margin-top:16px">
+    <details style="text-align:center">
+      <summary style="font-size:11px;color:var(--tx3);cursor:pointer;list-style:none">📥 Ativar com código de ativação</summary>
+      <div class="card" style="padding:16px;margin-top:10px;text-align:left">
+        <div class="fg"><label class="fl" style="font-size:11px">Cole o código de ativação recebido da Vanessa</label>
+          <textarea id="import_code" rows="3" style="font-size:11px;font-family:monospace" placeholder="Cole aqui o código completo..."></textarea>
+        </div>
+        <button class="btn bnav" style="width:100%;font-size:12px" onclick="importarDados()">Ativar minha conta</button>
+      </div>
+    </details>
+  </div>
+</div>
+</div>`;
+}
+
+window.doLogin=function(){
+  const code=document.getElementById('lcode').value.trim().toLowerCase();
+  if(!code){S.loginErr='Digite o código de acesso';R();return;}
+  if(code===MENTOR_CODE){S.role='mentor';S.loginErr='';R();return;}
+  const cli=S.clients.find(cl=>cl.code&&cl.code.toLowerCase()===code);
+  if(cli){S.role='cli';S.curCli=S.clients.indexOf(cli);S.cliTab='diag';S.loginErr='';R();return;}
+  S.loginErr='Código inválido. Verifique com a Vanessa.';R();
+};
+
+window.doLogout=function(){S.role='login';S.loginErr='';R();};
+
+window.exportarMentorada=function(id){
+  const cli=S.clients.find(c=>c.id===id);
+  if(!cli){alert('Mentorada não encontrada');return;}
+  const proc=S.procs.find(p=>p.cid===id);
+  // Salvar só o essencial — atividades são recriadas ao importar
+  const mini={i:cli.id,n:cli.n,ini:cli.ini,m:cli.mod,c:cli.code,j:cli.jornBloq,
+    ps:proc?{i:proc.id,s:proc.sess,sd:proc.sdon,e:proc.ets}:null,v:2};
+  const codigo=btoa(unescape(encodeURIComponent(JSON.stringify(mini))));
+  navigator.clipboard.writeText(codigo).then(()=>{
+    alert('✅ Código copiado!\n\nEnvie para '+cli.n+' pelo WhatsApp.');
+  }).catch(()=>{
+    prompt('Copie e envie para '+cli.n+':',codigo);
+  });
+};
+
+window.importarDados=function(){
+  const raw=document.getElementById('import_code').value.trim();
+  if(!raw){alert('Cole o código primeiro');return;}
+  try{
+    const d=JSON.parse(decodeURIComponent(escape(atob(raw))));
+    if(!d.i||!d.v){alert('Código inválido');return;}
+    if(!S.clients.find(c=>c.id===d.i)){
+      const cli={id:d.i,n:d.n,ini:d.ini,mod:d.m,code:d.c,jornBloq:d.j};
+      S.clients.push(cli);
+      if(d.ps){
+        const proc={id:d.ps.i,cid:d.i,sess:d.ps.s,sdon:d.ps.sd,ets:d.ps.e};
+        S.procs.push(proc);
+        initJornada(proc.id,d.i,d.m); // recriar atividades localmente
+      }
+      sv();
+    }
+    S.role='cli';
+    S.curCli=S.clients.findIndex(c=>c.id===d.i);
+    S.cliTab='diag';S.loginErr='';R();
+    alert('✅ Bem-vinda, '+d.n+'!');
+  }catch(e){
+    alert('Código inválido. Peça um novo para a Vanessa.');
+    console.error(e);
+  }
+};
+
+/* ── MENTOR ── */
+/* ═══════════════════════════════════════════════
+   DIAGNÓSTICO RAIZ × RESULTADO
+   ─ funções de render, estado e lógica
+═══════════════════════════════════════════════ */
+
+const DIAG_SECTIONS=[
+  {id:'s0',tag:'Identificação',icon:'👤'},
+  {id:'s1',tag:'🌱 Raiz — A Pessoa',icon:'🌱'},
+  {id:'s2',tag:'Negócio',icon:'🏢'},
+  {id:'s3',tag:'Rotina',icon:'📅'},
+  {id:'s4',tag:'Processos',icon:'⚙️'},
+  {id:'s5',tag:'Financeiro',icon:'💰'},
+  {id:'s6',tag:'Resultado',icon:'🎯'},
+];
+
+/* ── Vista Mentora: lista de diagnósticos ── */
+function bDiagsMentor(){
+  const cli=S.clients[S.curCli];
+  const meusDiags=cli?S.diags.filter(d=>d.cid===cli.id):S.diags;
+  return`
+<div class="rwb" style="margin-bottom:14px">
+  <div>
+    <div style="font-size:15px;font-weight:800">Diagnósticos Raiz × Resultado</div>
+    <div style="font-size:11px;color:var(--tx3);margin-top:2px">Respostas do questionário de diagnóstico das mentoradas</div>
+  </div>
+  ${cli?`<button class="btn bnav" onclick="abrirDiagForm(${cli.id})">+ Novo diagnóstico para ${cli.n}</button>`:''}
+</div>
+${S.clients.length>1?`<div style="margin-bottom:12px"><select onchange="S.curCli=parseInt(this.value);R()" style="font-size:12px;width:auto;padding:5px 10px">
+  ${S.clients.map((c,i)=>`<option value="${i}" ${i===S.curCli?'selected':''}>${c.n}</option>`).join('')}
+</select></div>`:''}
+${meusDiags.length===0?`<div class="card" style="text-align:center;padding:36px;color:var(--tx3)">
+  <div style="font-size:32px;margin-bottom:10px">📋</div>
+  <div style="font-size:13px;font-weight:700;margin-bottom:6px">Nenhum diagnóstico ainda</div>
+  <div style="font-size:12px;line-height:1.6">Envie o formulário de diagnóstico para a mentorada preencher antes da Sessão 1.</div>
+</div>`:meusDiags.map(d=>bDiagCard(d)).join('')}`;
+}
+
+function bDiagCard(d){
+  const cli=S.clients.find(c=>c.id===d.cid);
+  const dt=new Date(d.ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const rodaNeg=d.roda_negocio||{};
+  const rodaHab=d.habilidades||{};
+  const rodarLabels={fin:'Financeiro',eq:'Equipe',at:'Atendimento',mkt:'Marketing',proc:'Processos',vida:'Qualidade de vida'};
+  const habLabels={lideranca:'Liderança',organizacao:'Organização',financas:'Finanças',vendas:'Vendas',delegacao:'Delegação',disciplina:'Disciplina'};
+
+  function barColor(v,max){
+    const pct=v/max;
+    if(pct<=0.3)return'var(--rd)';
+    if(pct<=0.6)return'var(--go)';
+    return'var(--gr)';
+  }
+
+  return`<div class="card" style="margin-bottom:10px">
+<div class="rwb" style="margin-bottom:10px">
+  <div class="row" style="gap:10px">
+    ${cli?`<div class="av ${avc(cli.id)}" style="width:36px;height:36px;font-size:12px">${cli.ini}</div>`:''}
+    <div>
+      <div style="font-size:14px;font-weight:800">${d.nome||cli?.n||'—'}</div>
+      <div style="font-size:11px;color:var(--tx3)">${d.negocio?d.negocio+' · ':''} ${d.segmento||''} · ${dt}</div>
+    </div>
+  </div>
+  <button class="bgh" onclick="toggleDiag(${d.id})" style="font-size:18px">${d._open?'▲':'▼'}</button>
+</div>
+
+${d._open?`
+<!-- RAIZ: Habilidades -->
+${Object.keys(rodaHab).length?`
+<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin-bottom:8px">🌱 Mapeamento de Habilidades</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px">
+${Object.entries(rodaHab).map(([k,v])=>`
+<div>
+  <div class="rwb" style="margin-bottom:3px"><span style="font-size:11px;color:var(--tx2)">${habLabels[k]||k}</span><span style="font-size:11px;font-weight:700">${v}/5</span></div>
+  <div class="pb"><div class="pf" style="width:${v/5*100}%;background:${barColor(v,5)}"></div></div>
+</div>`).join('')}
+</div>`:''}
+
+<!-- NEGÓCIO: Roda -->
+${Object.keys(rodaNeg).length?`
+<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin-bottom:8px">🏢 Roda do Negócio</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px">
+${Object.entries(rodaNeg).filter(([k])=>rodarLabels[k]).map(([k,v])=>`
+<div>
+  <div class="rwb" style="margin-bottom:3px"><span style="font-size:11px;color:var(--tx2)">${rodarLabels[k]}</span><span style="font-size:11px;font-weight:700">${v}/10</span></div>
+  <div class="pb"><div class="pf" style="width:${v/10*100}%;background:${barColor(v,10)}"></div></div>
+</div>`).join('')}
+</div>`:''}
+
+<!-- CAMPOS TEXTUAIS -->
+${[
+  ['👤 Negócio / Segmento',[d.negocio,d.segmento].filter(Boolean).join(' · ')],
+  ['⏱ Tempo no negócio',d.tempo],
+  ['👥 Equipe',d.equipe],
+  ['📝 Descrição do negócio',d.descricao],
+  ['💬 Como se sente hoje',Array.isArray(d.sentimento)?d.sentimento.join(' / '):d.sentimento],
+  ['🚧 Crença que trava',d.crenca],
+  ['💪 Pontos fortes',d.pontos_fortes],
+  ['⚠️ Precisa melhorar',d.melhorar],
+  ['🧠 Comportamento que prejudica',d.comportamento],
+  ['🔥 3 maiores desafios',d.desafios],
+  ['✅ O que está funcionando',d.funcionando],
+  ['🗓 Dia típico',d.dia_tipico],
+  ['⏳ Tempo no operacional',d.tempo_operacional],
+  ['🔀 Tarefas para delegar',d.tarefas_delegar],
+  ['🏃 Quando falta, o negócio...',Array.isArray(d.sem_voce)?d.sem_voce.join(' / '):d.sem_voce],
+  ['😓 Tarefa que mais consome',d.tarefa_emocional],
+  ['📄 Documentação existente',Array.isArray(d.doc_existente)?d.doc_existente.join(' / '):d.doc_existente],
+  ['⚙️ Processos que mais repete',d.processos_repetem],
+  ['🔥 Processo mais urgente',d.processo_urgente],
+  ['🔄 Fluxo de atendimento',d.atendimento_fluxo],
+  ['♻️ O que gera retrabalho',d.retrabalho],
+  ['📊 Sabe o faturamento?',d.sabe_fatura],
+  ['💸 Sabe os custos?',d.sabe_custos],
+  ['🏷 Como precifica',Array.isArray(d.precificacao)?d.precificacao.join(' / '):d.precificacao],
+  ['🏦 Separação financeira',d.separacao],
+  ['💰 Desafio financeiro',d.desafio_financeiro],
+  ['🎯 O que a trouxe até aqui',d.motivo],
+  ['🚀 O que quer mudar em 90 dias',d.mudanca_90],
+  ['✨ O que quer que o negócio entregue',d.entrega_negocio],
+  ['❌ Já tentou e não funcionou',d.tentativas],
+  ['📝 O que mais quer que eu saiba',d.livre],
+].filter(([,v])=>v&&String(v).trim()).map(([l,v])=>`
+<div style="margin-bottom:10px">
+  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--tx3);margin-bottom:3px">${l}</div>
+  <div style="font-size:12px;color:var(--tx);line-height:1.55;background:var(--sf2);border-radius:var(--rs);padding:8px 11px">${v}</div>
+</div>`).join('')}
+`:''}
+</div>`;
+}
+
+/* ── Vista Cliente: formulário de diagnóstico ── */
+function bDiagCliente(){
+  const cli=S.clients[S.curCli];
+  if(!cli) return `<div class="ct"><div class="empty">Nenhuma mentorada cadastrada.</div></div>`;
+
+  const jaFez=S.diags.find(d=>d.cid===cli.id);
+  if(jaFez&&!S.diagEditando)return`<div class="ct">
+<div class="row" style="gap:12px;margin-bottom:20px">
+  <div class="av ${avc(cli.id)}" style="width:44px;height:44px;font-size:14px">${cli.ini}</div>
+  <div><div style="font-size:16px;font-weight:800">${cli.n}</div>
+  <div style="font-size:11px;color:var(--tx3)">Diagnóstico Raiz × Resultado</div></div>
+</div>
+<div class="card" style="text-align:center;padding:36px">
+  <div style="font-size:36px;margin-bottom:12px">✅</div>
+  <div style="font-size:15px;font-weight:800;margin-bottom:6px">Diagnóstico enviado!</div>
+  <div style="font-size:12px;color:var(--tx3);line-height:1.7;max-width:320px;margin:0 auto 20px">Obrigada por responder com tanta honestidade. A Vanessa já pode visualizar o seu diagnóstico e chegará preparada para a nossa sessão.</div>
+  <button class="btn" onclick="S.diagEditando=true;S.diagStep=0;R()">Editar respostas</button>
+</div></div>`;
+
+  return`<div class="ct">${bDiagForm(cli)}</div>`;
+}
+
+function bDiagForm(cli){
+  const step=S.diagStep;
+  const prog=Math.round(step/7*100);
+  const labels=['Identificação','🌱 Raiz','Negócio','Rotina','Processos','Financeiro','Resultado'];
+
+  return`
+<div class="row" style="gap:12px;margin-bottom:16px">
+  <div class="av ${avc(cli.id)}" style="width:44px;height:44px;font-size:14px">${cli.ini}</div>
+  <div><div style="font-size:16px;font-weight:800">${cli.n}</div>
+  <div style="font-size:11px;color:var(--tx3)">Diagnóstico Raiz × Resultado · Passo ${step+1} de 7</div></div>
+</div>
+
+<div style="margin-bottom:20px">
+  <div class="rwb" style="margin-bottom:6px">
+    <span style="font-size:11px;color:var(--tx3);font-weight:600">${labels[step]}</span>
+    <span style="font-size:12px;font-weight:800;color:var(--nv2)">${prog}%</span>
+  </div>
+  <div class="pb" style="height:6px"><div class="pf" style="width:${prog}%"></div></div>
+  <div style="display:flex;gap:4px;margin-top:6px">
+    ${labels.map((_,i)=>`<div style="flex:1;height:3px;border-radius:99px;background:${i<=step?'var(--nv2)':'var(--sf2)'}"></div>`).join('')}
+  </div>
+</div>
+
+${[bDS0,bDS1,bDS2,bDS3,bDS4,bDS5,bDS6][step]()}
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:14px;border-top:.5px solid var(--bd)">
+  ${step>0?`<button class="btn" onclick="capDiag();S.diagStep--;R()">← Anterior</button>`:`<div></div>`}
+  ${step<6
+    ?`<button class="btn bnav" onclick="capDiag();S.diagStep++;R()">Próximo →</button>`
+    :`<button class="btn bgrn" onclick="capDiag();salvarDiag(${cli.id})">Enviar diagnóstico ✓</button>`}
+</div>`;
+}
+
+/* ── STEPS ── */
+function fld(id,label,ph,tipo='text',val=''){
+  const v=S.diagData[id]||val;
+  return`<div class="fg"><label class="fl">${label}</label>
+  <input id="di_${id}" type="${tipo}" value="${v.replace(/"/g,'&quot;')}" placeholder="${ph}" oninput="S.diagData['${id}']=this.value"/>
+  </div>`;
+}
+function fta(id,label,ph,rows=3,val=''){
+  const v=S.diagData[id]||val;
+  return`<div class="fg"><label class="fl">${label}</label>
+  <textarea id="di_${id}" rows="${rows}" placeholder="${ph}" oninput="S.diagData['${id}']=this.value">${v}</textarea>
+  </div>`;
+}
+function fsl(id,label,opts,val=''){
+  const v=S.diagData[id]||val;
+  return`<div class="fg"><label class="fl">${label}</label>
+  <select id="di_${id}" oninput="S.diagData['${id}']=this.value">
+    <option value="">Selecione</option>
+    ${opts.map(o=>`<option ${v===o?'selected':''}>${o}</option>`).join('')}
+  </select></div>`;
+}
+function fchk(id,label,opts,single=false){
+  const vals=S.diagData[id]||[];
+  return`<div class="fg"><label class="fl">${label}</label>
+  ${opts.map(o=>{
+    const sel=Array.isArray(vals)?vals.includes(o):vals===o;
+    return`<div onclick="togDiagChk('${id}','${o.replace(/'/g,"\\'")}',${single})" style="display:flex;align-items:center;gap:8px;padding:8px 11px;border:.5px solid ${sel?'var(--nv2)':'var(--bd2)'};border-radius:var(--rs);cursor:pointer;margin-top:4px;background:${sel?'var(--nvf)':'var(--sf)'}">
+      <div style="width:16px;height:16px;border-radius:3px;border:1.5px solid ${sel?'var(--nv2)':'var(--bd2)'};background:${sel?'var(--nv2)':'transparent'};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:white">${sel?'✓':''}</div>
+      <span style="font-size:12px">${o}</span>
+    </div>`;}).join('')}
+  </div>`;
+}
+function fRoda(id,label,max=10){
+  const cur=S.diagRoda[id]||0;
+  const colors=['','#E53935','#E53935','#FB8C00','#FB8C00','#FDD835','#FDD835','#43A047','#43A047','#1E88E5','#1E88E5'];
+  return`<div style="margin-bottom:12px">
+    <div class="rwb" style="margin-bottom:5px">
+      <span style="font-size:12px;font-weight:600">${label}</span>
+      <span style="font-size:13px;font-weight:800;color:${cur?colors[cur]:'var(--tx3)'};">${cur||'—'}${max===5?'/5':'/10'}</span>
+    </div>
+    <div style="display:flex;gap:3px">
+      ${Array.from({length:max},(_,i)=>{const v=i+1;return`<div onclick="selRoda('${id}',${v})" style="flex:1;height:26px;border-radius:4px;cursor:pointer;border:1.5px solid ${v<=cur?colors[Math.min(cur,colors.length-1)]:'var(--bd2)'};background:${v<=cur?colors[Math.min(cur,colors.length-1)]:'var(--sf2)'};opacity:${v<=cur?1:0.5};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:${v<=cur?'white':'var(--tx3)'}">${v}</div>`;}).join('')}
+    </div>
+  </div>`;
+}
+
+function togDiagChk(id,val,single){
+  if(single){S.diagData[id]=val;}
+  else{
+    let arr=S.diagData[id]||[];
+    if(!Array.isArray(arr))arr=[];
+    S.diagData[id]=arr.includes(val)?arr.filter(v=>v!==val):[...arr,val];
+  }
+  R();
+}
+window.togDiagChk=togDiagChk;
+
+function selRoda(id,v){S.diagRoda[id]=v;R();}
+window.selRoda=selRoda;
+
+function bDS0(){return`
+<div style="background:var(--nvf);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--nv2);margin-bottom:14px;line-height:1.5">
+  Responda com honestidade — não existe certo ou errado. Quanto mais real, mais preciso será o nosso trabalho juntas.
+</div>
+<div class="g2">
+  ${fld('nome','Nome completo','Seu nome')}
+  ${fld('wpp','WhatsApp','(00) 00000-0000')}
+</div>
+<div class="g2">
+  ${fld('negocio','Nome do negócio','Como você chama')}
+  ${fld('segmento','Segmento','Ex: salão, confeitaria...')}
+</div>
+<div class="g2">
+  ${fsl('tempo','Há quanto tempo está no negócio?',['Menos de 1 ano','1 a 2 anos','3 a 5 anos','6 a 10 anos','Mais de 10 anos'])}
+  ${fsl('equipe','Tem equipe?',['Trabalho sozinha','1 a 2 pessoas','3 a 5 pessoas','Mais de 5 pessoas'])}
+</div>
+${fta('descricao','Descreva seu negócio em uma frase','O que você faz, para quem e qual transformação gera...',2)}`;}
+
+function bDS1(){return`
+<div style="background:var(--grf);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--gr);margin-bottom:14px;line-height:1.5;border-left:3px solid var(--gr)">
+  🌱 Esta seção é sobre você — não sobre o negócio. Seja honesta consigo mesma.
+</div>
+${fchk('sentimento','Como você se sente em relação ao seu negócio hoje?',[
+  'Empolgada e cheia de energia','Cansada e sobrecarregada','Travada, sem saber o próximo passo',
+  'Ansiosa com as finanças','Motivada mas perdida na organização','Sentindo que faço tudo sozinha',
+  'Com medo de crescer e perder o controle'])}
+${fta('crenca','Qual é a maior crença que te trava hoje?','Ex: não consigo delegar, tenho medo de cobrar mais...',2)}
+${fta('pontos_fortes','Quais são seus maiores pontos fortes como gestora?','O que você faz bem e naturalmente...',2)}
+${fta('melhorar','O que você sabe que precisa melhorar, mas ainda não conseguiu?','Seja específica...',2)}
+<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin:14px 0 8px">Mapeamento de habilidades (1 a 5)</div>
+${fRoda('lideranca','Liderança e gestão de equipe',5)}
+${fRoda('organizacao','Organização e planejamento',5)}
+${fRoda('financas','Finanças e precificação',5)}
+${fRoda('vendas','Vendas e atração de clientes',5)}
+${fRoda('delegacao','Delegação e confiança na equipe',5)}
+${fRoda('disciplina','Disciplina e consistência',5)}
+${fta('comportamento','Algum comportamento seu que prejudica o negócio?','Ex: procrastinação, dificuldade de cobrar...',2)}`;}
+
+function bDS2(){return`
+<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin-bottom:8px">Roda do Negócio — Nota de 1 a 10 por área</div>
+${fRoda('fin','Financeiro',10)}
+${fRoda('eq','Equipe e liderança',10)}
+${fRoda('at','Atendimento ao cliente',10)}
+${fRoda('mkt','Marketing e atração de clientes',10)}
+${fRoda('proc','Processos e organização interna',10)}
+${fRoda('vida','Qualidade de vida pessoal',10)}
+${fta('desafios','Quais são os 3 maiores desafios do negócio hoje?','1. \n2. \n3. ',3)}
+${fta('funcionando','O que está funcionando bem no negócio?','O que você já construiu que está dando resultado...',2)}`;}
+
+function bDS3(){return`
+${fta('dia_tipico','Descreva como é um dia típico seu no negócio','Desde quando chega até ir embora...',4)}
+${fsl('tempo_operacional','Quanto tempo do seu dia você passa no operacional?',[
+  'Quase todo o tempo — mal consigo parar para pensar',
+  'A maior parte do dia','Metade operacional, metade gestão',
+  'Consigo dedicar mais tempo à gestão','Tenho equipe que cuida do operacional'])}
+${fta('tarefas_delegar','Tarefas que poderiam ser delegadas ou automatizadas','Ex: responder WhatsApp, agendamentos, estoque...',2)}
+${fchk('sem_voce','O que acontece quando você falta ou tira férias?',[
+  'Para tudo — sou indispensável em absolutamente tudo',
+  'Funciona parcialmente, mas com muita dificuldade',
+  'A equipe consegue, mas me liga o tempo todo',
+  'Funciona bem na maioria das situações',
+  'Tenho processos, a equipe sabe o que fazer'],true)}
+${fta('tarefa_emocional','Tarefa que mais te consome emocionalmente','Pode ser uma tarefa, situação ou pessoa...',2)}`;}
+
+function bDS4(){return`
+<div style="background:var(--gof);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--go);margin-bottom:14px;border-left:3px solid var(--go)">
+  💡 Processo é qualquer coisa que você faz mais de uma vez no negócio.
+</div>
+${fchk('doc_existente','Você tem alguma coisa documentada hoje?',[
+  'Não tenho nada — está tudo na minha cabeça',
+  'Tenho algumas anotações no caderno ou celular',
+  'Tenho mensagens salvas no WhatsApp que uso como roteiro',
+  'Tenho checklists, mas a equipe nem sempre segue',
+  'Tenho processos documentados e em uso'])}
+${fta('processos_repetem','Liste os processos que você mais repete no negócio','Ex:\n- Abertura do dia\n- Atendimento ao cliente\n- Responder orçamentos',3)}
+${fta('processo_urgente','Qual processo, se organizado agora, aliviaria mais a sua rotina?','Se você pudesse resolver um gargalo amanhã...',2)}
+${fta('atendimento_fluxo','Como é o atendimento ao cliente hoje — do primeiro contato à finalização?','Do primeiro contato até receber e ir embora...',3)}
+${fta('retrabalho','O que mais gera retrabalho ou erro no negócio hoje?','Ex: cliente que esquece, produto que falta...',2)}`;}
+
+function bDS5(){return`
+${fsl('sabe_fatura','Você sabe quanto o negócio fatura por mês?',[
+  'Sim, tenho esse número exato','Tenho uma ideia aproximada','Não tenho clareza nenhuma'])}
+${fsl('sabe_custos','Você sabe quanto o negócio gasta por mês?',[
+  'Sim, tenho planilha ou controle','Sei mais ou menos','Não tenho esse controle'])}
+${fchk('precificacao','Como você precifica seus produtos ou serviços?',[
+  'Pelo que a concorrência cobra','Pelo que "acho" que vale',
+  'Com base nos meus custos, mas sem fórmula definida',
+  'Com fórmula: custos + margem + pró-labore','Tenho dificuldade de cobrar o valor que quero'])}
+${fsl('separacao','O dinheiro do negócio e o seu dinheiro pessoal são separados?',[
+  'Sim, tenho conta separada e pró-labore definido',
+  'Parcialmente — tento separar mas mistura','Não — é tudo junto'])}
+${fta('desafio_financeiro','Qual é o seu maior desafio financeiro hoje?','Ex: sobra pouco, não sei se tenho lucro...',2)}`;}
+
+function bDS6(){return`
+${fta('motivo','O que te trouxe até aqui? O que fez você buscar esse diagnóstico agora?','Pode ser uma situação, um cansaço, um sonho...',3)}
+${fta('mudanca_90','Se em 90 dias o seu negócio pudesse mudar em uma coisa, o que seria?','Seja específica. Uma mudança real, não perfeita.',2)}
+${fta('entrega_negocio','O que você quer que o negócio entregue para você?','Ex: faturamento, tempo, qualidade de vida...',2)}
+${fta('tentativas','O que você já tentou e não funcionou?','Cursos, métodos, contratações... o que não deu certo?',2)}
+${fta('livre','Tem mais alguma coisa que você quer que eu saiba?','Espaço livre — pode escrever o que quiser...',2)}`;}
+
+/* ── SAVE ── */
+window.capDiag=function(){
+  document.querySelectorAll('[id^="di_"]').forEach(el=>{
+    const k=el.id.slice(3);
+    if(el.tagName==='TEXTAREA'||el.tagName==='INPUT'||el.tagName==='SELECT'){
+      if(el.value.trim()) S.diagData[k]=el.value;
+    }
+  });
+};
+window.salvarDiag=async function(cid){
+  const d={
+    id:Date.now()+Math.floor(Math.random()*1000), cid, ts:new Date().toISOString(), _open:false,
+    ...S.diagData,
+    habilidades:{
+      lideranca:S.diagRoda.lideranca||0,
+      organizacao:S.diagRoda.organizacao||0,
+      financas:S.diagRoda.financas||0,
+      vendas:S.diagRoda.vendas||0,
+      delegacao:S.diagRoda.delegacao||0,
+      disciplina:S.diagRoda.disciplina||0,
+    },
+    roda_negocio:{
+      fin:S.diagRoda.fin||0,
+      eq:S.diagRoda.eq||0,
+      at:S.diagRoda.at||0,
+      mkt:S.diagRoda.mkt||0,
+      proc:S.diagRoda.proc||0,
+      vida:S.diagRoda.vida||0,
+    }
+  };
+  S.diags=S.diags.filter(x=>x.cid!==cid||(S.diagEditando&&false));
+  S.diags.push(d);
+  S.diagEditando=false;
+  S.diagData={};S.diagRoda={};S.diagStep=0;
+  sv();R();
+};
+
+window.toggleDiag=function(id){
+  S.diags=S.diags.map(d=>d.id===id?{...d,_open:!d._open}:d);
+  R();
+};
+window.abrirDiagForm=function(cid){
+  S.diagData={};S.diagRoda={};S.diagStep=0;S.diagEditando=true;
+  S.tab='d';R();
+};
+
+
+
+function bMentor(){
+  return`<div class="tabs">
+    <button class="tab ${S.tab==='j'?'on':''}" onclick="st('j')">Jornada</button>
+    <button class="tab ${S.tab==='c'?'on':''}" onclick="st('c')">Mentoradas</button>
+    <button class="tab ${S.tab==='d'?'on':''}" onclick="st('d')">Diagnósticos</button>
+  </div><div class="ct">${S.tab==='j'?bJornada():S.tab==='d'?bDiagsMentor():bClientes()}</div>`;
+}
+
+function bJornada(){
+  const cli=S.clients[S.curCli];
+  if(!cli)return`<div class="empty">Cadastre uma mentorada para começar.</div>`;
+  const proc=gProc(cli.id);
+  if(!proc)return bNoProc(cli);
+  // Garantir que S.etapa aponta para uma fase válida desta modalidade
+  const fasesValidas=getFasesVisiveis(cli);
+  if(fasesValidas.length>0&&!fasesValidas.includes(S.etapa)) S.etapa=fasesValidas[0];
+  const all=gAll(proc.id);const tp=pct(all);
+  return`
+<div class="rwb" style="margin-bottom:14px">
+  <div class="row" style="gap:10px">
+    <div class="av ${avc(cli.id)}" style="width:38px;height:38px;font-size:12px">${cli.ini}</div>
+    <div><div style="font-size:14px;font-weight:800">${cli.n}</div>
+    <div style="font-size:11px;color:var(--tx3)">${proc.sdon}/${proc.sess} sessões · ${getMod(cli).label}</div></div>
+  </div>
+  ${S.clients.length>1?`<select onchange="S.curCli=parseInt(this.value);R()" style="font-size:11px;width:auto;padding:5px 10px">
+    ${S.clients.map((c,i)=>`<option value="${i}" ${i===S.curCli?'selected':''}>${c.n}</option>`).join('')}</select>`:''}
+</div>
+${cli.jornBloq?`<div class="card" style="margin-bottom:12px;padding:12px 16px;border:1.5px solid var(--rd);display:flex;align-items:center;justify-content:space-between;gap:12px">
+  <div><div style="font-size:12px;font-weight:700;color:var(--rd)">🔒 Jornada bloqueada</div>
+  <div style="font-size:11px;color:var(--tx3)">A mentorada vê só o Diagnóstico. Libere quando estiver pronta.</div></div>
+  <button class="btn" style="background:var(--gr);color:#fff;border:none;flex-shrink:0;font-size:12px" onclick="liberarJornada(${cli.id})">Liberar jornada</button>
+</div>`:''}
+
+<div class="card" style="padding:14px 18px;margin-bottom:12px">
+  <div class="rwb" style="margin-bottom:6px">
+    <div style="font-size:12px;font-weight:700;color:var(--tx2)">Progresso geral · ${all.filter(a=>a.st==='done').length}/${all.length} atividades concluídas</div>
+    <div style="font-size:15px;font-weight:800;color:var(--nv2)">${tp}%</div>
+  </div>
+  <div class="pb"><div class="pf" style="width:${tp}%"></div></div>
+  <div style="font-size:10px;color:var(--tx3);margin-top:10px;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Sessões — clique para marcar</div>
+  <div class="sdots">
+    ${Array.from({length:proc.sess},(_,i)=>`<div class="sd ${i<proc.sdon?'sdon':'stod'}" onclick="tSess(${proc.id},${i})" title="Sessão ${i+1}">${i+1}</div>`).join('')}
+  </div>
+</div>
+
+${(()=>{
+  const fases=getFasesVisiveis(cli);
+  if(fases.length===0) return `<div class="card" style="text-align:center;padding:28px;color:var(--tx3)">
+    <div style="font-size:28px;margin-bottom:10px">🔍</div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:6px">Diagnóstico R$ 147</div>
+    <div style="font-size:12px;line-height:1.7">Sessão 1 — Diagnóstico<br>Sessão 2 — Entrega do Resultado<br><br>Acompanhe as sessões acima e o diagnóstico na aba Diagnósticos.</div>
+  </div>`;
+  return `<div class="enav">
+  ${fases.map((eIdx,pos)=>{const e=ETS[eIdx];const lk=!proc.ets[eIdx];const sp=pct(gAtivs(proc.id,eIdx));
+    return`<div class="et ${S.etapa===eIdx?'on':''}" onclick="S.etapa=${eIdx};R()">
+      <div class="etnum ${e.nc}">${pos+1}</div>
+      <div class="etname">${getNomeFase(cli,eIdx)}</div>
+      <div class="etpct">${lk?'🔒 bloqueada':`${sp}%`}</div>
+    </div>`;}).join('')}
+  </div>
+  ${bEtDetail(proc)}`;
+})()}`;
+}
+
+function bEtDetail(proc){
+  const cli=S.clients[S.curCli];
+  const fases=getFasesVisiveis(cli);
+  const pos=fases.indexOf(S.etapa); // posição visível (1-based display)
+  const i=S.etapa;const et=ETS[i];const lk=!proc.ets[i];
+  const ativs=gAtivs(proc.id,i);const sp=pct(ativs);
+  const done=ativs.filter(a=>a.st==='done').length;
+  const sub=ativs.filter(a=>a.st==='submitted').length;
+  const pend=ativs.filter(a=>a.st==='pending').length;
+  const nomeF=getNomeFase(cli,i);
+  return`
+<div class="etdet">
+  <div class="rwb" style="margin-bottom:10px">
+    <div>
+      <div style="font-size:14px;font-weight:800;color:${et.cv}">${pos+1}. ${nomeF}</div>
+      <div style="font-size:11px;color:var(--tx2);margin-top:2px">${et.ds}</div>
+    </div>
+    <div class="row" style="gap:8px">
+      <button class="lbtn ${lk?'llk':'lok'}" onclick="tLock(${proc.id},${i})">${lk?'🔒 Liberar para mentorada':'🔓 Fase liberada'}</button>
+      <button class="btn bsm" onclick="oAddAtiv(${i})">+ Atividade</button>
+    </div>
+  </div>
+  ${!lk?`<div class="rwb" style="margin-bottom:10px">
+    <div style="flex:1;margin-right:12px">
+      <div class="rwb" style="margin-bottom:4px">
+        <span style="font-size:10px;color:var(--tx3)">${done}/${ativs.length} concluídas</span>
+        <span style="font-size:12px;font-weight:800;color:${et.cv}">${sp}%</span>
+      </div>
+      <div class="pb"><div class="pf" style="width:${sp}%;background:${et.cv}"></div></div>
+    </div>
+    <div class="row" style="gap:5px;flex-shrink:0">
+      ${pend?`<span class="b bg2">${pend} pend.</span>`:''}
+      ${sub?`<span class="b bnv">${sub} env.</span>`:''}
+      ${done?`<span class="b bgr">${done} conc.</span>`:''}
+    </div>
+  </div>`:``}
+</div>
+${lk?`<div class="card" style="text-align:center;color:var(--tx3);font-size:13px;padding:22px;border-radius:0 0 var(--r) var(--r);margin-top:0">
+  🔒 Fase bloqueada — libere quando a mentorada estiver pronta para esta etapa.
+</div>`:`<div>${ativs.map(a=>bAcM(a)).join('')}${!ativs.length?`<div class="empty">Nenhuma atividade nesta fase.</div>`:''}</div>`}`;
+}
+
+function bAcM(a){
+  const[bc,bl]=STM[a.st]||STM.pending;const o=ovr(a.pr,a.st);
+  return`<div class="ac" style="${o?'border-left:2px solid var(--rd)':''}">
+<div class="rwb">
+  <div class="f1">
+    <div class="at">${a.ti}</div>
+    <div class="ad">${a.de}</div>
+    <div class="am">
+      <span class="pt pt${a.pi}">${PNM[a.pi]}</span>
+      <span class="b ${bc}">${bl}</span>
+      ${a.pr?`<span style="font-size:10px;color:${o?'var(--rd)':'var(--tx3)'}">${o?'⚠ ':''}${fmt(a.pr)}</span>`:''}
+    </div>
+    ${a.res?`<div class="rep">💬 ${a.res}</div>`:''}
+    ${a.fb?`<div class="fb2">✏️ ${a.fb}</div>`:''}
+  </div>
+  <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0;margin-left:12px">
+    ${a.st==='submitted'?`<button class="btn bsm bgrn" onclick="oFb(${a.id})">Feedback</button>`:''}
+    ${a.st==='done'?`<span class="b bgr">✓</span>`:''}
+    <button class="bgh bsm" onclick="dAtiv(${a.id})" style="color:var(--rd)">✕</button>
+  </div>
+</div>
+</div>`;
+}
+
+function bNoProc(cli){
+  return`<div style="text-align:center;padding:48px 24px">
+<div style="font-size:36px;margin-bottom:12px">🌱</div>
+<div style="font-size:15px;font-weight:800;margin-bottom:6px">${cli.n} ainda não tem jornada</div>
+<div style="font-size:12px;color:var(--tx3);margin-bottom:20px;max-width:340px;margin-left:auto;margin-right:auto;line-height:1.6">
+  Crie a Jornada Raiz × Resultado completa com todas as <strong>16 atividades</strong> nos 4 módulos.<br>A Fase 1 já é liberada automaticamente.
+</div>
+<button class="btn bnav" onclick="criarJ(${cli.id})">✨ Criar Jornada Raiz × Resultado completa</button>
+</div>`;
+}
+
+function bClientes(){
+  return`<div class="rwb" style="margin-bottom:14px">
+  <div style="font-size:12px;color:var(--tx2)">${S.clients.length} mentorada${S.clients.length!==1?'s':''}</div>
+  <button class="btn bnav" onclick="S.modal='c';R()">+ Nova mentorada</button>
+</div>
+${S.clients.map((c,i)=>{
+  const pr=gProc(c.id);const all=pr?gAll(pr.id):[];const tp=pct(all);const fl=pr?pr.ets.filter(Boolean).length:0;
+  return`<div class="card" style="margin-bottom:8px">
+<div class="rwb">
+  <div class="row" style="gap:10px">
+    <div class="av ${avc(c.id)}" style="width:36px;height:36px;font-size:12px">${c.ini}</div>
+    <div>
+      <div style="font-size:13px;font-weight:700">${c.n} ${c.jornBloq?'<span style=\"font-size:9px;background:var(--rd);color:#fff;padding:1px 5px;border-radius:3px;vertical-align:middle\">BLOQUEADA</span>':''}</div>
+      <div style="font-size:11px;color:var(--tx3)">${getMod(c).icon} ${getMod(c).label} · ${pr?`${pr.sdon}/${pr.sess} sessões`:'sem sessões'} · ${c.code?`código: <b>${c.code}</b>`:'sem código'}</div>
+    </div>
+  </div>
+  <div class="row" style="gap:6px">
+    ${pr?`<span class="b bgr">${tp}%</span><button class="btn bsm" onclick="S.curCli=${i};S.tab='j';R()">Abrir</button>`:`<button class="btn bsm bnav" onclick="criarJ(${c.id})">Criar jornada</button>`}
+    <button class="btn bsm" onclick="exportarMentorada(${c.id})" style="background:var(--gr);color:#fff;border:none">📤 Exportar</button>
+    <button class="bgh bsm" onclick="dCli(${c.id})" style="color:var(--rd)">✕</button>
+  </div>
+</div>
+${pr?`<div class="pb" style="margin-top:10px"><div class="pf" style="width:${tp}%"></div></div>`:''}
+</div>`;}).join('')}`;
+}
+
+/* ── CLIENTE VIEW ── */
+function bCliente(){
+  const cli=S.clients[S.curCli];
+  if(!cli)return`<div class="ct"><div class="empty">Nenhuma mentorada cadastrada.</div></div>`;
+
+  // Cliente tem tabs: Jornada e Diagnóstico
+  const cTab=S.cliTab||'jornada';
+  const tabHdr=`<div class="tabs">
+    <button class="tab ${cTab==='jornada'?'on':''}" onclick="S.cliTab='jornada';R()">Jornada</button>
+    <button class="tab ${cTab==='diag'?'on':''}" onclick="S.cliTab='diag';R()">📋 Diagnóstico</button>
+  </div>`;
+  if(cTab==='diag') return tabHdr+bDiagCliente();
+  if(cTab==='jornada'&&cli.jornBloq){
+    return tabHdr+`<div class="ct"><div style="text-align:center;padding:48px 20px">
+<div style="font-size:36px;margin-bottom:14px">🔒</div>
+<div style="font-size:15px;font-weight:800;margin-bottom:8px;color:var(--nv2)">Jornada em preparação</div>
+<div style="font-size:12px;color:var(--tx3);line-height:1.7;max-width:300px;margin:0 auto">A Vanessa vai liberar sua jornada em breve.<br>Enquanto isso, preencha o Diagnóstico se ainda não fez.</div>
+<button class="btn bnav" style="margin-top:20px" onclick="S.cliTab='diag';R()">Ir para o Diagnóstico</button>
+</div></div>`;
+  }
+
+  const proc=gProc(cli.id);
+  if(!proc)return tabHdr+`<div class="ct"><div style="text-align:center;padding:60px 24px">
+<div style="font-size:36px;margin-bottom:12px">🌱</div>
+<div style="font-size:14px;font-weight:700;margin-bottom:8px">Sua jornada está sendo preparada</div>
+<div style="font-size:12px;color:var(--tx3)">A mentora Vanessa vai liberar em breve. Fique de olho!</div>
+</div></div>`;
+
+  const all=gAll(proc.id);const unl=all.filter(a=>proc.ets[a.e]);
+  const tp=pct(unl);const pend=unl.filter(a=>a.st==='pending').length;
+  const sub=unl.filter(a=>a.st==='submitted').length;const done=unl.filter(a=>a.st==='done').length;
+
+  return tabHdr+`<div class="ct">
+${S.clients.length>1?`<div style="margin-bottom:12px"><select onchange="S.curCli=parseInt(this.value);R()" style="font-size:12px;width:auto;padding:5px 10px">
+  ${S.clients.map((c,i)=>`<option value="${i}" ${i===S.curCli?'selected':''}>${c.n}</option>`).join('')}</select></div>`:''}
+
+<div class="row" style="gap:12px;margin-bottom:16px">
+  <div class="av ${avc(cli.id)}" style="width:44px;height:44px;font-size:14px">${cli.ini}</div>
+  <div>
+    <div style="font-size:16px;font-weight:800">${cli.n}</div>
+    <div style="font-size:11px;color:var(--tx3)">Jornada Raiz × Resultado · ${proc.sdon}/${proc.sess} sessões realizadas</div>
+  </div>
+</div>
+
+<div class="st3">
+  <div class="stc"><div class="stn" style="color:var(--tx2)">${pend}</div><div class="stl">Para fazer</div></div>
+  <div class="stc"><div class="stn" style="color:var(--nv2)">${sub}</div><div class="stl">Enviadas</div></div>
+  <div class="stc"><div class="stn" style="color:var(--gr)">${done}</div><div class="stl">Concluídas</div></div>
+</div>
+
+<div style="margin-bottom:18px">
+  <div class="rwb" style="margin-bottom:5px">
+    <span style="font-size:11px;color:var(--tx3)">Progresso da jornada</span>
+    <span style="font-size:14px;font-weight:800;color:var(--nv2)">${tp}%</span>
+  </div>
+  <div class="pbg"><div class="pf" style="width:${tp}%;height:100%"></div></div>
+</div>
+
+${getFasesVisiveis(cli).map((ei,pos)=>{
+  const et=ETS[ei];
+  const lk=!proc.ets[ei];const ativs=gAtivs(proc.id,ei);const sp=pct(ativs);
+  const nomeF=getNomeFase(cli,ei);
+  return`<div class="cstage">
+<div class="csh">
+  <div class="etnum ${et.nc}" style="width:26px;height:26px;font-size:10px;flex-shrink:0">${pos+1}</div>
+  <div class="f1">
+    <div style="font-size:13px;font-weight:700;color:${lk?'var(--tx3)':et.cv}">${nomeF}</div>
+    <div style="font-size:11px;color:var(--tx3)">${et.ds}</div>
+  </div>
+  ${lk?`<span class="b bg2" style="flex-shrink:0">🔒 Em breve</span>`:`<span style="font-size:13px;font-weight:800;color:${et.cv};flex-shrink:0">${sp}%</span>`}
+</div>
+${lk?`<div class="lock-msg">🔒 Esta fase será liberada pela mentora Vanessa no momento certo da sua jornada. Continue firme nas fases abertas!</div>`:`
+<div class="csb">
+  <div class="pb" style="margin-bottom:13px"><div class="pf" style="width:${sp}%;background:${et.cv}"></div></div>
+  ${ativs.map(a=>bAcC(a)).join('')}
+</div>`}
+</div>`;}).join('')}
+</div>`;
+}
+
+function bAcC(a){
+  const[bc,bl]=STM[a.st]||STM.pending;const o=ovr(a.pr,a.st)&&a.st!=='done';
+  return`<div class="ac" style="margin-bottom:7px;${o?'border-left:2px solid var(--rd)':''}">
+<div class="rwb">
+  <div class="f1">
+    <div class="at">${a.ti}</div>
+    <div class="ad">${a.de}</div>
+    <div class="am">
+      <span class="pt pt${a.pi}">${PNM[a.pi]}</span>
+      <span class="b ${bc}">${bl}</span>
+      ${a.pr?`<span style="font-size:10px;color:${o?'var(--rd)':'var(--tx3)'}">${o?'⚠ ':''}${fmt(a.pr)}</span>`:''}
+    </div>
+    ${a.res?`<div class="rep">💬 ${a.res}</div>`:''}
+    ${a.fb?`<div class="fb2">✏️ Feedback da Vanessa: ${a.fb}</div>`:''}
+  </div>
+  <div style="flex-shrink:0;margin-left:12px">
+    ${a.st==='pending'?`<button class="btn bsm bnav" onclick="oSub(${a.id})">Entregar</button>`:''}
+    ${a.st==='submitted'?`<span class="b bnv">⏳ Aguardando</span>`:''}
+    ${a.st==='done'?`<span class="b bgr">✓ Concluída</span>`:''}
+  </div>
+</div>
+</div>`;
+}
+
+/* ── MODALS ── */
+function bModal(){
+  if(S.modal==='c')return`<div class="mbg" onclick="cm(event)"><div class="modal">
+<div class="mtt">Nova mentorada</div>
+<div class="fg"><label class="fl">Nome completo</label><input id="cn" placeholder="Ex: Ana Lima"/></div>
+<div class="fg"><label class="fl">Código de acesso</label>
+  <input id="ccode" placeholder="Ex: ana2026" style="font-family:monospace"/>
+  <div style="font-size:11px;color:var(--tx3);margin-top:3px">Ela usará esse código para entrar no sistema.</div>
+</div>
+<div class="fg"><label class="fl">Modalidade</label>
+  <select id="cmod">
+    <option value="completa">🌱 Mentoria Completa — 4 fases · 16 atividades</option>
+    <option value="processos">⚙️ Processos e Estrutura — Fase 1 Raiz + Fase 2 Estruturação</option>
+    <option value="diagnostico">🔍 Diagnóstico R$ 147 — 2 sessões</option>
+  </select>
+</div>
+<div class="g2">
+  <div class="fg"><label class="fl">Total de sessões</label><input id="cs" type="number" value="8" min="1"/></div>
+  <div class="fg"><label class="fl">Sessões realizadas</label><input id="cd" type="number" value="0" min="0"/></div>
+</div>
+<div class="info-box" style="font-size:11px">🔒 O primeiro acesso mostrará apenas o Diagnóstico. A jornada fica bloqueada até você liberar.</div>
+<div class="rwb">
+  <button class="btn" onclick="S.modal=null;R()">Cancelar</button>
+  <button class="btn bnav" onclick="saveCli()">Criar mentorada</button>
+</div>
+</div></div>`;
+  return'';
+}
+
+function bSub(){
+  const a=S.ativs.find(x=>x.id===S.subId);if(!a)return'';
+  return`<div class="mbg" onclick="if(event.target.classList.contains('mbg')){S.subId=null;R()}"><div class="modal">
+<div class="mtt">Entregar atividade</div>
+<div style="font-size:13px;font-weight:700;margin-bottom:3px">${a.ti}</div>
+<div style="font-size:12px;color:var(--tx2);margin-bottom:14px;line-height:1.45">${a.de}</div>
+<div class="fg"><label class="fl">Sua entrega / reflexão</label>
+  <textarea id="st2" style="min-height:110px" placeholder="Descreva o que você fez, aprendeu ou reflectiu…">${a.res||''}</textarea>
+</div>
+<div class="rwb">
+  <button class="btn" onclick="S.subId=null;R()">Cancelar</button>
+  <button class="btn bgrn" onclick="doSub(${a.id})">Enviar para a Vanessa ↗</button>
+</div>
+</div></div>`;
+}
+
+function bFb(){
+  const a=S.ativs.find(x=>x.id===S.fbId);if(!a)return'';
+  return`<div class="mbg" onclick="if(event.target.classList.contains('mbg')){S.fbId=null;R()}"><div class="modal">
+<div class="mtt">Feedback · ${a.ti}</div>
+${a.res?`<div class="rep" style="margin-bottom:13px">💬 "${a.res}"</div>`:''}
+<div class="fg"><label class="fl">Feedback da mentora</label>
+  <textarea id="ft2" style="min-height:90px" placeholder="Escreva seu feedback construtivo…">${a.fb||''}</textarea>
+</div>
+<div class="fg"><label class="fl">Status da atividade</label>
+  <select id="fs2"><option value="submitted">Enviada (pendente)</option><option value="done" ${a.st==='done'?'selected':''}>✓ Concluída — marcar como feita</option></select>
+</div>
+<div class="rwb">
+  <button class="btn" onclick="S.fbId=null;R()">Cancelar</button>
+  <button class="btn bnav" onclick="doFb(${a.id})">Salvar feedback</button>
+</div>
+</div></div>`;
+}
+
+function bAddAtiv(){
+  const i=S.addEt;
+  return`<div class="mbg" onclick="if(event.target.classList.contains('mbg')){S.addEt=null;R()}"><div class="modal">
+<div class="mtt">+ Atividade extra · ${ETS[i].n}</div>
+<div class="fg"><label class="fl">Título</label><input id="at2" placeholder="Ex: Revisar precificação após ajuste"/></div>
+<div class="fg"><label class="fl">Instrução para a mentorada</label><textarea id="ad2" placeholder="O que ela deve fazer?"></textarea></div>
+<div class="g2">
+  <div class="fg"><label class="fl">Pilar</label>
+    <select id="ap2"><option value="O">O – Organização</option><option value="R">R – Resultado</option><option value="A">A – Ação</option></select>
+  </div>
+  <div class="fg"><label class="fl">Prazo</label><input id="apr2" type="date"/></div>
+</div>
+<div class="rwb">
+  <button class="btn" onclick="S.addEt=null;R()">Cancelar</button>
+  <button class="btn bnav" onclick="saveAtiv()">Adicionar atividade</button>
+</div>
+</div></div>`;
+}
+
+function cm(e){if(e.target.classList.contains('mbg')){S.modal=null;R();}}
+
+/* ── ACTIONS ── */
+window.sr=r=>{S.role=r;R()};
+window.st=t=>{S.tab=t;R()};
+window.cm=cm;
+window.oSub=id=>{S.subId=id;R()};
+window.oFb=id=>{S.fbId=id;R()};
+window.oAddAtiv=i=>{S.addEt=i;R()};
+
+window.criarJ=cid=>{
+  const pid=Date.now();const p2=Date.now()+1;
+  S.procs=S.procs.filter(p=>p.cid!==cid);
+  S.ativs=S.ativs.filter(a=>a.cid!==cid);
+  S.procs.push({id:pid,cid,sess:8,sdon:0,ets:[false,false,false,false]});
+  initJornada(pid,cid,S.clients.find(cl=>cl.id===cid)?.mod||'completa');sv();R();
+};
+
+window.tLock=async(pid,ei)=>{
+  S.procs=S.procs.map(p=>{if(p.id!==pid)return p;const e=[...p.ets];e[ei]=!e[ei];return{...p,ets:e};});
+  const proc=S.procs.find(p=>p.id===pid);
+  if(proc&&proc.ets.some(Boolean)){
+    S.clients=S.clients.map(cl=>cl.id===proc.cid?{...cl,jornBloq:false}:cl);
+  }
+  await sv();R();
+};
+
+window.tSess=async(pid,i)=>{
+  S.procs=S.procs.map(p=>{if(p.id!==pid)return p;return{...p,sdon:i<p.sdon?i:i+1};});await sv();R();
+};
+
+window.saveCli=function(){
+  try{
+    const n=document.getElementById('cn').value.trim();
+    if(!n){alert('Nome obrigatório');return;}
+    const codeEl=document.getElementById('ccode');
+    const modEl=document.getElementById('cmod');
+    const code=(codeEl&&codeEl.value.trim())||n.split(' ')[0].toLowerCase()+'2024';
+    const mod=(modEl&&modEl.value)||'completa';
+    const etsInit=[false,false,false,false];
+    const id=Date.now();
+    const pid=id+1;
+    const sess=parseInt((document.getElementById('cs')||{value:'8'}).value)||8;
+    const sdon=parseInt((document.getElementById('cd')||{value:'0'}).value)||0;
+    S.clients.push({id,n,ini:ini(n),mod,code,jornBloq:true});
+    S.procs.push({id:pid,cid:id,sess,sdon,ets:etsInit});
+    initJornada(pid,id,mod);
+    S.modal=null;
+    S.curCli=S.clients.length-1;
+    sv();R();
+  }catch(e){
+    console.error('saveCli erro:',e);
+    alert('Erro ao criar mentorada: '+e.message);
+  }
+};
+
+window.saveAtiv=async()=>{
+  const t=document.getElementById('at2').value.trim();if(!t){alert('Título obrigatório');return;}
+  const cli=S.clients[S.curCli];const proc=gProc(cli.id);if(!proc)return;
+  S.ativs.push({id:Date.now()+Math.floor(Math.random()*1000),pid:proc.id,cid:cli.id,e:S.addEt,ti:t,de:document.getElementById('ad2').value.trim(),pi:document.getElementById('ap2').value,pr:document.getElementById('apr2').value,st:'pending',res:'',fb:''});
+  S.addEt=null;sv();R();
+};
+
+window.doSub=id=>{
+  const t=document.getElementById('st2').value.trim();
+  S.ativs=S.ativs.map(a=>a.id===id?{...a,st:'submitted',res:t}:a);
+  S.subId=null;sv();R();
+};
+
+window.doFb=id=>{
+  const fb=document.getElementById('ft2').value.trim();const st=document.getElementById('fs2').value;
+  S.ativs=S.ativs.map(a=>a.id===id?{...a,fb,st}:a);
+  S.fbId=null;sv();R();
+};
+
+window.dAtiv=id=>{if(confirm('Excluir atividade?')){S.ativs=S.ativs.filter(a=>a.id!==id);sv();R();}};
+window.liberarJornada=async function(id){
+  S.clients=S.clients.map(cl=>cl.id===id?{...cl,jornBloq:false}:cl);
+  // Libera automaticamente a primeira fase da modalidade
+  const cli=S.clients.find(cl=>cl.id===id);
+  const proc=cli?gProc(cli.id):null;
+  if(proc){
+    const fases=getFasesVisiveis(cli);
+    if(fases.length>0){
+      const e=[...proc.ets];
+      e[fases[0]]=true;
+      S.procs=S.procs.map(p=>p.id===proc.id?{...p,ets:e}:p);
+    }
+  }
+  sv();R();
+};
+window.dCli=async id=>{if(confirm('Excluir mentorada e toda a jornada?')){
+  // Deletar do Supabase
+  const proc=S.procs.find(p=>p.cid===id);
+  if(proc){
+    const ativIds=S.ativs.filter(a=>a.cid===id).map(a=>a.id);
+    for(const aid of ativIds) await sbDel('rxr_ativs',aid);
+    await sbDel('rxr_procs',proc.id);
+  }
+  const diagIds=S.diags.filter(d=>d.cid===id).map(d=>d.id);
+  for(const did of diagIds) await sbDel('rxr_diags',did);
+  await sbDel('rxr_clients',id);
+  // Atualizar estado local
+  S.clients=S.clients.filter(c=>c.id!==id);
+  S.procs=S.procs.filter(p=>p.cid!==id);
+  S.ativs=S.ativs.filter(a=>a.cid!==id);
+  S.diags=S.diags.filter(d=>d.cid!==id);
+  if(S.curCli>=S.clients.length)S.curCli=0;
+  R();
+}};
+
+
+// Carregar dados do Supabase ao iniciar
+loadData();
+</script>
+</body>
+</html>
