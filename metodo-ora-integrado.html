@@ -254,33 +254,29 @@ async function loadData(){
 }
 
 async function svCli(cl){
-  const{id,...d}=cl;
-  const ex=await sb('rxr_clients?id=eq.'+id);
-  if(ex&&ex.length) await sb('rxr_clients?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
-  else await sb('rxr_clients',{method:'POST',body:JSON.stringify({id,...d})});
+  await sb('rxr_clients',{method:'POST',
+    headers:{'Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({...cl})});
 }
 async function svProc(p){
-  const{id,...d}=p;const pay={...d,ets:JSON.stringify(p.ets)};
-  const ex=await sb('rxr_procs?id=eq.'+id);
-  if(ex&&ex.length) await sb('rxr_procs?id=eq.'+id,{method:'PATCH',body:JSON.stringify(pay)});
-  else await sb('rxr_procs',{method:'POST',body:JSON.stringify({id,...pay})});
+  await sb('rxr_procs',{method:'POST',
+    headers:{'Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({...p,ets:JSON.stringify(p.ets)})});
 }
 async function svAtiv(a){
-  const{id,...d}=a;
-  const ex=await sb('rxr_ativs?id=eq.'+id);
-  if(ex&&ex.length) await sb('rxr_ativs?id=eq.'+id,{method:'PATCH',body:JSON.stringify(d)});
-  else await sb('rxr_ativs',{method:'POST',body:JSON.stringify({id,...d})});
+  await sb('rxr_ativs',{method:'POST',
+    headers:{'Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({...a})});
 }
 async function svDiag(dg){
-  const{id,_open,...d}=dg;
-  const pay={...d,
-    habilidades:JSON.stringify(dg.habilidades||{}),
-    roda_negocio:JSON.stringify(dg.roda_negocio||{}),
-    sentimento:Array.isArray(dg.sentimento)?JSON.stringify(dg.sentimento):dg.sentimento||'',
-  };
-  const ex=await sb('rxr_diags?id=eq.'+id);
-  if(ex&&ex.length) await sb('rxr_diags?id=eq.'+id,{method:'PATCH',body:JSON.stringify(pay)});
-  else await sb('rxr_diags',{method:'POST',body:JSON.stringify({id,...pay})});
+  const{_open,...d}=dg;
+  await sb('rxr_diags',{method:'POST',
+    headers:{'Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({...d,
+      habilidades:JSON.stringify(dg.habilidades||{}),
+      roda_negocio:JSON.stringify(dg.roda_negocio||{}),
+      sentimento:Array.isArray(dg.sentimento)?JSON.stringify(dg.sentimento):dg.sentimento||'',
+    })});
 }
 
 // sv() salva só o que mudou (passado como argumento)
