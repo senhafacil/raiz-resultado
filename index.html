@@ -1161,11 +1161,12 @@ window.tLock=async(pid,ei)=>{
   if(proc&&proc.ets.some(Boolean)){
     S.clients=S.clients.map(cl=>cl.id===proc.cid?{...cl,jornBloq:false}:cl);
   }
-  sv('procs').then(()=>R());
+  const lp=S.procs.find(p=>p.id===pid);if(lp)svProc(lp).then(()=>R());
 };
 
 window.tSess=async(pid,i)=>{
-  S.procs=S.procs.map(p=>{if(p.id!==pid)return p;return{...p,sdon:i<p.sdon?i:i+1};});await sv();R();
+  S.procs=S.procs.map(p=>{if(p.id!==pid)return p;return{...p,sdon:i<p.sdon?i:i+1};});
+  const pp=S.procs.find(p=>p.id===pid);if(pp)await svProc(pp);R();
 };
 
 window.saveCli=async function(){
@@ -1181,18 +1182,24 @@ window.saveCli=async function(){
     const pid=id+1;
     const sess=parseInt((document.getElementById('cs')||{value:'8'}).value)||8;
     const sdon=parseInt((document.getElementById('cd')||{value:'0'}).value)||0;
-    S.clients.push({id,n,ini:ini(n),mod,code,jornBloq:true});
-    S.procs.push({id:pid,cid:id,sess,sdon,ets:etsInit});
+    const novaCli={id,n,ini:ini(n),mod,code,jornBloq:true};
+    const novaProc={id:pid,cid:id,sess,sdon,ets:etsInit};
+    S.clients.push(novaCli);
+    S.procs.push(novaProc);
     initJornada(pid,id,mod);
+    const novasAtivs=S.ativs.filter(a=>a.cid===id);
     S.modal=null;
     S.curCli=S.clients.length-1;
     R(); // render imediato
     try{
-      await sv('all'); // salvar no Supabase
+      // Salvar apenas os itens novos desta mentorada
+      await svCli(novaCli);
+      await svProc(novaProc);
+      for(const a of novasAtivs) await svAtiv(a);
       console.log('✅ Mentorada salva no Supabase');
     }catch(err){
       console.error('❌ Erro ao salvar no Supabase:',err);
-      alert('Mentorada criada mas erro ao salvar: '+err.message);
+      alert('Erro ao salvar: '+err.message);
     }
   }catch(e){
     console.error('saveCli erro:',e);
