@@ -223,6 +223,7 @@ async function sb(path,opts={}){
     headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,
       'Content-Type':'application/json','Prefer':'return=representation',...(xh||{})},
     ...rest});
+  if(res.status===204||res.status===205){return [];}
   if(!res.ok){console.error('SB erro',res.status,await res.text());return null;}
   const t=await res.text();return t?JSON.parse(t):[];
 }
@@ -255,8 +256,15 @@ async function loadData(){
 }
 
 async function svCli(cl){
-  await sb('rxr_clients?id=eq.'+cl.id,{method:'DELETE'});
-  await sb('rxr_clients',{method:'POST',body:JSON.stringify(cl)});
+  try{
+    const r1=await sb('rxr_clients?id=eq.'+cl.id,{method:'DELETE'});
+    console.log('DELETE client',cl.id,'result:',r1);
+    const r2=await sb('rxr_clients',{method:'POST',body:JSON.stringify(cl)});
+    console.log('POST client result:',r2);
+  }catch(e){
+    console.error('svCli ERRO:',e);
+    alert('Erro ao salvar cliente: '+e.message);
+  }
 }
 async function svProc(p){
   const d={...p,ets:JSON.stringify(p.ets)};
