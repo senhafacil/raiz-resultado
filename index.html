@@ -223,6 +223,7 @@ async function sb(path,opts={}){
     headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,
       'Content-Type':'application/json','Prefer':'return=representation',...(xh||{})},
     ...rest});
+  if(res.status===204||res.status===205){return [];}
   if(!res.ok){console.error('SB erro',res.status,await res.text());return null;}
   const t=await res.text();return t?JSON.parse(t):[];
 }
