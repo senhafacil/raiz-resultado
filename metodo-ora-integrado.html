@@ -354,7 +354,10 @@ function bLogin(){
   </div>
   <div class="card" style="padding:24px">
     <div class="fg"><label class="fl">Código de acesso</label>
-    <input id="lcode" type="password" placeholder="Digite seu código..." style="font-family:monospace;font-size:15px;text-align:center;letter-spacing:2px" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <div style="position:relative">
+      <input id="lcode" type="password" placeholder="Digite seu código..." style="font-family:monospace;font-size:15px;text-align:center;letter-spacing:2px;width:100%;padding-right:40px" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <span onclick="var el=document.getElementById('lcode');el.type=el.type==='password'?'text':'password';this.textContent=el.type==='password'?'👁':'🙈'" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;user-select:none">👁</span>
+    </div>
     </div>
     ${err?`<div style="font-size:12px;color:var(--rd);margin-bottom:10px;text-align:center">${err}</div>`:''}
     <button class="btn bnav" style="width:100%;margin-top:4px" onclick="doLogin()">Entrar</button>
