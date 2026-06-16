@@ -255,29 +255,27 @@ async function loadData(){
 }
 
 async function svCli(cl){
-  await sb('rxr_clients',{method:'POST',
-    headers:{'Prefer':'resolution=merge-duplicates,return=representation'},
-    body:JSON.stringify(cl)});
+  await sb('rxr_clients?id=eq.'+cl.id,{method:'DELETE'});
+  await sb('rxr_clients',{method:'POST',body:JSON.stringify(cl)});
 }
 async function svProc(p){
-  await sb('rxr_procs',{method:'POST',
-    headers:{'Prefer':'resolution=merge-duplicates,return=representation'},
-    body:JSON.stringify({...p,ets:JSON.stringify(p.ets)})});
+  const d={...p,ets:JSON.stringify(p.ets)};
+  await sb('rxr_procs?id=eq.'+p.id,{method:'DELETE'});
+  await sb('rxr_procs',{method:'POST',body:JSON.stringify(d)});
 }
 async function svAtiv(a){
-  await sb('rxr_ativs',{method:'POST',
-    headers:{'Prefer':'resolution=merge-duplicates,return=representation'},
-    body:JSON.stringify(a)});
+  await sb('rxr_ativs?id=eq.'+a.id,{method:'DELETE'});
+  await sb('rxr_ativs',{method:'POST',body:JSON.stringify(a)});
 }
 async function svDiag(dg){
   const{_open,...d}=dg;
-  await sb('rxr_diags',{method:'POST',
-    headers:{'Prefer':'resolution=merge-duplicates,return=representation'},
-    body:JSON.stringify({...d,
-      habilidades:JSON.stringify(dg.habilidades||{}),
-      roda_negocio:JSON.stringify(dg.roda_negocio||{}),
-      sentimento:Array.isArray(dg.sentimento)?JSON.stringify(dg.sentimento):dg.sentimento||'',
-    })});
+  const pay={...d,
+    habilidades:JSON.stringify(dg.habilidades||{}),
+    roda_negocio:JSON.stringify(dg.roda_negocio||{}),
+    sentimento:Array.isArray(dg.sentimento)?JSON.stringify(dg.sentimento):dg.sentimento||'',
+  };
+  await sb('rxr_diags?id=eq.'+dg.id,{method:'DELETE'});
+  await sb('rxr_diags',{method:'POST',body:JSON.stringify(pay)});
 }
 
 // sv() salva só o que mudou (passado como argumento)
@@ -286,6 +284,12 @@ async function sv(what='all'){
   if(what==='all'||what==='procs')   for(const p  of S.procs)   await svProc(p);
   if(what==='all'||what==='ativs')   for(const a  of S.ativs)   await svAtiv(a);
   if(what==='all'||what==='diags')   for(const d  of S.diags)   await svDiag(d);
+}
+
+// Salvar item único — mais rápido
+async function svOne(table,data){
+  const r=await sb(table+'?id=eq.'+data.id,{method:'DELETE'});
+  await sb(table,{method:'POST',body:JSON.stringify(data)});
 }
 
 // fallback local — não usar, só compatibilidade
