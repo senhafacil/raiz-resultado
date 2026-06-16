@@ -1159,7 +1159,7 @@ window.tSess=async(pid,i)=>{
   S.procs=S.procs.map(p=>{if(p.id!==pid)return p;return{...p,sdon:i<p.sdon?i:i+1};});await sv();R();
 };
 
-window.saveCli=function(){
+window.saveCli=async function(){
   try{
     const n=document.getElementById('cn').value.trim();
     if(!n){alert('Nome obrigatório');return;}
@@ -1177,7 +1177,14 @@ window.saveCli=function(){
     initJornada(pid,id,mod);
     S.modal=null;
     S.curCli=S.clients.length-1;
-    sv();R();
+    R(); // render imediato
+    try{
+      await sv('all'); // salvar no Supabase
+      console.log('✅ Mentorada salva no Supabase');
+    }catch(err){
+      console.error('❌ Erro ao salvar no Supabase:',err);
+      alert('Mentorada criada mas erro ao salvar: '+err.message);
+    }
   }catch(e){
     console.error('saveCli erro:',e);
     alert('Erro ao criar mentorada: '+e.message);
