@@ -1176,7 +1176,7 @@ window.tLock=async(pid,ei)=>{
   if(proc&&proc.ets.some(Boolean)){
     S.clients=S.clients.map(cl=>cl.id===proc.cid?{...cl,jornBloq:false}:cl);
   }
-  const lp=S.procs.find(p=>p.id===pid);if(lp)svProc(lp).then(()=>R());
+  const lp=S.procs.find(p=>p.id===pid);if(lp)await svProc(lp);R();
 };
 
 window.tSess=async(pid,i)=>{
@@ -1255,7 +1255,12 @@ window.liberarJornada=async function(id){
       S.procs=S.procs.map(p=>p.id===proc.id?{...p,ets:e}:p);
     }
   }
-  sv();R();
+  // Salvar cliente e proc atualizados no Supabase
+  const cliAtual=S.clients.find(cl=>cl.id===id);
+  const procAtual=S.procs.find(p=>p.cid===id);
+  if(cliAtual) await svCli(cliAtual);
+  if(procAtual) await svProc(procAtual);
+  R();
 };
 window.dCli=async id=>{if(confirm('Excluir mentorada e toda a jornada?')){
   // Deletar do Supabase
