@@ -412,6 +412,9 @@ const DIAG_SECTIONS=[
 function bDiagsMentor(){
   const cli=S.clients[S.curCli];
   const meusDiags=cli?S.diags.filter(d=>d.cid===cli.id):S.diags;
+  if(S.diagEditando&&S.diagCid===cli?.id){
+    return bDiagFormMentor(cli);
+  }
   return`
 <div class="rwb" style="margin-bottom:14px">
   <div>
@@ -428,6 +431,15 @@ ${meusDiags.length===0?`<div class="card" style="text-align:center;padding:36px;
   <div style="font-size:13px;font-weight:700;margin-bottom:6px">Nenhum diagnóstico ainda</div>
   <div style="font-size:12px;line-height:1.6">Envie o formulário de diagnóstico para a mentorada preencher antes da Sessão 1.</div>
 </div>`:meusDiags.map(d=>bDiagCard(d)).join('')}`;
+}
+
+function bDiagFormMentor(cli){
+  return`<div>
+<div class="rwb" style="margin-bottom:14px">
+  <div style="font-size:15px;font-weight:800">Novo diagnóstico — ${cli.n}</div>
+</div>
+${bDiagForm(cli)}
+</div>`;
 }
 
 function bDiagCard(d){
@@ -747,6 +759,7 @@ window.capDiag=function(){
   });
 };
 window.salvarDiag=async function(cid){
+  if(!cid&&S.diagCid)cid=S.diagCid;
   const d={
     id:Date.now()+Math.floor(Math.random()*1000), cid, ts:new Date().toISOString(), _open:false,
     ...S.diagData,
@@ -771,7 +784,8 @@ window.salvarDiag=async function(cid){
   S.diags.push(d);
   S.diagEditando=false;
   S.diagData={};S.diagRoda={};S.diagStep=0;
-  sv();R();
+  await svDiag(d);
+  R();
 };
 
 window.toggleDiag=function(id){
@@ -780,6 +794,7 @@ window.toggleDiag=function(id){
 };
 window.abrirDiagForm=function(cid){
   S.diagData={};S.diagRoda={};S.diagStep=0;S.diagEditando=true;
+  S.diagCid=cid; // guardar para qual cliente é o diagnóstico
   S.tab='d';R();
 };
 
