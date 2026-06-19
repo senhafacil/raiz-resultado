@@ -199,6 +199,15 @@ const MODALIDADES={
     cor:'var(--go)',
     ets:['Fase 1 — Estruturação','Fase 2 — Plano Estratégico'],
   },
+  consultoria_raiz:{
+    label:'Consultoria Raiz',
+    desc:'Raiz × Resultado · Fase 1 Raiz + Fase 2 Estruturação',
+    fases:[0,1],
+    temDiag:true,
+    icon:'🌿',
+    cor:'var(--gr)',
+    ets:['Fase 1 — Raiz','Fase 2 — Estruturação'],
+  },
 };
 
 function getMod(cli){return MODALIDADES[cli.mod||'completa']||MODALIDADES.completa;}
@@ -1084,6 +1093,7 @@ function bModal(){
     <option value="completa">🌱 Mentoria Completa — 4 fases · 16 atividades</option>
     <option value="processos">⚙️ Processos e Estrutura — Fase 1 Raiz + Fase 2 Estruturação</option>
     <option value="diagnostico">🔍 Diagnóstico R$ 147 — 2 sessões</option>
+    <option value="consultoria_raiz">🌿 Consultoria Raiz — Raiz + Estruturação</option>
   </select>
 </div>
 <div class="g2">
