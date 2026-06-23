@@ -132,6 +132,48 @@ textarea{resize:vertical;min-height:75px;line-height:1.5}
 .empty{text-align:center;padding:36px 20px;color:var(--tx3);font-size:13px}
 .info-box{background:var(--nvf);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--nv2);line-height:1.5;margin-bottom:12px}
 
+/* PLANO DE AÇÃO */
+.plano-fase-hdr{border-radius:var(--r) var(--r) 0 0;padding:13px 17px;display:flex;align-items:center;gap:11px}
+.plano-fase-num{font-size:20px;font-weight:800;color:rgba(255,255,255,.4);line-height:1;flex-shrink:0}
+.plano-fase-tit{font-size:11px;font-weight:700;color:white;line-height:1.3}
+.plano-fase-pz{font-size:9px;color:rgba(255,255,255,.55);margin-top:2px}
+.plano-fase-intro{padding:9px 17px;font-size:11px;line-height:1.5;font-style:italic}
+.plano-fase-body{background:var(--sf);padding:4px 0}
+.plano-acao{display:flex;gap:10px;padding:9px 17px}
+.plano-acao+.plano-acao{border-top:.3px solid var(--bd)}
+.plano-acao-num{width:18px;height:18px;border-radius:50%;color:white;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.plano-acao-tit{font-size:12px;font-weight:700;color:var(--nv);margin-bottom:2px}
+.plano-acao-desc{font-size:11px;color:var(--tx2);line-height:1.45}
+.plano-card3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
+.plano-mini{border-radius:var(--rs);padding:11px}
+.plano-mini-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.plano-mini-txt{font-size:11px;color:var(--tx2);line-height:1.4}
+.plano-alerta{border-radius:var(--rs);padding:13px 15px;margin-bottom:10px}
+.plano-alerta-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--rd);margin-bottom:5px}
+.plano-alerta-txt{font-size:12px;color:#5C1010;line-height:1.5}
+.plano-diag{background:var(--sf);border:.5px solid var(--bd2);border-radius:var(--r);padding:14px 17px;margin-bottom:10px}
+.plano-status-ok{display:inline-flex;align-items:center;gap:5px;background:var(--grf);color:var(--gr);padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.plano-status-rascunho{display:inline-flex;align-items:center;gap:5px;background:var(--gof);color:var(--go);padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+
+/* CRONOGRAMA */
+.cron-semana{background:var(--sf);border:.5px solid var(--bd2);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.cron-hdr{padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .15s}
+.cron-hdr:hover{background:var(--sf2)}
+.cron-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.cron-titulo{font-size:13px;font-weight:700;color:var(--nv)}
+.cron-sub{font-size:11px;color:var(--tx3);margin-top:1px}
+.cron-body{padding:4px 16px 12px}
+.cron-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:.3px solid var(--bd)}
+.cron-item:last-child{border-bottom:none}
+.cron-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--bd2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.cron-check.done{background:var(--gr);border-color:var(--gr)}
+.cron-txt{font-size:12px;color:var(--tx2);flex:1;line-height:1.4;padding-top:1px}
+.cron-txt.done{text-decoration:line-through;color:var(--tx3)}
+.cron-nota{font-size:11px;color:var(--tx3);font-style:italic;margin-top:3px}
+.cron-pbar{height:4px;background:var(--sf2);border-radius:99px;overflow:hidden;margin-top:6px}
+.cron-pfill{height:100%;border-radius:99px;transition:width .4s}
+@media(max-width:600px){.plano-card3{grid-template-columns:1fr}}
+
 @media(max-width:600px){
   .st3{grid-template-columns:repeat(3,1fr)}
   .enav{grid-template-columns:repeat(2,1fr)}
@@ -814,7 +856,9 @@ function bMentor(){
     <button class="tab ${S.tab==='j'?'on':''}" onclick="st('j')">Jornada</button>
     <button class="tab ${S.tab==='c'?'on':''}" onclick="st('c')">Mentoradas</button>
     <button class="tab ${S.tab==='d'?'on':''}" onclick="st('d')">Diagnósticos</button>
-  </div><div class="ct">${S.tab==='j'?bJornada():S.tab==='d'?bDiagsMentor():bClientes()}</div>`;
+    <button class="tab ${S.tab==='p'?'on':''}" onclick="st('p')">📄 Plano de Ação</button>
+    <button class="tab ${S.tab==='cr'?'on':''}" onclick="st('cr')">📅 Cronograma</button>
+  </div><div class="ct">${S.tab==='j'?bJornada():S.tab==='d'?bDiagsMentor():S.tab==='p'?bPlanoMentor():S.tab==='cr'?bCronMentor():bClientes()}</div>`;
 }
 
 function bJornada(){
@@ -982,11 +1026,18 @@ function bCliente(){
 
   // Cliente tem tabs: Jornada e Diagnóstico
   const cTab=S.cliTab||'jornada';
+  const diagCli=S.diags.find(d=>d.cid===cli.id);
+  const temPlano=diagCli&&diagCli.plano_liberado&&diagCli.plano_dados;
+  const temCron=temPlano&&(diagCli.cron_dados||localStorage.getItem('rxr-cron-'+cli.id));
   const tabHdr=`<div class="tabs">
     <button class="tab ${cTab==='jornada'?'on':''}" onclick="S.cliTab='jornada';R()">Jornada</button>
     <button class="tab ${cTab==='diag'?'on':''}" onclick="S.cliTab='diag';R()">📋 Diagnóstico</button>
+    ${temPlano?`<button class="tab ${cTab==='plano'?'on':''}" onclick="S.cliTab='plano';R()">📄 Plano de Ação</button>`:''}
+    ${temCron?`<button class="tab ${cTab==='cron'?'on':''}" onclick="S.cliTab='cron';R()">📅 Cronograma</button>`:''}
   </div>`;
   if(cTab==='diag') return tabHdr+bDiagCliente();
+  if(cTab==='plano') return tabHdr+bPlanoCli();
+  if(cTab==='cron') return tabHdr+bCronCli();
   if(cTab==='jornada'&&cli.jornBloq){
     return tabHdr+`<div class="ct"><div style="text-align:center;padding:48px 20px">
 <div style="font-size:36px;margin-bottom:14px">🔒</div>
@@ -1078,6 +1129,355 @@ function bAcC(a){
 </div>
 </div>`;
 }
+
+/* ── PLANO DE AÇÃO ── */
+
+function gerarPlanoDados(cli, diag){
+  const nome=(diag.nome||cli.n).split(' ')[0];
+  const segmento=diag.segmento||'negócio';
+  const roda=diag.roda_negocio||{};
+  const hab=diag.habilidades||{};
+  const sentimento=Array.isArray(diag.sentimento)?diag.sentimento:(diag.sentimento?[diag.sentimento]:[]);
+
+  const rodaMap={fin:'Financeiro',eq:'Equipe',at:'Atendimento',mkt:'Marketing',proc:'Processos',vida:'Qualidade de vida'};
+  const rodaArr=Object.entries(rodaMap).map(([k,l])=>({k,l,v:parseInt(roda[k])||0})).sort((a,b)=>a.v-b.v);
+  const fraquezas=rodaArr.filter(a=>a.v<=4).slice(0,3);
+  const forca=rodaArr[rodaArr.length-1];
+  const atArea=rodaArr.find(a=>a.k==='at');
+
+  // DIAGNÓSTICO
+  let dtxt=`${nome}, ao longo do nosso primeiro encontro ficou muito claro para mim onde você está — e o que está te impedindo de avançar. `;
+  if(sentimento.some(s=>s.includes('sobrecarregada')||s.includes('tudo sozinha')))
+    dtxt+=`Você está carregando o negócio nas costas sozinha, e isso se vê. `;
+  else if(sentimento.some(s=>s.includes('Travada')))
+    dtxt+=`Você chegou até aqui sabendo que algo precisa mudar — e a resposta já está dentro do diagnóstico que você preencheu. `;
+  else if(sentimento.some(s=>s.includes('Ansiosa')))
+    dtxt+=`A ansiedade que você sente tem endereço — e juntas vamos encontrar a saída. `;
+  else dtxt+=`Você chegou até mim com disposição real para mudar. `;
+
+  if(diag.negocio||segmento) dtxt+=`Você tem ${diag.negocio?'"'+diag.negocio+'"':('um negócio de '+segmento)} com potencial real. O problema não é falta de talento — é falta de estrutura. `;
+
+  if(fraquezas.length>0){
+    const f0=fraquezas[0];
+    if(f0.k==='proc') dtxt+=`O que mais trava o seu crescimento hoje são os processos: tudo está na sua cabeça, e isso tem limite. `;
+    else if(f0.k==='fin') dtxt+=`O que mais trava o seu crescimento é a falta de clareza financeira: sem saber o que entra e sai de verdade, fica impossível crescer com controle. `;
+    else if(f0.k==='mkt') dtxt+=`O que mais trava o seu crescimento é a atração de clientes: o negócio precisa de uma estratégia consistente para não depender só de indicação. `;
+    else if(f0.k==='eq') dtxt+=`O que mais trava o seu crescimento é a dependência de você em tudo — sem estrutura de delegação, o crescimento tem teto. `;
+    else dtxt+=`O ponto mais crítico hoje é ${f0.l.toLowerCase()} (${f0.v}/10) — e é por aqui que vamos começar. `;
+  }
+  if(atArea&&atArea.v>=6) dtxt+=`Sua maior força hoje é o atendimento — e é nele que vamos nos apoiar enquanto construímos o resto.`;
+  else if(forca&&forca.v>=5) dtxt+=`Sua maior força é ${forca.l.toLowerCase()} (${forca.v}/10) — vamos construir em cima disso.`;
+
+  // DOR / GARGALO / OPORTUNIDADE
+  const dor=fraquezas[0]?`${fraquezas[0].l} (${fraquezas[0].v}/10) é a área mais crítica do seu negócio agora.`:'Sobrecarga operacional — tudo passa pelas suas mãos.';
+  const gargalo=diag.tempo_operacional&&diag.tempo_operacional.includes('Quase todo')
+    ?'Você passa quase todo o tempo no operacional — sem espaço para pensar estrategicamente.'
+    :fraquezas[1]?`${fraquezas[1].l} (${fraquezas[1].v}/10) precisa de atenção.`:'Ausência de processos claros gera retrabalho constante.';
+  const op=diag.mudanca_90
+    ?`Você disse: "${diag.mudanca_90.slice(0,70).trim()}${diag.mudanca_90.length>70?'...':''}" — esse é seu primeiro objetivo.`
+    :forca&&forca.v>=6?`${forca.l} já está funcionando — é hora de construir o resto em cima disso.`:'Estruturar o negócio agora vai multiplicar os resultados dos próximos 90 dias.';
+
+  // ALERTA
+  let alerta=`${nome}, o maior risco agora não é errar — é não começar. Esse plano foi desenhado para ser simples o suficiente para você iniciar ainda essa semana.`;
+  if(diag.crenca&&diag.crenca.length>5) alerta=`${nome}, você disse que a crença que mais te trava é: "${diag.crenca.slice(0,80)}..." — esse é o trabalho mais profundo dessa jornada. Não é de ferramentas, é de mentalidade.`;
+  else if(sentimento.some(s=>s.includes('sobrecarregada'))) alerta=`${nome}, o cansaço que você sente é real. Mas ele não é o preço do sucesso — é o sinal de que algo na estrutura precisa mudar. Isso é exatamente o que vamos fazer juntas.`;
+  else if(diag.tarefa_emocional&&diag.tarefa_emocional.length>5) alerta=`${nome}, você mencionou que o que mais te consome emocionalmente é "${diag.tarefa_emocional.slice(0,60).trim()}...". Esse é um dos primeiros nós que vamos desatar juntas nessa jornada.`;
+
+  // FASES
+  const fases=[
+    {num:'01',cor:'nv',titulo:'Base · Clareza e identidade',prazo:'Semanas 1–2',
+     intro:`${nome}, antes de qualquer ferramenta, você precisa ter clareza sobre o que está construindo e por quê.`,
+     acoes:[
+       {t:'Definir sua missão em 1 frase',d:'O que você faz, para quem faz e qual transformação gera. Essa frase vai guiar toda decisão do negócio.'},
+       {t:'Mapear sua rotina atual',d:'Durante 3 dias, anote tudo que você faz e o tempo de cada tarefa. Sem julgamento — o objetivo é enxergar onde o tempo vai.'},
+       {t:'Identificar o que só você pode fazer',d:'Separar o que depende do seu julgamento do que é operacional e pode ser delegado ou automatizado.'},
+       {t:'Definir as 3 prioridades dos próximos 30 dias',d:'Não 10 metas. Três. O que, se feito agora, transforma a operação no próximo mês?'},
+     ]},
+    {num:'02',cor:'pu',titulo:'Estruturação · Processos e rotina',prazo:'Semanas 3–4',
+     intro:`Agora que você tem clareza, vamos tirar o ${segmento} da sua cabeça e colocar em processos que funcionam sem depender só de você.`,
+     acoes:[
+       {t:'Mapear os 5 processos mais repetitivos',d:'Para cada um: quem faz, como faz, quanto tempo leva. Primeiro passo para delegar com confiança.'},
+       {t:'Criar checklist de abertura e encerramento',d:'Uma rotina documentada que qualquer pessoa consegue seguir sem precisar perguntar nada.'},
+       {t:'Padronizar o atendimento ao cliente',d:'Do primeiro contato à finalização: como você recebe, como responde, como fecha e como faz follow-up.'},
+       {t:'Organizar a semana em blocos fixos',d:'Blocos para produção, atendimento, gestão e descanso. A semana organizada reduz o caos operacional.'},
+     ]},
+    {num:'03',cor:'go',titulo:'Financeiro · Números e precificação',prazo:'Semanas 5–7',
+     intro:`${nome}, aqui vem a parte que mais liberta: saber exatamente quanto você ganha, quanto gasta e se o negócio está dando o lucro que você merece.`,
+     acoes:[
+       {t:'Levantar todos os custos do negócio',d:'Fixos (sempre existem) e variáveis (dependem do movimento). Sem esse número, qualquer preço é chute.'},
+       {t:'Calcular o custo real por produto ou serviço',d:'Custo direto + rateio dos fixos + valor do seu tempo. Esse é o piso do seu preço.'},
+       {t:'Revisar a precificação atual',d:'O preço que você cobra hoje cobre os custos + pró-labore + margem de lucro mínima? Se não: quando e quanto ajustar.'},
+       {t:'Definir meta de faturamento de 90 dias',d:'Faturamento mínimo (pagar as contas) e ideal (crescer). Esses dois números guiam todas as decisões do próximo trimestre.'},
+     ]},
+    {num:'04',cor:'gr',titulo:'Plano Estratégico · Crescer com controle',prazo:'Semanas 8–10',
+     intro:`Com a base sólida, os processos rodando e os números claros, você vai conseguir pensar em crescimento real — sem precisar trabalhar mais horas.`,
+     acoes:[
+       {t:'Plano de ação de 90 dias',d:'3 metas concretas, com as ações necessárias, prazo e responsável. Uma página. Simples e direto ao ponto.'},
+       {t:fraquezas.some(f=>f.k==='mkt')?'Estratégia de atração de clientes':'Estratégia de crescimento de receita',
+        d:fraquezas.some(f=>f.k==='mkt')?'Marketing está entre os pontos mais críticos — definir 3 ações concretas para atrair clientes de forma consistente.':'3 ações para aumentar faturamento: novo serviço, reativação de clientes ou aumento de ticket médio.'},
+       {t:'Ritual semanal de revisão',d:'Toda semana, 30 minutos: o que foi feito, o que ficou, o que precisa ajustar. Esse hábito separa quem cresce de quem trava.'},
+       {t:`Indicadores do ${segmento}`,d:'Definir quais números você vai acompanhar toda semana: faturamento, clientes, ticket médio. Decisão com dado, não com percepção.'},
+     ]},
+  ];
+
+  return{nome,segmento,negocio:diag.negocio||segmento,diagnostico:dtxt,dor,gargalo,oportunidade:op,fases,alerta,data:new Date().toLocaleDateString('pt-BR')};
+}
+
+function bPlanoConteudo(plano){
+  const COR={nv:'var(--nv2)',pu:'var(--pu)',go:'var(--go)',gr:'var(--gr)'};
+  const BGCOR={nv:'var(--nvf)',pu:'var(--puf)',go:'var(--gof)',gr:'var(--grf)'};
+  return`
+  <div class="plano-diag">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);margin-bottom:8px">Onde você está hoje</div>
+    <div style="font-size:13px;color:var(--tx2);line-height:1.65">${plano.diagnostico}</div>
+  </div>
+  <div class="plano-card3">
+    <div class="plano-mini" style="background:var(--gof)">
+      <div class="plano-mini-lbl" style="color:var(--go)">Dor principal</div>
+      <div class="plano-mini-txt">${plano.dor}</div>
+    </div>
+    <div class="plano-mini" style="background:var(--nvf)">
+      <div class="plano-mini-lbl" style="color:var(--nv2)">Gargalo</div>
+      <div class="plano-mini-txt">${plano.gargalo}</div>
+    </div>
+    <div class="plano-mini" style="background:var(--grf)">
+      <div class="plano-mini-lbl" style="color:var(--gr)">Oportunidade</div>
+      <div class="plano-mini-txt">${plano.oportunidade}</div>
+    </div>
+  </div>
+  <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);margin:12px 0 8px">As 4 fases da jornada</div>
+  ${plano.fases.map(fase=>`
+    <div style="border:.5px solid var(--bd2);border-radius:var(--r);overflow:hidden;margin-bottom:8px">
+      <div class="plano-fase-hdr" style="background:${COR[fase.cor]}">
+        <div class="plano-fase-num">${fase.num}</div>
+        <div style="flex:1"><div class="plano-fase-tit">${fase.titulo}</div><div class="plano-fase-pz">${fase.prazo}</div></div>
+      </div>
+      <div class="plano-fase-intro" style="background:${BGCOR[fase.cor]};color:var(--tx2)">${fase.intro}</div>
+      <div class="plano-fase-body">
+        ${fase.acoes.map((a,i)=>`
+          <div class="plano-acao">
+            <div class="plano-acao-num" style="background:${COR[fase.cor]}">${i+1}</div>
+            <div><div class="plano-acao-tit">${a.t}</div><div class="plano-acao-desc">${a.d}</div></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('')}
+  <div class="plano-alerta" style="background:var(--rdf)">
+    <div class="plano-alerta-lbl">Atenção</div>
+    <div class="plano-alerta-txt">${plano.alerta}</div>
+  </div>`;
+}
+
+function bPlanoMentor(){
+  const cli=S.clients[S.curCli];
+  if(!cli)return`<div class="empty">Selecione uma mentorada para ver o plano de ação.</div>`;
+
+  const seletor=S.clients.length>1?`<select onchange="S.curCli=parseInt(this.value);R()" style="font-size:11px;width:auto;padding:5px 10px;margin-bottom:14px">
+    ${S.clients.map((c,i)=>`<option value="${i}" ${i===S.curCli?'selected':''}>${c.n}</option>`).join('')}
+  </select>`:'';
+
+  const diag=S.diags.find(d=>d.cid===cli.id);
+  if(!diag) return seletor+`<div style="text-align:center;padding:40px 20px">
+    <div style="font-size:32px;margin-bottom:10px">📋</div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:6px;color:var(--nv)">${cli.n} ainda não tem diagnóstico</div>
+    <div style="font-size:12px;color:var(--tx3);max-width:280px;margin:0 auto 16px;line-height:1.6">O diagnóstico precisa ser preenchido antes de gerar o plano.</div>
+    <button class="btn bnav" onclick="S.tab='d';R()">Ir para Diagnósticos</button>
+  </div>`;
+
+  // Tenta carregar do Supabase, senão usa localStorage
+  let planoDados=diag.plano_dados;
+  if(!planoDados) planoDados=localStorage.getItem('rxr-plano-'+cli.id);
+  let liberado=diag.plano_liberado||localStorage.getItem('rxr-plano-lib-'+cli.id)==='true';
+  const plano=planoDados?JSON.parse(planoDados):null;
+
+  if(!plano) return seletor+`<div style="text-align:center;padding:40px 20px">
+    <div style="font-size:32px;margin-bottom:10px">🌿</div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:6px;color:var(--nv)">Diagnóstico recebido!</div>
+    <div style="font-size:12px;color:var(--tx3);max-width:300px;margin:0 auto 18px;line-height:1.6">
+      ${cli.n.split(' ')[0]} já preencheu o diagnóstico. Clique abaixo para gerar o rascunho do plano — você revisa antes de liberar para ela.
+    </div>
+    <button class="btn bnav" onclick="gerarPlano(${cli.id})">✨ Gerar rascunho do plano</button>
+  </div>`;
+
+  return seletor+`
+  <div class="rwb" style="margin-bottom:10px">
+    <div>
+      <div style="font-size:14px;font-weight:800;color:var(--nv)">Plano de Ação — ${cli.n}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+        <span style="font-size:11px;color:var(--tx3)">Gerado em ${plano.data}</span>
+        ${liberado?`<span class="plano-status-ok">✓ Liberado para a mentorada</span>`:`<span class="plano-status-rascunho">🔒 Rascunho — aguardando revisão</span>`}
+      </div>
+    </div>
+    <div class="row" style="gap:6px;flex-shrink:0">
+      <button class="btn bsm" onclick="gerarPlano(${cli.id})">↺ Regerar</button>
+      ${!liberado?`<button class="btn bgrn bsm" onclick="liberarPlano(${cli.id})">🔓 Liberar para ${cli.n.split(' ')[0]}</button>`:''}
+    </div>
+  </div>
+  <div class="info-box" style="font-size:11px;margin-bottom:12px">
+    💡 Revise o plano. Antes de liberar, você pode ajustar qualquer texto aqui na conversa com a IA e clicar em <strong>↺ Regerar</strong> com as correções.
+  </div>
+  ${bPlanoConteudo(plano)}`;
+}
+
+function bPlanoCli(){
+  const cli=S.clients[S.curCli];
+  if(!cli) return`<div class="ct"></div>`;
+  const diag=S.diags.find(d=>d.cid===cli.id);
+  let planoDados=diag?.plano_dados||localStorage.getItem('rxr-plano-'+cli.id);
+  const liberado=diag?.plano_liberado||localStorage.getItem('rxr-plano-lib-'+cli.id)==='true';
+  if(!liberado||!planoDados) return`<div class="ct">
+    <div style="text-align:center;padding:48px 20px">
+      <div style="font-size:32px;margin-bottom:10px">🌿</div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px;color:var(--nv2)">Seu plano está sendo preparado</div>
+      <div style="font-size:12px;color:var(--tx3);max-width:280px;margin:0 auto;line-height:1.6">A Vanessa está revisando e em breve libera o seu plano de ação personalizado.</div>
+    </div>
+  </div>`;
+  const plano=JSON.parse(planoDados);
+  return`<div class="ct">
+    <div class="row" style="gap:12px;margin-bottom:20px">
+      <div class="av ${avc(cli.id)}" style="width:44px;height:44px;font-size:14px">${cli.ini}</div>
+      <div>
+        <div style="font-size:16px;font-weight:800">${cli.n}</div>
+        <div style="font-size:11px;color:var(--tx3)">Plano de Ação · Raiz × Resultado · ${plano.data}</div>
+      </div>
+    </div>
+    ${bPlanoConteudo(plano)}
+  </div>`;}
+
+/* ── CRONOGRAMA ── */
+
+const CRON_TPL=[
+  {sem:'1–2',fase:'Base',cor:'nv',desc:'Clareza e prioridades',
+   itens:['Separar no papel: o que é Comercial e o que é Assessoria','Anotar cada urgência durante 2 semanas (de quem veio, quanto tempo tomou)','Escrever o seu posicionamento em 1 frase','Mapear o que só você pode fazer vs. o que pode ser delegado']},
+  {sem:'3–4',fase:'Estruturação',cor:'pu',desc:'Agenda e processos',
+   itens:['Criar os 3 blocos fixos da semana na agenda','Criar protocolo de triagem de urgências (3 categorias)','Padronizar o fluxo de campanha passo a passo','Montar o pipeline visual de clientes com as 6 etapas','Comunicar clientes o horário de suporte (Qui/Sex)']},
+  {sem:'5–7',fase:'Financeiro',cor:'go',desc:'Números e precificação',
+   itens:['Registrar horas de assessoria por cliente durante 4 semanas','Calcular o custo real de cada serviço','Criar 2 modelos: Consórcio Básico e Consórcio + Assessoria','Definir meta semanal mínima de novos contatos','Analisar qual segmento gera mais retorno']},
+  {sem:'8–10',fase:'Estratégia',cor:'gr',desc:'Crescer com controle',
+   itens:['Criar proposta de assessoria premium (1 página)','Enviar proposta para os 5 clientes mais ativos','Estruturar o programa de indicações com benefício claro','Definir ritual de revisão semanal (segunda, 30 min)','Pesquisar e contratar ferramenta de disparo WhatsApp']},
+];
+
+const COR_MAP={nv:'var(--nv2)',pu:'var(--pu)',go:'var(--go)',gr:'var(--gr)'};
+const BG_MAP={nv:'var(--nvf)',pu:'var(--puf)',go:'var(--gof)',gr:'var(--grf)'};
+
+function gerarCronDados(){
+  return CRON_TPL.map((bloco,bi)=>({
+    id:bi,sem:bloco.sem,fase:bloco.fase,cor:bloco.cor,desc:bloco.desc,
+    aberto:bi===0,
+    itens:bloco.itens.map((txt,ii)=>({id:bi*10+ii,txt,done:false,nota:''})),
+  }));
+}
+
+function bCronMentor(){
+  const cli=S.clients[S.curCli];
+  if(!cli)return`<div class="empty">Selecione uma mentorada.</div>`;
+  const diag=S.diags.find(d=>d.cid===cli.id);
+  const temPlano=diag&&(diag.plano_liberado||diag.plano_dados);
+  if(!temPlano)return`<div style="text-align:center;padding:40px 20px">
+    <div style="font-size:28px;margin-bottom:10px">📅</div>
+    <div style="font-size:13px;font-weight:700;color:var(--nv);margin-bottom:6px">Gere o Plano de Ação primeiro</div>
+    <div style="font-size:12px;color:var(--tx3);max-width:280px;margin:0 auto 16px;line-height:1.6">O cronograma é gerado a partir do plano de ação da mentorada.</div>
+    <button class="btn bnav" onclick="S.tab='p';R()">Ir para Plano de Ação</button>
+  </div>`;
+  let cronStr=diag.cron_dados||localStorage.getItem('rxr-cron-'+cli.id);
+  const cronLiberado=diag.cron_liberado||localStorage.getItem('rxr-cron-lib-'+cli.id)==='true';
+  const cron=cronStr?JSON.parse(cronStr):null;
+  if(!cron)return`<div style="text-align:center;padding:40px 20px">
+    <div style="font-size:28px;margin-bottom:10px">📅</div>
+    <div style="font-size:13px;font-weight:700;color:var(--nv);margin-bottom:6px">Cronograma ainda não gerado</div>
+    <div style="font-size:12px;color:var(--tx3);max-width:280px;margin:0 auto 16px;line-height:1.6">Gere o cronograma de 10 semanas para ${cli.n.split(' ')[0]}. Ela poderá marcar o progresso e adicionar notas.</div>
+    <button class="btn bnav" onclick="gerarCron(${cli.id})">📅 Gerar cronograma</button>
+  </div>`;
+  const total=cron.reduce((s,b)=>s+b.itens.length,0);
+  const feitos=cron.reduce((s,b)=>s+b.itens.filter(i=>i.done).length,0);
+  const pct=total?Math.round(feitos/total*100):0;
+  return`
+  <div class="rwb" style="margin-bottom:12px">
+    <div>
+      <div style="font-size:14px;font-weight:800;color:var(--nv)">Cronograma — ${cli.n}</div>
+      <div style="font-size:11px;color:var(--tx3);margin-top:3px">${feitos}/${total} ações concluídas · ${pct}% · ${cronLiberado?'🟢 Liberado':'🔒 Não liberado'}</div>
+    </div>
+    <div class="row" style="gap:6px">
+      ${!cronLiberado?`<button class="btn bgrn bsm" onclick="liberarCron(${cli.id})">🔓 Liberar para ${cli.n.split(' ')[0]}</button>`:`<span class="plano-status-ok">✓ Liberado</span>`}
+    </div>
+  </div>
+  <div class="pb" style="margin-bottom:14px"><div class="pf" style="width:${pct}%;background:var(--gr)"></div></div>
+  ${cron.map(b=>bCronBloco(b,cli.id,true)).join('')}`;
+}
+
+function bCronBloco(b,cid,isMentor){
+  const total=b.itens.length;
+  const feitos=b.itens.filter(i=>i.done).length;
+  const pct=total?Math.round(feitos/total*100):0;
+  return`<div class="cron-semana">
+    <div class="cron-hdr" onclick="toggleCronBloco(${cid},${b.id})">
+      <div class="cron-num" style="background:${BG_MAP[b.cor]};color:${COR_MAP[b.cor]}">${b.sem.replace('–','-')}</div>
+      <div style="flex:1">
+        <div class="cron-titulo">${b.fase} <span style="font-weight:400;color:var(--tx3)">· ${b.desc}</span></div>
+        <div class="cron-pbar" style="width:120px"><div class="cron-pfill" style="width:${pct}%;background:${COR_MAP[b.cor]}"></div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <span style="font-size:11px;font-weight:700;color:${COR_MAP[b.cor]}">${feitos}/${total}</span>
+        <span style="font-size:14px;color:var(--tx3)">${b.aberto?'▲':'▼'}</span>
+      </div>
+    </div>
+    ${b.aberto?`<div class="cron-body">
+      ${b.itens.map(item=>`
+        <div class="cron-item">
+          <div class="cron-check ${item.done?'done':''}" onclick="toggleCronItem(${cid},${b.id},${item.id})">
+            ${item.done?`<svg width="10" height="10" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+          </div>
+          <div style="flex:1">
+            <div class="cron-txt ${item.done?'done':''}">${item.txt}</div>
+            ${item.nota?`<div class="cron-nota">📝 ${item.nota}</div>`:''}
+            ${!isMentor&&!item.done?`<input type="text" placeholder="Adicionar nota..." value="${item.nota||''}"
+              style="margin-top:5px;font-size:11px;padding:4px 8px;border-radius:5px"
+              onblur="salvarNotaCron(${cid},${b.id},${item.id},this.value)"
+              onkeydown="if(event.key==='Enter')this.blur()"/>`:
+              item.nota&&isMentor?'':''}
+          </div>
+        </div>
+      `).join('')}
+    </div>`:''}
+  </div>`;
+}
+
+function bCronCli(){
+  const cli=S.clients[S.curCli];
+  if(!cli)return`<div class="ct"></div>`;
+  const diag=S.diags.find(d=>d.cid===cli.id);
+  const cronStr=diag?.cron_dados||localStorage.getItem('rxr-cron-'+cli.id);
+  const liberado=diag?.cron_liberado||localStorage.getItem('rxr-cron-lib-'+cli.id)==='true';
+  if(!liberado||!cronStr)return`<div class="ct"><div style="text-align:center;padding:48px 20px">
+    <div style="font-size:32px;margin-bottom:10px">📅</div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:6px;color:var(--nv2)">Seu cronograma está sendo preparado</div>
+    <div style="font-size:12px;color:var(--tx3);max-width:280px;margin:0 auto;line-height:1.6">A Vanessa vai liberar em breve. Fique de olho!</div>
+  </div></div>`;
+  const cron=JSON.parse(cronStr);
+  const total=cron.reduce((s,b)=>s+b.itens.length,0);
+  const feitos=cron.reduce((s,b)=>s+b.itens.filter(i=>i.done).length,0);
+  const pct=total?Math.round(feitos/total*100):0;
+  return`<div class="ct">
+    <div class="row" style="gap:12px;margin-bottom:16px">
+      <div class="av ${avc(cli.id)}" style="width:44px;height:44px;font-size:14px">${cli.ini}</div>
+      <div>
+        <div style="font-size:15px;font-weight:800">${cli.n}</div>
+        <div style="font-size:11px;color:var(--tx3)">Cronograma · 10 semanas · Raiz × Resultado</div>
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div class="rwb" style="margin-bottom:5px">
+        <span style="font-size:11px;color:var(--tx3)">Progresso geral · ${feitos} de ${total} ações</span>
+        <span style="font-size:13px;font-weight:800;color:var(--gr)">${pct}%</span>
+      </div>
+      <div class="pb" style="height:7px"><div class="pf" style="width:${pct}%;background:var(--gr)"></div></div>
+    </div>
+    <div style="background:var(--grf);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--gr);margin-bottom:14px;line-height:1.5">
+      ✅ Marque cada ação conforme você for realizando. Você pode adicionar uma nota em cada item.
+    </div>
+    ${cron.map(b=>bCronBloco(b,cli.id,false)).join('')}
+  </div>`;}
 
 /* ── MODALS ── */
 function bModal(){
@@ -1292,6 +1692,82 @@ window.dCli=async id=>{if(confirm('Excluir mentorada e toda a jornada?')){
   R();
 }};
 
+
+window.gerarPlano=async function(cid){
+  const cli=S.clients.find(c=>c.id===cid);
+  const diag=S.diags.find(d=>d.cid===cid);
+  if(!cli||!diag){alert('Diagnóstico não encontrado.');return;}
+  const planoDados=gerarPlanoDados(cli,diag);
+  const planoStr=JSON.stringify(planoDados);
+  // Salvar local sempre
+  localStorage.setItem('rxr-plano-'+cid,planoStr);
+  // Atualizar state
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,plano_dados:planoStr,plano_liberado:d.plano_liberado||false}:d);
+  // Tentar salvar no Supabase (precisa das colunas plano_dados e plano_liberado na tabela rxr_diags)
+  try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){console.warn('Supabase: colunas plano ainda não existem',e);}
+  R();
+};
+
+window.liberarPlano=async function(cid){
+  localStorage.setItem('rxr-plano-lib-'+cid,'true');
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,plano_liberado:true}:d);
+  try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){console.warn('Supabase: colunas plano ainda não existem',e);}
+  R();
+};
+
+window.gerarCron=async function(cid){
+  const cron=gerarCronDados();
+  const cronStr=JSON.stringify(cron);
+  localStorage.setItem('rxr-cron-'+cid,cronStr);
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,cron_dados:cronStr,cron_liberado:d.cron_liberado||false}:d);
+  try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){console.warn('Supabase cron:',e);}
+  R();
+};
+
+window.liberarCron=async function(cid){
+  localStorage.setItem('rxr-cron-lib-'+cid,'true');
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,cron_liberado:true}:d);
+  try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){console.warn('Supabase cron:',e);}
+  R();
+};
+
+window.toggleCronBloco=function(cid,bid){
+  const update=cronStr=>{
+    const c=JSON.parse(cronStr);
+    return JSON.stringify(c.map(b=>b.id===bid?{...b,aberto:!b.aberto}:b));
+  };
+  const diag=S.diags.find(d=>d.cid===cid);
+  const cronStr=diag?.cron_dados||localStorage.getItem('rxr-cron-'+cid);
+  if(!cronStr)return;
+  const novo=update(cronStr);
+  localStorage.setItem('rxr-cron-'+cid,novo);
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,cron_dados:novo}:d);
+  R();
+};
+
+window.toggleCronItem=async function(cid,bid,iid){
+  const diag=S.diags.find(d=>d.cid===cid);
+  const cronStr=diag?.cron_dados||localStorage.getItem('rxr-cron-'+cid);
+  if(!cronStr)return;
+  const cron=JSON.parse(cronStr);
+  const novo=JSON.stringify(cron.map(b=>b.id!==bid?b:{...b,itens:b.itens.map(i=>i.id!==iid?i:{...i,done:!i.done})}));
+  localStorage.setItem('rxr-cron-'+cid,novo);
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,cron_dados:novo}:d);
+  try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){}
+  R();
+};
+
+window.salvarNotaCron=async function(cid,bid,iid,nota){
+  const diag=S.diags.find(d=>d.cid===cid);
+  const cronStr=diag?.cron_dados||localStorage.getItem('rxr-cron-'+cid);
+  if(!cronStr)return;
+  const cron=JSON.parse(cronStr);
+  const novo=JSON.stringify(cron.map(b=>b.id!==bid?b:{...b,itens:b.itens.map(i=>i.id!==iid?i:{...i,nota:nota.trim()})}));
+  localStorage.setItem('rxr-cron-'+cid,novo);
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,cron_dados:novo}:d);
+  try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){}
+  R();
+};
 
 // Carregar dados do Supabase ao iniciar
 loadData();
