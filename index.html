@@ -1285,10 +1285,13 @@ function gerarPlanoDados(cli, diag){
 function bPlanoConteudo(plano){
   const COR={nv:'var(--nv2)',pu:'var(--pu)',go:'var(--go)',gr:'var(--gr)'};
   const BGCOR={nv:'var(--nvf)',pu:'var(--puf)',go:'var(--gof)',gr:'var(--grf)'};
+  // retrocompatibilidade com planos no formato antigo
+  const raizTxt=plano.raiz||plano.diagnostico||'';
+  const fasesOk=(plano.fases||[]).map(f=>({...f,acoes:(f.acoes||[]).map(a=>({...a,passos:a.passos||(a.d?[a.d]:[])}))}) );
   return`
   <div style="background:var(--nvf);border-left:3px solid var(--nv2);border-radius:0 var(--rs) var(--rs) 0;padding:13px 15px;margin-bottom:10px">
     <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--nv2);margin-bottom:5px">🌱 RAIZ — Onde você está</div>
-    <div style="font-size:13px;color:var(--tx);line-height:1.6;font-weight:500">${plano.raiz}</div>
+    <div style="font-size:13px;color:var(--tx);line-height:1.6;font-weight:500">${raizTxt}</div>
   </div>
   <div class="plano-card3">
     <div class="plano-mini" style="background:var(--gof)">
@@ -1305,7 +1308,7 @@ function bPlanoConteudo(plano){
     </div>
   </div>
   <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin:14px 0 8px">⚡ RESULTADO — Plano prático semana a semana</div>
-  ${plano.fases.map(fase=>`
+  ${fasesOk.map(fase=>`
     <div style="border:.5px solid var(--bd2);border-radius:var(--r);overflow:hidden;margin-bottom:8px">
       <div class="plano-fase-hdr" style="background:${COR[fase.cor]}">
         <div class="plano-fase-num">${fase.num}</div>
@@ -1313,13 +1316,13 @@ function bPlanoConteudo(plano){
       </div>
       <div style="background:${BGCOR[fase.cor]};padding:9px 15px;font-size:11px;color:var(--tx2);line-height:1.5;border-bottom:.5px solid var(--bd);font-style:italic">${fase.raiz}</div>
       <div class="plano-fase-body">
-        ${fase.acoes.map((a,ai)=>`
+        ${(fase.acoes||[]).map((a,ai)=>`
           <div class="plano-acao">
             <div class="plano-acao-num" style="background:${COR[fase.cor]}">${ai+1}</div>
             <div style="flex:1">
               <div class="plano-acao-tit">${a.t}</div>
               <div style="margin-top:6px">
-                ${a.passos.map((p,pi)=>`<div style="display:flex;gap:7px;align-items:flex-start;margin-bottom:5px">
+                ${(a.passos||[]).map((p,pi)=>`<div style="display:flex;gap:7px;align-items:flex-start;margin-bottom:5px">
                   <div style="width:16px;height:16px;border-radius:50%;background:${BGCOR[fase.cor]};color:${COR[fase.cor]};font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${pi+1}</div>
                   <div style="font-size:11px;color:var(--tx2);line-height:1.45;flex:1">${p}</div>
                 </div>`).join('')}
@@ -1356,6 +1359,7 @@ function bPlanoMentor(){
   // Tenta carregar do Supabase, senão usa localStorage
   // Guard: Supabase pode retornar 'vazio' ou 'false' como string (default da coluna)
   function limpaVal(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
+  const cronValidado=!!(limpaVal(diag.cron_dados)||limpaVal(localStorage.getItem('rxr-cron-'+cli.id)));
   let planoDados=limpaVal(diag.plano_dados);
   if(!planoDados) planoDados=limpaVal(localStorage.getItem('rxr-plano-'+cli.id));
   let liberado=(diag.plano_liberado===true||diag.plano_liberado==='true')||localStorage.getItem('rxr-plano-lib-'+cli.id)==='true';
@@ -1381,7 +1385,10 @@ function bPlanoMentor(){
     </div>
     <div class="row" style="gap:6px;flex-shrink:0">
       <button class="btn bsm" onclick="gerarPlano(${cli.id})">↺ Regerar</button>
-      ${!liberado?`<button class="btn bgrn bsm" onclick="liberarPlano(${cli.id})">🔓 Liberar para ${cli.n.split(' ')[0]}</button>`:''}
+      ${!cronValidado?
+        `<button class="btn bsm" style="background:var(--pu);color:white;border-color:var(--pu)" onclick="validarEGerarCron(${cli.id})">✅ Validar e gerar cronograma</button>`
+        :`<span class="plano-status-ok">✓ Plano validado</span>`}
+      ${liberado?'':`<button class="btn bgrn bsm" onclick="liberarTudo(${cli.id})">🔓 Liberar para ${cli.n.split(' ')[0]}</button>`}
     </div>
   </div>
   <div class="info-box" style="font-size:11px;margin-bottom:12px">
@@ -1417,26 +1424,45 @@ function bPlanoCli(){
 
 /* ── CRONOGRAMA ── */
 
-const CRON_TPL=[
-  {sem:'1–2',fase:'Base',cor:'nv',desc:'Clareza e prioridades',
-   itens:['Separar no papel: o que é Comercial e o que é Assessoria','Anotar cada urgência durante 2 semanas (de quem veio, quanto tempo tomou)','Escrever o seu posicionamento em 1 frase','Mapear o que só você pode fazer vs. o que pode ser delegado']},
-  {sem:'3–4',fase:'Estruturação',cor:'pu',desc:'Agenda e processos',
-   itens:['Criar os 3 blocos fixos da semana na agenda','Criar protocolo de triagem de urgências (3 categorias)','Padronizar o fluxo de campanha passo a passo','Montar o pipeline visual de clientes com as 6 etapas','Comunicar clientes o horário de suporte (Qui/Sex)']},
-  {sem:'5–7',fase:'Financeiro',cor:'go',desc:'Números e precificação',
-   itens:['Registrar horas de assessoria por cliente durante 4 semanas','Calcular o custo real de cada serviço','Criar 2 modelos: Consórcio Básico e Consórcio + Assessoria','Definir meta semanal mínima de novos contatos','Analisar qual segmento gera mais retorno']},
-  {sem:'8–10',fase:'Estratégia',cor:'gr',desc:'Crescer com controle',
-   itens:['Criar proposta de assessoria premium (1 página)','Enviar proposta para os 5 clientes mais ativos','Estruturar o programa de indicações com benefício claro','Definir ritual de revisão semanal (segunda, 30 min)','Pesquisar e contratar ferramenta de disparo WhatsApp']},
-];
-
 const COR_MAP={nv:'var(--nv2)',pu:'var(--pu)',go:'var(--go)',gr:'var(--gr)'};
 const BG_MAP={nv:'var(--nvf)',pu:'var(--puf)',go:'var(--gof)',gr:'var(--grf)'};
 
-function gerarCronDados(){
-  return CRON_TPL.map((bloco,bi)=>({
-    id:bi,sem:bloco.sem,fase:bloco.fase,cor:bloco.cor,desc:bloco.desc,
-    aberto:bi===0,
-    itens:bloco.itens.map((txt,ii)=>({id:bi*10+ii,txt,done:false,nota:''})),
-  }));
+// Gera cronograma PERSONALIZADO a partir do plano validado
+function gerarCronDoPlano(plano){
+  return (plano.fases||[]).map((fase,fi)=>{
+    const cor=fase.cor||'nv';
+    const faseTit=(fase.titulo||'').split(' · ');
+    const acoes=fase.acoes||[];
+    // Cada ação do plano vira itens no cronograma com seus passos
+    const itens=[];
+    acoes.forEach((acao,ai)=>{
+      const passos=acao.passos||(acao.d?[acao.d]:[]);
+      passos.forEach((p,pi)=>{
+        itens.push({
+          id:fi*1000+ai*10+pi,
+          txt:`${acao.t}: ${p}`,
+          done:false,
+          nota:'',
+          grupo:acao.t,
+        });
+      });
+      if(acao.entrega){
+        itens.push({
+          id:fi*1000+ai*10+9,
+          txt:`📎 Entrega: ${acao.entrega}`,
+          done:false,nota:'',
+          grupo:acao.t,
+        });
+      }
+    });
+    return{
+      id:fi,
+      sem:(fase.prazo||'').replace('Semanas ','').replace('Semana ',''),
+      fase:faseTit[0]||('Fase '+(fi+1)),
+      desc:faseTit[1]||'',
+      cor,aberto:fi===0,itens,
+    };
+  });
 }
 
 function bCronMentor(){
@@ -1458,7 +1484,7 @@ function bCronMentor(){
     <div style="font-size:28px;margin-bottom:10px">📅</div>
     <div style="font-size:13px;font-weight:700;color:var(--nv);margin-bottom:6px">Cronograma ainda não gerado</div>
     <div style="font-size:12px;color:var(--tx3);max-width:280px;margin:0 auto 16px;line-height:1.6">Gere o cronograma de 10 semanas para ${cli.n.split(' ')[0]}. Ela poderá marcar o progresso e adicionar notas.</div>
-    <button class="btn bnav" onclick="gerarCron(${cli.id})">📅 Gerar cronograma</button>
+    <button class="btn bnav" onclick="validarEGerarCron(${cli.id})">✅ Validar plano e gerar cronograma</button>
   </div>`;
   const total=cron.reduce((s,b)=>s+b.itens.length,0);
   const feitos=cron.reduce((s,b)=>s+b.itens.filter(i=>i.done).length,0);
@@ -1795,6 +1821,31 @@ window.liberarPlano=async function(cid){
   localStorage.setItem('rxr-plano-lib-'+cid,'true');
   S.diags=S.diags.map(d=>d.cid===cid?{...d,plano_liberado:true}:d);
   try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){console.warn('Supabase: colunas plano ainda não existem',e);}
+  R();
+};
+
+window.validarEGerarCron=async function(cid){
+  // Gera cronograma personalizado baseado no plano atual
+  const cli=S.clients.find(c=>c.id===cid);
+  const diag=S.diags.find(d=>d.cid===cid);
+  if(!cli||!diag){alert('Plano não encontrado.');return;}
+  function lv(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
+  const planoDados=lv(diag.plano_dados)||lv(localStorage.getItem('rxr-plano-'+cid));
+  if(!planoDados){alert('Gere o plano de ação primeiro.');return;}
+  const plano=JSON.parse(planoDados);
+  const cron=gerarCronDoPlano(plano);
+  const cronStr=JSON.stringify(cron);
+  localStorage.setItem('rxr-cron-'+cid,cronStr);
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,cron_dados:cronStr,cron_liberado:false}:d);
+  try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){console.warn(e);}
+  alert('Cronograma gerado com base no plano! Revise na aba Cronograma e libere quando estiver pronto.');
+  R();
+};
+
+window.liberarTudo=async function(cid){
+  localStorage.setItem('rxr-plano-lib-'+cid,'true');
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,plano_liberado:true}:d);
+  try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){console.warn(e);}
   R();
 };
 
