@@ -1140,100 +1140,155 @@ function gerarPlanoDados(cli, diag){
   const nome=(diag.nome||cli.n).split(' ')[0];
   const segmento=diag.segmento||'negócio';
   const roda=diag.roda_negocio||{};
-  const hab=diag.habilidades||{};
   const sentimento=Array.isArray(diag.sentimento)?diag.sentimento:(diag.sentimento?[diag.sentimento]:[]);
-
   const rodaMap={fin:'Financeiro',eq:'Equipe',at:'Atendimento',mkt:'Marketing',proc:'Processos',vida:'Qualidade de vida'};
   const rodaArr=Object.entries(rodaMap).map(([k,l])=>({k,l,v:parseInt(roda[k])||0})).sort((a,b)=>a.v-b.v);
   const fraquezas=rodaArr.filter(a=>a.v<=4).slice(0,3);
   const forca=rodaArr[rodaArr.length-1];
-  const atArea=rodaArr.find(a=>a.k==='at');
 
-  // DIAGNÓSTICO
-  let dtxt=`${nome}, ao longo do nosso primeiro encontro ficou muito claro para mim onde você está — e o que está te impedindo de avançar. `;
+  // RAIZ — curta, direta (max 3 frases)
+  let raiz='';
   if(sentimento.some(s=>s.includes('sobrecarregada')||s.includes('tudo sozinha')))
-    dtxt+=`Você está carregando o negócio nas costas sozinha, e isso se vê. `;
+    raiz+=`${nome}, você está carregando o negócio sozinha — e isso aparece em todo o diagnóstico. `;
   else if(sentimento.some(s=>s.includes('Travada')))
-    dtxt+=`Você chegou até aqui sabendo que algo precisa mudar — e a resposta já está dentro do diagnóstico que você preencheu. `;
+    raiz+=`${nome}, você sabe que algo precisa mudar. A resposta já está no que você respondeu. `;
   else if(sentimento.some(s=>s.includes('Ansiosa')))
-    dtxt+=`A ansiedade que você sente tem endereço — e juntas vamos encontrar a saída. `;
-  else dtxt+=`Você chegou até mim com disposição real para mudar. `;
-
-  if(diag.negocio||segmento) dtxt+=`Você tem ${diag.negocio?'"'+diag.negocio+'"':('um negócio de '+segmento)} com potencial real. O problema não é falta de talento — é falta de estrutura. `;
-
-  if(fraquezas.length>0){
-    const f0=fraquezas[0];
-    if(f0.k==='proc') dtxt+=`O que mais trava o seu crescimento hoje são os processos: tudo está na sua cabeça, e isso tem limite. `;
-    else if(f0.k==='fin') dtxt+=`O que mais trava o seu crescimento é a falta de clareza financeira: sem saber o que entra e sai de verdade, fica impossível crescer com controle. `;
-    else if(f0.k==='mkt') dtxt+=`O que mais trava o seu crescimento é a atração de clientes: o negócio precisa de uma estratégia consistente para não depender só de indicação. `;
-    else if(f0.k==='eq') dtxt+=`O que mais trava o seu crescimento é a dependência de você em tudo — sem estrutura de delegação, o crescimento tem teto. `;
-    else dtxt+=`O ponto mais crítico hoje é ${f0.l.toLowerCase()} (${f0.v}/10) — e é por aqui que vamos começar. `;
+    raiz+=`${nome}, a ansiedade que você sente tem endereço — e agora a gente vai resolver. `;
+  else raiz+=`${nome}, você tem potencial real. O que falta é estrutura, não esforço. `;
+  if(fraquezas[0]){
+    const f=fraquezas[0];
+    if(f.k==='proc') raiz+=`Gargalo principal: os processos estão na sua cabeça, não no papel. `;
+    else if(f.k==='fin') raiz+=`Gargalo principal: sem clareza financeira real, o crescimento fica no escuro. `;
+    else if(f.k==='mkt') raiz+=`Gargalo principal: o negócio depende de indicação — precisa de estratégia de atração. `;
+    else if(f.k==='eq') raiz+=`Gargalo principal: tudo depende de você — sem delegação, o crescimento tem teto. `;
+    else raiz+=`Gargalo principal: ${f.l.toLowerCase()} (${f.v}/10) está travando o crescimento. `;
   }
-  if(atArea&&atArea.v>=6) dtxt+=`Sua maior força hoje é o atendimento — e é nele que vamos nos apoiar enquanto construímos o resto.`;
-  else if(forca&&forca.v>=5) dtxt+=`Sua maior força é ${forca.l.toLowerCase()} (${forca.v}/10) — vamos construir em cima disso.`;
+  if(forca&&forca.v>=5) raiz+=`Sua maior força é ${forca.l.toLowerCase()} — é nela que vamos nos apoiar.`;
 
-  // DOR / GARGALO / OPORTUNIDADE
-  const dor=fraquezas[0]?`${fraquezas[0].l} (${fraquezas[0].v}/10) é a área mais crítica do seu negócio agora.`:'Sobrecarga operacional — tudo passa pelas suas mãos.';
+  // CARDS
+  const dor=fraquezas[0]?`${fraquezas[0].l} (${fraquezas[0].v}/10) — área mais crítica agora.`:'Sobrecarga total — tudo passa por você.';
   const gargalo=diag.tempo_operacional&&diag.tempo_operacional.includes('Quase todo')
-    ?'Você passa quase todo o tempo no operacional — sem espaço para pensar estrategicamente.'
-    :fraquezas[1]?`${fraquezas[1].l} (${fraquezas[1].v}/10) precisa de atenção.`:'Ausência de processos claros gera retrabalho constante.';
+    ?'Quase todo o tempo no operacional — zero espaço para estratégia.'
+    :fraquezas[1]?`${fraquezas[1].l} (${fraquezas[1].v}/10) — atenção urgente.`:'Processos não documentados — retrabalho constante.';
   const op=diag.mudanca_90
-    ?`Você disse: "${diag.mudanca_90.slice(0,70).trim()}${diag.mudanca_90.length>70?'...':''}" — esse é seu primeiro objetivo.`
-    :forca&&forca.v>=6?`${forca.l} já está funcionando — é hora de construir o resto em cima disso.`:'Estruturar o negócio agora vai multiplicar os resultados dos próximos 90 dias.';
+    ?`"${diag.mudanca_90.slice(0,55).trim()}..." — objetivo número 1.`
+    :forca&&forca.v>=6?`${forca.l} já funciona — construir o resto em cima disso.`:'Estruturar agora = resultado nos próximos 90 dias.';
 
   // ALERTA
-  let alerta=`${nome}, o maior risco agora não é errar — é não começar. Esse plano foi desenhado para ser simples o suficiente para você iniciar ainda essa semana.`;
-  if(diag.crenca&&diag.crenca.length>5) alerta=`${nome}, você disse que a crença que mais te trava é: "${diag.crenca.slice(0,80)}..." — esse é o trabalho mais profundo dessa jornada. Não é de ferramentas, é de mentalidade.`;
-  else if(sentimento.some(s=>s.includes('sobrecarregada'))) alerta=`${nome}, o cansaço que você sente é real. Mas ele não é o preço do sucesso — é o sinal de que algo na estrutura precisa mudar. Isso é exatamente o que vamos fazer juntas.`;
-  else if(diag.tarefa_emocional&&diag.tarefa_emocional.length>5) alerta=`${nome}, você mencionou que o que mais te consome emocionalmente é "${diag.tarefa_emocional.slice(0,60).trim()}...". Esse é um dos primeiros nós que vamos desatar juntas nessa jornada.`;
+  let alerta=`${nome}, o primeiro passo é o mais importante. Não precisa ser perfeito — precisa ser feito. Comece pela Semana 1 ainda essa semana.`;
+  if(diag.crenca&&diag.crenca.length>5)
+    alerta=`${nome}, você disse que a crença que mais te trava é: "${diag.crenca.slice(0,70)}..." — esse é o trabalho da raiz. As ferramentas funcionam quando a mentalidade já mudou.`;
+  else if(sentimento.some(s=>s.includes('sobrecarregada')))
+    alerta=`${nome}, o cansaço não é o preço do sucesso — é o sinal de que algo precisa mudar. Esse plano existe exatamente para isso.`;
 
-  // FASES
+  const temMkt=fraquezas.some(f=>f.k==='mkt');
+  const temEq=fraquezas.some(f=>f.k==='eq');
+
+  // FASES — raiz curta + passos práticos prontos
   const fases=[
-    {num:'01',cor:'nv',titulo:'Base · Clareza e identidade',prazo:'Semanas 1–2',
-     intro:`${nome}, antes de qualquer ferramenta, você precisa ter clareza sobre o que está construindo e por quê.`,
+    {num:'01',cor:'nv',titulo:'Base · Raiz e clareza',prazo:'Semanas 1–2',
+     raiz:`Antes de qualquer ferramenta, você precisa ter clareza de onde está e para onde vai. Rápido de fazer — mas sem isso, nada do resto funciona.`,
      acoes:[
-       {t:'Definir sua missão em 1 frase',d:'O que você faz, para quem faz e qual transformação gera. Essa frase vai guiar toda decisão do negócio.'},
-       {t:'Mapear sua rotina atual',d:'Durante 3 dias, anote tudo que você faz e o tempo de cada tarefa. Sem julgamento — o objetivo é enxergar onde o tempo vai.'},
-       {t:'Identificar o que só você pode fazer',d:'Separar o que depende do seu julgamento do que é operacional e pode ser delegado ou automatizado.'},
-       {t:'Definir as 3 prioridades dos próximos 30 dias',d:'Não 10 metas. Três. O que, se feito agora, transforma a operação no próximo mês?'},
+       {t:'Escreva sua missão em 1 frase',passos:[
+         'Responda: O que você faz? / Para quem? / Qual resultado entrega?',
+         'Junte em 1 frase: "Ajudo [público] a [resultado] através de [o que faz]"',
+         'Salva no celular e manda para mim no WhatsApp',
+       ],entrega:'Manda essa frase antes da próxima sessão'},
+       {t:'Mapeie sua semana atual',passos:[
+         'Durante 3 dias: anote O QUE FEZ e QUANTO TEMPO em cada tarefa',
+         'Marque cada item: 🔴 Só eu / 🟡 Posso ensinar / 🟢 Pode automatizar',
+         'Some as horas de cada cor — esse número vai te surpreender',
+       ],entrega:'Traga esse mapeamento para a próxima sessão'},
+       {t:'Defina as 3 prioridades do próximo mês',passos:[
+         'Liste tudo que está na cabeça para fazer no negócio',
+         'Escolha só 3 que, se feitas, mudam a operação',
+         'Para cada uma: O quê / Por quê / Até quando',
+       ]},
      ]},
     {num:'02',cor:'pu',titulo:'Estruturação · Processos e rotina',prazo:'Semanas 3–4',
-     intro:`Agora que você tem clareza, vamos tirar o ${segmento} da sua cabeça e colocar em processos que funcionam sem depender só de você.`,
+     raiz:`Tudo que depende só de você tem limite. Essa fase tira o negócio da sua cabeça e coloca no papel — para que funcione sem você estar presente em tudo.`,
      acoes:[
-       {t:'Mapear os 5 processos mais repetitivos',d:'Para cada um: quem faz, como faz, quanto tempo leva. Primeiro passo para delegar com confiança.'},
-       {t:'Criar checklist de abertura e encerramento',d:'Uma rotina documentada que qualquer pessoa consegue seguir sem precisar perguntar nada.'},
-       {t:'Padronizar o atendimento ao cliente',d:'Do primeiro contato à finalização: como você recebe, como responde, como fecha e como faz follow-up.'},
-       {t:'Organizar a semana em blocos fixos',d:'Blocos para produção, atendimento, gestão e descanso. A semana organizada reduz o caos operacional.'},
+       {t:'Documente os 5 processos mais repetitivos',passos:[
+         'Liste os 5 processos que você mais repete (ex: atendimento, produção, pedido)',
+         'Para cada um: Quem faz / Como faz passo a passo / Quanto tempo leva',
+         'Identifique qual deles mais te consome — esse vai ser o primeiro a delegar',
+       ],entrega:'Traga essa lista documentada'},
+       {t:'Crie o checklist de abertura e encerramento',passos:[
+         'Anote tudo que você faz ao começar o dia — em ordem',
+         'Anote tudo que faz ao encerrar o dia',
+         'Esse checklist vai ser seguido pela equipe (ou por você com consistência)',
+       ]},
+       {t:'Organize a semana em blocos fixos',passos:[
+         'Defina 3 blocos: Produção / Atendimento / Gestão',
+         'Atribua dias e horários fixos — ex: Seg/Ter = produção, Qua/Qui = atendimento, Sex = gestão',
+         'Coloca na agenda e trata como reunião que não pode cancelar',
+       ]},
+       ...(temEq?[{t:'Defina o primeiro papel a delegar',passos:[
+         'Olhe os itens 🟡 do mapeamento da Semana 1',
+         'Escolha 1 tarefa para ensinar alguém a fazer essa semana',
+         'Documente o passo a passo em até 10 linhas e teste com a pessoa',
+       ]}]:[]),
      ]},
     {num:'03',cor:'go',titulo:'Financeiro · Números e precificação',prazo:'Semanas 5–7',
-     intro:`${nome}, aqui vem a parte que mais liberta: saber exatamente quanto você ganha, quanto gasta e se o negócio está dando o lucro que você merece.`,
+     raiz:`Você não consegue crescer o que não consegue medir. Essa fase vai te dar clareza sobre o que entra, o que sai e se o negócio dá o lucro que você merece.`,
      acoes:[
-       {t:'Levantar todos os custos do negócio',d:'Fixos (sempre existem) e variáveis (dependem do movimento). Sem esse número, qualquer preço é chute.'},
-       {t:'Calcular o custo real por produto ou serviço',d:'Custo direto + rateio dos fixos + valor do seu tempo. Esse é o piso do seu preço.'},
-       {t:'Revisar a precificação atual',d:'O preço que você cobra hoje cobre os custos + pró-labore + margem de lucro mínima? Se não: quando e quanto ajustar.'},
-       {t:'Definir meta de faturamento de 90 dias',d:'Faturamento mínimo (pagar as contas) e ideal (crescer). Esses dois números guiam todas as decisões do próximo trimestre.'},
+       {t:'Levante todos os custos do negócio',passos:[
+         'Duas colunas: FIXOS (aluguel, apps, salários) | VARIÁVEIS (matéria-prima, embalagem)',
+         'Liste cada custo com o valor mensal médio',
+         'Some os dois totais — esse é o custo mínimo por mês',
+       ],entrega:'Traga a planilha de custos completa'},
+       {t:'Calcule o custo real de cada produto ou serviço',passos:[
+         'Custo direto (material) + parte dos custos fixos + valor do seu tempo',
+         'Valor do seu tempo: pró-labore desejado ÷ horas disponíveis por mês',
+         'Esse número é o piso — o preço não pode ser menor',
+       ]},
+       {t:'Revise e ajuste a precificação',passos:[
+         'Compare preço atual vs custo real calculado acima',
+         'O preço cobre: custo + pró-labore + margem de 30%? Se não: defina quando e quanto ajustar',
+         'Estabeleça uma data para comunicar o reajuste aos clientes',
+       ]},
+       {t:'Defina meta de faturamento de 90 dias',passos:[
+         'Meta mínima = todos os custos + pró-labore desejado',
+         'Meta ideal = mínima + 30% para reinvestimento',
+         'Divida por 4 — quanto precisa faturar por semana?',
+       ],entrega:'Manda os dois números para mim'},
      ]},
-    {num:'04',cor:'gr',titulo:'Plano Estratégico · Crescer com controle',prazo:'Semanas 8–10',
-     intro:`Com a base sólida, os processos rodando e os números claros, você vai conseguir pensar em crescimento real — sem precisar trabalhar mais horas.`,
+    {num:'04',cor:'gr',titulo:'Plano Estratégico · Crescimento',prazo:'Semanas 8–10',
+     raiz:`Com a base, os processos e os números no lugar, você está pronta para crescer de forma sustentável. Essa fase é sobre decisão — não fazer mais, mas fazer melhor.`,
      acoes:[
-       {t:'Plano de ação de 90 dias',d:'3 metas concretas, com as ações necessárias, prazo e responsável. Uma página. Simples e direto ao ponto.'},
-       {t:fraquezas.some(f=>f.k==='mkt')?'Estratégia de atração de clientes':'Estratégia de crescimento de receita',
-        d:fraquezas.some(f=>f.k==='mkt')?'Marketing está entre os pontos mais críticos — definir 3 ações concretas para atrair clientes de forma consistente.':'3 ações para aumentar faturamento: novo serviço, reativação de clientes ou aumento de ticket médio.'},
-       {t:'Ritual semanal de revisão',d:'Toda semana, 30 minutos: o que foi feito, o que ficou, o que precisa ajustar. Esse hábito separa quem cresce de quem trava.'},
-       {t:`Indicadores do ${segmento}`,d:'Definir quais números você vai acompanhar toda semana: faturamento, clientes, ticket médio. Decisão com dado, não com percepção.'},
+       {t:'Monte seu plano de 90 dias',passos:[
+         'Escolha 3 metas concretas e mensuráveis (números reais)',
+         'Para cada meta: ações necessárias + responsável + data limite',
+         'Imprima ou fixe em algum lugar que você vê todo dia',
+       ],entrega:'Traga o plano para validarmos juntas'},
+       {t:temMkt?'Crie estratégia de atração de clientes':'Aumente o ticket médio ou crie nova fonte de receita',
+        passos:temMkt?[
+          'Identifique: onde estão seus melhores clientes (Instagram, indicação, feira...)',
+          'Defina 3 ações semanais de presença nesse canal — e execute toda semana',
+          'Meta: quantos novos contatos por semana? Anote e acompanhe',
+        ]:[
+          'Liste 3 formas de aumentar receita sem aumentar clientes (combo, serviço extra, frequência)',
+          'Escolha 1 para implementar nesse ciclo de 90 dias',
+          'Defina meta: quanto quer aumentar o ticket médio em 30 dias?',
+        ]},
+       {t:'Crie o ritual semanal de revisão',passos:[
+         'Reserva 30 minutos fixos por semana (sugestão: segunda de manhã)',
+         'Responda: O que fiz? / O que ficou? / O que ajusto essa semana?',
+         'Olhe 3 números: faturamento da semana / clientes atendidos / ticket médio',
+       ]},
      ]},
   ];
 
-  return{nome,segmento,negocio:diag.negocio||segmento,diagnostico:dtxt,dor,gargalo,oportunidade:op,fases,alerta,data:new Date().toLocaleDateString('pt-BR')};
+  return{nome,segmento,negocio:diag.negocio||segmento,raiz,dor,gargalo,oportunidade:op,fases,alerta,data:new Date().toLocaleDateString('pt-BR')};
 }
 
 function bPlanoConteudo(plano){
   const COR={nv:'var(--nv2)',pu:'var(--pu)',go:'var(--go)',gr:'var(--gr)'};
   const BGCOR={nv:'var(--nvf)',pu:'var(--puf)',go:'var(--gof)',gr:'var(--grf)'};
   return`
-  <div class="plano-diag">
-    <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);margin-bottom:8px">Onde você está hoje</div>
-    <div style="font-size:13px;color:var(--tx2);line-height:1.65">${plano.diagnostico}</div>
+  <div style="background:var(--nvf);border-left:3px solid var(--nv2);border-radius:0 var(--rs) var(--rs) 0;padding:13px 15px;margin-bottom:10px">
+    <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--nv2);margin-bottom:5px">🌱 RAIZ — Onde você está</div>
+    <div style="font-size:13px;color:var(--tx);line-height:1.6;font-weight:500">${plano.raiz}</div>
   </div>
   <div class="plano-card3">
     <div class="plano-mini" style="background:var(--gof)">
@@ -1249,19 +1304,28 @@ function bPlanoConteudo(plano){
       <div class="plano-mini-txt">${plano.oportunidade}</div>
     </div>
   </div>
-  <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);margin:12px 0 8px">As 4 fases da jornada</div>
+  <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin:14px 0 8px">⚡ RESULTADO — Plano prático semana a semana</div>
   ${plano.fases.map(fase=>`
     <div style="border:.5px solid var(--bd2);border-radius:var(--r);overflow:hidden;margin-bottom:8px">
       <div class="plano-fase-hdr" style="background:${COR[fase.cor]}">
         <div class="plano-fase-num">${fase.num}</div>
         <div style="flex:1"><div class="plano-fase-tit">${fase.titulo}</div><div class="plano-fase-pz">${fase.prazo}</div></div>
       </div>
-      <div class="plano-fase-intro" style="background:${BGCOR[fase.cor]};color:var(--tx2)">${fase.intro}</div>
+      <div style="background:${BGCOR[fase.cor]};padding:9px 15px;font-size:11px;color:var(--tx2);line-height:1.5;border-bottom:.5px solid var(--bd);font-style:italic">${fase.raiz}</div>
       <div class="plano-fase-body">
-        ${fase.acoes.map((a,i)=>`
+        ${fase.acoes.map((a,ai)=>`
           <div class="plano-acao">
-            <div class="plano-acao-num" style="background:${COR[fase.cor]}">${i+1}</div>
-            <div><div class="plano-acao-tit">${a.t}</div><div class="plano-acao-desc">${a.d}</div></div>
+            <div class="plano-acao-num" style="background:${COR[fase.cor]}">${ai+1}</div>
+            <div style="flex:1">
+              <div class="plano-acao-tit">${a.t}</div>
+              <div style="margin-top:6px">
+                ${a.passos.map((p,pi)=>`<div style="display:flex;gap:7px;align-items:flex-start;margin-bottom:5px">
+                  <div style="width:16px;height:16px;border-radius:50%;background:${BGCOR[fase.cor]};color:${COR[fase.cor]};font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${pi+1}</div>
+                  <div style="font-size:11px;color:var(--tx2);line-height:1.45;flex:1">${p}</div>
+                </div>`).join('')}
+              </div>
+              ${a.entrega?`<div style="margin-top:7px;background:var(--grf);border-radius:5px;padding:5px 9px;font-size:10px;font-weight:700;color:var(--gr)">📎 ${a.entrega}</div>`:''}
+            </div>
           </div>
         `).join('')}
       </div>
