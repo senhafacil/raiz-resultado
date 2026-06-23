@@ -940,6 +940,7 @@ function bEtDetail(proc){
     <div class="row" style="gap:8px">
       <button class="lbtn ${lk?'llk':'lok'}" onclick="tLock(${proc.id},${i})">${lk?'🔒 Liberar para mentorada':'🔓 Fase liberada'}</button>
       <button class="btn bsm" onclick="oAddAtiv(${i})">+ Atividade</button>
+        ${(()=>{const proxLiberada=proc.ets.slice(i+1).some(Boolean);return!proxLiberada&&!lk?`<button class="btn bsm" style="background:var(--gof);color:var(--go);border-color:rgba(154,108,0,.3)" onclick="st('p')" title="Última fase liberada — gere o Plano de Ação">📄 Plano de Ação</button>`:''})()}
     </div>
   </div>
   ${!lk?`<div class="rwb" style="margin-bottom:10px">
@@ -1030,9 +1031,9 @@ function bCliente(){
   // Cliente tem tabs: Jornada e Diagnóstico
   const cTab=S.cliTab||'jornada';
   const diagCli=S.diags.find(d=>d.cid===cli.id);
-  const procCli=gProc(cli.id);
-  const fase4LiberadaCli=procCli&&procCli.ets&&procCli.ets[3];
-  const temPlano=fase4LiberadaCli&&diagCli&&(diagCli.plano_liberado===true||diagCli.plano_liberado==='true')&&diagCli.plano_dados;
+  // Plano de Ação disponível quando mentor liberar — independente de fase ou sessões
+  const temPlano=diagCli&&(diagCli.plano_liberado===true||diagCli.plano_liberado==='true')
+    &&diagCli.plano_dados&&diagCli.plano_dados!=='vazio';
   function _lcv(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
   const temCron=temPlano&&(_lcv(diagCli.cron_dados)||_lcv(localStorage.getItem('rxr-cron-'+cli.id)));
   const tabHdr=`<div class="tabs">
@@ -1303,19 +1304,7 @@ function bPlanoConteudo(plano){
 function bPlanoMentor(){
   const cli=S.clients[S.curCli];
   if(!cli)return`<div class="empty">Selecione uma mentorada para ver o plano de ação.</div>`;
-  // Verificar se fase 4 (Plano Estratégico) está liberada na jornada
-  const proc=gProc(cli.id);
-  const fase4ok=proc&&proc.ets&&proc.ets[3];
-  if(!fase4ok) return(S.clients.length>1?`<select onchange="S.curCli=parseInt(this.value);R()" style="font-size:11px;width:auto;padding:5px 10px;margin-bottom:14px">${S.clients.map((c,i)=>`<option value="${i}" ${i===S.curCli?'selected':''}>${c.n}</option>`).join('')}</select>`:'')
-  +`<div style="text-align:center;padding:44px 20px">
-    <div style="font-size:32px;margin-bottom:10px">🌿</div>
-    <div style="font-size:14px;font-weight:700;color:var(--nv);margin-bottom:8px">Plano de Ação disponível na Fase Final</div>
-    <div style="font-size:12px;color:var(--tx3);max-width:320px;margin:0 auto 18px;line-height:1.6">
-      O Plano de Ação é gerado quando <strong>${cli.n.split(' ')[0]}</strong> chegar na fase <strong>Plano Estratégico</strong> da jornada.<br><br>
-      Libere a Fase 4 na aba <strong>Jornada</strong> quando ela estiver pronta.
-    </div>
-    <button class="btn bnav" onclick="S.tab='j';R()">Ir para Jornada</button>
-  </div>`;
+
 
   const seletor=S.clients.length>1?`<select onchange="S.curCli=parseInt(this.value);R()" style="font-size:11px;width:auto;padding:5px 10px;margin-bottom:14px">
     ${S.clients.map((c,i)=>`<option value="${i}" ${i===S.curCli?'selected':''}>${c.n}</option>`).join('')}
