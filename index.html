@@ -851,6 +851,9 @@ window.abrirDiagForm=function(cid){
 
 
 
+function safePlano(){try{return bPlanoMentor();}catch(e){console.error('bPlanoMentor:',e);return`<div class="empty"><div style="font-size:28px;margin-bottom:8px">⚠️</div><div style="font-weight:700;margin-bottom:4px">Erro ao carregar o plano</div><div style="font-size:12px;color:var(--tx3)">${e.message}</div></div>`;}}
+function safeCron(){try{return bCronMentor();}catch(e){console.error('bCronMentor:',e);return`<div class="empty"><div style="font-size:28px;margin-bottom:8px">⚠️</div><div style="font-weight:700;margin-bottom:4px">Erro ao carregar cronograma</div><div style="font-size:12px;color:var(--tx3)">${e.message}</div></div>`;}}
+
 function bMentor(){
   return`<div class="tabs">
     <button class="tab ${S.tab==='j'?'on':''}" onclick="st('j')">Jornada</button>
@@ -858,7 +861,7 @@ function bMentor(){
     <button class="tab ${S.tab==='d'?'on':''}" onclick="st('d')">Diagnósticos</button>
     <button class="tab ${S.tab==='p'?'on':''}" onclick="st('p')">📄 Plano de Ação</button>
     <button class="tab ${S.tab==='cr'?'on':''}" onclick="st('cr')">📅 Cronograma</button>
-  </div><div class="ct">${S.tab==='j'?bJornada():S.tab==='d'?bDiagsMentor():S.tab==='p'?bPlanoMentor():S.tab==='cr'?bCronMentor():bClientes()}</div>`;
+  </div><div class="ct">${S.tab==='j'?bJornada():S.tab==='d'?bDiagsMentor():S.tab==='p'?safePlano():S.tab==='cr'?safeCron():bClientes()}</div>`;
 }
 
 function bJornada(){
@@ -1566,7 +1569,18 @@ function cm(e){if(e.target.classList.contains('mbg')){S.modal=null;R();}}
 
 /* ── ACTIONS ── */
 window.sr=r=>{S.role=r;R()};
-window.st=t=>{S.tab=t;R()};
+window.st=t=>{
+  S.tab=t;
+  try{R();}catch(e){
+    console.error('Erro ao renderizar aba '+t+':',e);
+    document.getElementById('root').innerHTML=`<div style="padding:40px;text-align:center;color:#9B2020">
+      <div style="font-size:28px;margin-bottom:10px">⚠️</div>
+      <div style="font-size:13px;font-weight:700">Erro ao carregar aba</div>
+      <div style="font-size:12px;color:#565888;margin-top:6px">${e.message}</div>
+      <button onclick="S.tab='j';R()" style="margin-top:16px;padding:7px 14px;background:#1C1F5A;color:white;border:none;border-radius:8px;cursor:pointer;font-size:12px">Voltar para Jornada</button>
+    </div>`;
+  }
+};
 window.cm=cm;
 window.oSub=id=>{S.subId=id;R()};
 window.oFb=id=>{S.fbId=id;R()};
