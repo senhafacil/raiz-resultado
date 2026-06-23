@@ -1031,7 +1031,8 @@ function bCliente(){
   const cTab=S.cliTab||'jornada';
   const diagCli=S.diags.find(d=>d.cid===cli.id);
   const temPlano=diagCli&&diagCli.plano_liberado&&diagCli.plano_dados;
-  const temCron=temPlano&&(diagCli.cron_dados||localStorage.getItem('rxr-cron-'+cli.id));
+  function _lcv(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
+  const temCron=temPlano&&(_lcv(diagCli.cron_dados)||_lcv(localStorage.getItem('rxr-cron-'+cli.id)));
   const tabHdr=`<div class="tabs">
     <button class="tab ${cTab==='jornada'?'on':''}" onclick="S.cliTab='jornada';R()">Jornada</button>
     <button class="tab ${cTab==='diag'?'on':''}" onclick="S.cliTab='diag';R()">📋 Diagnóstico</button>
@@ -1289,9 +1290,11 @@ function bPlanoMentor(){
   </div>`;
 
   // Tenta carregar do Supabase, senão usa localStorage
-  let planoDados=diag.plano_dados;
-  if(!planoDados) planoDados=localStorage.getItem('rxr-plano-'+cli.id);
-  let liberado=diag.plano_liberado||localStorage.getItem('rxr-plano-lib-'+cli.id)==='true';
+  // Guard: Supabase pode retornar 'vazio' ou 'false' como string (default da coluna)
+  function limpaVal(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
+  let planoDados=limpaVal(diag.plano_dados);
+  if(!planoDados) planoDados=limpaVal(localStorage.getItem('rxr-plano-'+cli.id));
+  let liberado=(diag.plano_liberado===true||diag.plano_liberado==='true')||localStorage.getItem('rxr-plano-lib-'+cli.id)==='true';
   const plano=planoDados?JSON.parse(planoDados):null;
 
   if(!plano) return seletor+`<div style="text-align:center;padding:40px 20px">
@@ -1383,8 +1386,9 @@ function bCronMentor(){
     <div style="font-size:12px;color:var(--tx3);max-width:280px;margin:0 auto 16px;line-height:1.6">O cronograma é gerado a partir do plano de ação da mentorada.</div>
     <button class="btn bnav" onclick="S.tab='p';R()">Ir para Plano de Ação</button>
   </div>`;
-  let cronStr=diag.cron_dados||localStorage.getItem('rxr-cron-'+cli.id);
-  const cronLiberado=diag.cron_liberado||localStorage.getItem('rxr-cron-lib-'+cli.id)==='true';
+  function limpaValC(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
+  let cronStr=limpaValC(diag.cron_dados)||limpaValC(localStorage.getItem('rxr-cron-'+cli.id));
+  const cronLiberado=(diag.cron_liberado===true||diag.cron_liberado==='true')||localStorage.getItem('rxr-cron-lib-'+cli.id)==='true';
   const cron=cronStr?JSON.parse(cronStr):null;
   if(!cron)return`<div style="text-align:center;padding:40px 20px">
     <div style="font-size:28px;margin-bottom:10px">📅</div>
@@ -1450,8 +1454,9 @@ function bCronCli(){
   const cli=S.clients[S.curCli];
   if(!cli)return`<div class="ct"></div>`;
   const diag=S.diags.find(d=>d.cid===cli.id);
-  const cronStr=diag?.cron_dados||localStorage.getItem('rxr-cron-'+cli.id);
-  const liberado=diag?.cron_liberado||localStorage.getItem('rxr-cron-lib-'+cli.id)==='true';
+  function _lv(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
+  const cronStr=_lv(diag?.cron_dados)||_lv(localStorage.getItem('rxr-cron-'+cli.id));
+  const liberado=(diag?.cron_liberado===true||diag?.cron_liberado==='true')||localStorage.getItem('rxr-cron-lib-'+cli.id)==='true';
   if(!liberado||!cronStr)return`<div class="ct"><div style="text-align:center;padding:48px 20px">
     <div style="font-size:32px;margin-bottom:10px">📅</div>
     <div style="font-size:14px;font-weight:700;margin-bottom:6px;color:var(--nv2)">Seu cronograma está sendo preparado</div>
