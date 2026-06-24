@@ -1158,98 +1158,260 @@ function gerarPlanoDados(cli, diag){
   const sentimento=Array.isArray(diag.sentimento)?diag.sentimento:(diag.sentimento?[diag.sentimento]:[]);
   const rodaMap={fin:'Financeiro',eq:'Equipe',at:'Atendimento',mkt:'Marketing',proc:'Processos',vida:'Qualidade de vida'};
   const rodaArr=Object.entries(rodaMap).map(([k,l])=>({k,l,v:parseInt(roda[k])||0})).sort((a,b)=>a.v-b.v);
-  const fraquezas=rodaArr.filter(a=>a.v<=4).slice(0,3);
+  const fraquezas=rodaArr.filter(a=>a.v<=5).slice(0,3);
   const forca=rodaArr[rodaArr.length-1];
-  const temMkt=fraquezas.some(f=>f.k==='mkt');
+  const dor1=fraquezas[0]||{k:'proc',l:'Processos',v:0};
   const temFin=fraquezas.some(f=>f.k==='fin');
   const temProc=fraquezas.some(f=>f.k==='proc');
+  const temMkt=fraquezas.some(f=>f.k==='mkt');
   const temEq=fraquezas.some(f=>f.k==='eq');
 
-  // RAIZ — síntese da jornada, olhando para frente
-  let raiz=`${nome}, você chegou até aqui. Passou pelas 4 fases da jornada — e agora é hora de colocar tudo em movimento de forma sustentável. `;
-  if(diag.mudanca_90&&diag.mudanca_90.length>5)
-    raiz+=`Você disse que queria: "${diag.mudanca_90.slice(0,70).trim()}". Esse continua sendo o norte. `;
-  if(forca&&forca.v>=5)
-    raiz+=`Sua maior força é ${forca.l.toLowerCase()} — continue construindo em cima disso.`;
-  else
-    raiz+=`O próximo ciclo é sobre consolidar o que você aprendeu e colocar em prática com constância.`;
+  // ── RAIZ — curta, direta, olhando para o que vem ──────────────
+  let raiz='';
+  if(sentimento.some(s=>s.includes('sobrecarregada')||s.includes('tudo sozinha')))
+    raiz+=`${nome}, você chegou até aqui carregando o negócio sozinha — e chegou a hora de mudar isso. `;
+  else if(sentimento.some(s=>s.includes('Travada')))
+    raiz+=`${nome}, você sabe que algo precisa mudar. Esse plano é o próximo passo concreto. `;
+  else if(sentimento.some(s=>s.includes('Ansiosa')))
+    raiz+=`${nome}, a ansiedade que você sente tem endereço. Os próximos 30 dias vão resolver isso. `;
+  else if(sentimento.some(s=>s.includes('Empolgada')))
+    raiz+=`${nome}, você tem energia e clareza do que quer. Agora é transformar isso em estrutura. `;
+  else raiz+=`${nome}, você tem potencial real. O que falta é estrutura, não esforço. `;
 
-  // CARDS — estado atual pós-jornada
-  const dor=fraquezas[0]?`${fraquezas[0].l} ainda precisa de atenção contínua (${fraquezas[0].v}/10).`:'Manter a consistência sem depender da pressão das sessões.';
-  const gargalo=fraquezas[1]?`${fraquezas[1].l} (${fraquezas[1].v}/10) — área para seguir desenvolvendo.`:'Transformar o aprendizado em hábito de gestão.';
-  const op=diag.mudanca_90?`Meta declarada: "${diag.mudanca_90.slice(0,55).trim()}..."`
-    :forca&&forca.v>=6?`${forca.l} é a alavanca — use como base para crescer.`:'Aplicar a estrutura construída para dobrar os resultados.';
+  if(dor1.k==='proc') raiz+=`O foco dos próximos 30 dias é tirar o negócio da sua cabeça e colocar em processos que funcionam sem você estar presente em tudo.`;
+  else if(dor1.k==='fin') raiz+=`O foco dos próximos 30 dias é ter clareza financeira real — saber exatamente o que entra, o que sai e se o negócio dá o lucro que você merece.`;
+  else if(dor1.k==='mkt') raiz+=`O foco dos próximos 30 dias é criar um fluxo consistente de clientes — sem depender só de indicação ou de você se esforçar mais.`;
+  else if(dor1.k==='eq') raiz+=`O foco dos próximos 30 dias é começar a delegar com confiança — para que o negócio passe a funcionar sem depender de você em tudo.`;
+  else raiz+=`O foco dos próximos 30 dias é ${dor1.l.toLowerCase()} — a área mais crítica identificada no seu diagnóstico.`;
 
-  // ALERTA — baseado em crenças ou padrões identificados
-  let alerta=`${nome}, o risco agora é voltar para os velhos hábitos sem a pressão das sessões. O ritual semanal de revisão não é opcional — é o que vai garantir que tudo que construímos aqui continue vivo.`;
+  // ── CARDS ──────────────────────────────────────────────────────
+  const dor=dor1?`${dor1.l} (${dor1.v}/10) — área mais crítica agora.`:'Tudo centralizado em você — sem estrutura para crescer.';
+  const gargalo=fraquezas[1]?`${fraquezas[1].l} (${fraquezas[1].v}/10) — foco do próximo ciclo.`:'Processos não documentados — retrabalho constante.';
+  const op=diag.mudanca_90?`"${diag.mudanca_90.slice(0,55).trim()}..." — objetivo declarado.`
+    :forca&&forca.v>=6?`${forca.l} já funciona — construir o resto em cima disso.`:'30 dias de estrutura = base para crescer de forma sustentável.';
+
+  // ── ALERTA ─────────────────────────────────────────────────────
+  let alerta=`${nome}, o primeiro passo é o mais importante. Não precisa ser perfeito — precisa ser feito. Comece pela Semana 1 ainda essa semana.`;
   if(diag.crenca&&diag.crenca.length>5)
-    alerta=`${nome}, lembra da crença que você identificou: "${diag.crenca.slice(0,65)}..."? Agora você tem as ferramentas para combatê-la. A consciência é o primeiro passo — a ação consistente é o que muda.`;
+    alerta=`${nome}, você identificou que a crença que mais te trava é: "${diag.crenca.slice(0,70)}..." — esse é o trabalho da raiz. As ferramentas funcionam quando a mentalidade já mudou.`;
+  else if(sentimento.some(s=>s.includes('sobrecarregada')))
+    alerta=`${nome}, o cansaço não é o preço do sucesso — é o sinal de que algo precisa mudar. Esse plano existe exatamente para isso.`;
 
-  // PLANO DE 90 DIAS — estratégico, não repete exercícios da jornada
-  const fases=[
-    {num:'01',cor:'nv',titulo:'Consolidação · Primeiros 30 dias',prazo:'Dias 1–30',
-     raiz:`Os primeiros 30 dias pós-jornada são os mais críticos. O objetivo é transformar o que você aprendeu em rotina real — sem precisar de ninguém te lembrando.`,
-     acoes:[
-       {t:'Ative o ritual semanal de revisão',passos:[
-         'Escolha um horário fixo: sugestão segunda-feira, 8h, 30 minutos',
-         'Toda semana responda: O que fiz? / O que ficou? / O que ajusto?',
-         'Olhe os 3 indicadores: faturamento / clientes atendidos / ticket médio',
-         'Anote em um caderno ou planilha — o registro é o que cria o hábito',
-       ],entrega:'Manda o primeiro registro para mim na segunda-feira seguinte'},
-       {t:'Coloque os processos documentados em operação',passos:[
-         'Revise os checklists e processos que você criou durante a jornada',
-         'Teste cada processo por 2 semanas — ajuste o que não funcionou na prática',
-         'Delegue pelo menos 1 tarefa operacional que ainda está com você',
-       ]},
-       ...(temFin?[{t:'Implante o controle financeiro semanal',passos:[
-         'Todo domingo: registre o faturamento da semana + principais gastos',
-         'Compare com a meta semanal que você definiu',
-         'Ajuste a estratégia se estiver abaixo de 80% da meta por 2 semanas seguidas',
-       ],entrega:'Manda o primeiro fechamento semanal para mim'}]:[]),
-     ]},
-    {num:'02',cor:'pu',titulo:'Crescimento · Dias 31–60',prazo:'Dias 31–60',
-     raiz:`Com a base funcionando, o mês 2 é sobre aumentar resultado sem aumentar carga. Crescimento inteligente — não trabalhar mais, trabalhar melhor.`,
-     acoes:[
-       {t:temMkt?'Execute a estratégia de atração de clientes':'Aumente o ticket médio ou crie nova fonte de receita',
-        passos:temMkt?[
-          'Execute as 3 ações semanais de presença que você definiu',
-          'Acompanhe: quantos contatos novos por semana? Qual canal converte mais?',
-          'Teste 1 nova abordagem por mês — compare os resultados',
-        ]:[
-          'Implante o modelo de serviço ou produto adicional que você definiu',
-          'Comunique para a base atual de clientes primeiro',
-          'Acompanhe: quantos aderiram? Qual o impacto no ticket médio?',
+  // ── 4 SEMANAS — sempre 30 dias, foco na dor principal ──────────
+  // Semana 1: mapear o problema
+  // Semana 2: criar a solução/estrutura
+  // Semana 3: testar na prática
+  // Semana 4: ajustar e consolidar
+
+  function semanaMapear(){
+    if(dor1.k==='proc') return {
+      titulo:'Mapear o que já existe',
+      intro:`Antes de criar qualquer coisa nova, você precisa ver com clareza o que já existe no seu negócio. Essa semana é de diagnóstico — sem julgamento.`,
+      acoes:[
+        {t:'Documente as etapas do seu processo atual',passos:[
+          'Escreva cada etapa do seu fluxo de trabalho — do primeiro contato ao pós-venda',
+          'Para cada etapa: o que você faz / o que fala / quanto tempo leva / onde registra hoje',
+          'Não precisa ser bonito — precisa estar escrito fora da sua cabeça',
         ]},
-       {t:'Revise e consolide as metas de faturamento',passos:[
-         'Compare faturamento real dos últimos 30 dias com a meta que você estabeleceu',
-         'Identifique: o que gerou mais resultado? Replique.',
-         'Ajuste a meta do próximo mês com base nos dados reais — não na intuição',
-       ]},
-       ...(temEq?[{t:'Avance na delegação',passos:[
-         'Avalie a delegação que você implementou no mês 1: funcionou?',
-         'Se sim: delegue mais 1 tarefa operacional',
-         'Se não: identifique o gargalo (treinamento, processo, perfil da pessoa) e corrija',
-       ]}]:[]),
-     ]},
-    {num:'03',cor:'gr',titulo:'Consolidação Estratégica · Dias 61–90',prazo:'Dias 61–90',
-     raiz:`O terceiro mês é a prova dos 9. É onde você valida se a estrutura construída sustenta o crescimento — ou o que ainda precisa ajustar.`,
-     acoes:[
-       {t:'Faça o balanço dos 90 dias',passos:[
-         'Compare: faturamento, clientes, ticket médio — início vs. agora',
-         'Quais processos estão funcionando bem? Quais ainda travam?',
-         'O que você conseguiu delegar? O que ainda está centralizado em você?',
-       ],entrega:'Traz esses números para a nossa sessão de revisão'},
-       {t:'Planeje o próximo ciclo de 90 dias',passos:[
-         'Com base no balanço: defina 3 metas para o próximo trimestre',
-         'Identifique 1 área para investir (equipe, ferramenta, capacitação)',
-         'Mantenha o ritual semanal — agora já deve ser automático',
-       ]},
-       {t:'Avalie sua qualidade de vida como empresária',passos:[
-         'Você está trabalhando menos horas que antes da jornada?',
-         'Está conseguindo estar presente na família como queria?',
-         'Se não: o que ainda precisa mudar na estrutura do negócio?',
-       ]},
-     ]},
+        {t:'Identifique onde está o maior retrabalho',passos:[
+          'Olhe cada etapa e marque: onde você repete trabalho que poderia estar padronizado?',
+          'Onde você improvisa mais? Onde perde mais tempo buscando informação?',
+          'Essa etapa é a prioridade da Semana 2',
+        ]},
+        {t:'Mapeie o que só você pode fazer vs. o que pode ser delegado',passos:[
+          'Para cada atividade da sua semana: marca 🔴 só eu / 🟡 posso ensinar / 🟢 pode automatizar',
+          'Some as horas de cada cor — esse número vai te surpreender',
+          'Os itens 🟡 são o ponto de partida para a delegação futura',
+        ]},
+      ]};
+    if(dor1.k==='fin') return {
+      titulo:'Levantar os números reais',
+      intro:`Você não consegue crescer o que não consegue medir. Essa semana é sobre colocar os números na mesa — sem filtro.`,
+      acoes:[
+        {t:'Liste todos os custos do negócio',passos:[
+          'Duas colunas: FIXOS (sempre existem) e VARIÁVEIS (dependem do movimento)',
+          'Liste cada custo com o valor mensal — não esqueça os pequenos',
+          'Some os dois totais: esse é o custo mínimo do negócio por mês',
+        ]},
+        {t:'Calcule o custo real por produto ou serviço',passos:[
+          'Custo direto + parte dos fixos rateada + valor do seu tempo',
+          'Valor do seu tempo: pró-labore desejado ÷ horas disponíveis por mês',
+          'Esse número é o piso — o preço não pode ser menor que isso',
+        ]},
+        {t:'Compare faturamento atual com o que deveria ser',passos:[
+          'Qual foi o faturamento dos últimos 3 meses? (média)',
+          'Compare com: total de custos + pró-labore + 30% de margem',
+          'Está abaixo? Quanto precisa aumentar para atingir o mínimo viável?',
+        ]},
+      ]};
+    if(dor1.k==='mkt') return {
+      titulo:'Mapear de onde vêm os clientes hoje',
+      intro:`Antes de criar qualquer estratégia nova, precisa entender o que já funciona. Essa semana é sobre enxergar de onde vêm seus melhores clientes.`,
+      acoes:[
+        {t:'Faça um raio-x dos últimos 10 clientes',passos:[
+          'Para cada um: como chegou até você? (indicação, redes, busca, evento...)',
+          'Qual canal trouxe os clientes que ficaram / pagaram melhor / mais fáceis de fechar?',
+          'Esse canal é o ponto de partida — não invente novos antes de dominar esse',
+        ]},
+        {t:'Defina quem é o seu cliente ideal em 1 parágrafo',passos:[
+          'Qual o perfil de quem compra mais fácil, paga bem e indica?',
+          'Onde essa pessoa passa o tempo? O que ela lê, assiste, consome?',
+          'Que problema ela tem que você resolve melhor do que qualquer concorrente?',
+        ]},
+        {t:'Identifique a maior barreira de conversão',passos:[
+          'Onde as pessoas chegam mas não fecham? Em qual etapa você perde mais?',
+          'O que elas perguntam antes de dizer não? O que falta para elas decidirem?',
+          'Esse é o ponto que a Semana 2 vai atacar',
+        ]},
+      ]};
+    return {
+      titulo:`Mapear a situação atual — ${dor1.l}`,
+      intro:`Essa semana é de diagnóstico. Você precisa ver com clareza onde está antes de criar qualquer solução.`,
+      acoes:[
+        {t:`Documente como está ${dor1.l.toLowerCase()} hoje`,passos:[
+          'Escreva o que funciona, o que não funciona e o que você não sabe',
+          'Não filtre — coloque tudo no papel',
+          'Esse mapeamento é a base de tudo que vem pela frente',
+        ]},
+        {t:'Identifique o ponto de maior impacto',passos:[
+          `Dentro de ${dor1.l.toLowerCase()}: o que, se resolvido, muda mais a operação?`,
+          'Esse é o foco da Semana 2 — não tente resolver tudo ao mesmo tempo',
+        ]},
+      ]};
+  }
+
+  function semanaPadronizar(){
+    if(dor1.k==='proc') return {
+      titulo:'Padronizar e documentar',
+      intro:`Com o mapa pronto, essa semana você transforma o que existe em processos reais — escritos, claros, que qualquer pessoa consegue seguir.`,
+      acoes:[
+        {t:'Crie templates para as comunicações mais repetidas',passos:[
+          'Abra as mensagens que você já usa (WhatsApp, e-mail) e transforme em templates fixos',
+          'Um template por etapa do processo — com espaços para personalizar: [nome], [necessidade]',
+          'Teste enviando para você mesma antes de usar com clientes',
+        ]},
+        {t:'Transforme seus checklists em documentos com sequência definida',passos:[
+          'Cada item do checklist deve ser uma ação clara — não uma categoria',
+          'Ordene em sequência lógica: o que vem antes e o que vem depois',
+          'Outra pessoa consegue executar sem você explicar? Se sim: está pronto',
+        ]},
+        {t:'Defina o que colher em cada etapa antes de avançar',passos:[
+          'Para cada etapa do processo: qual informação é obrigatória antes de passar para a próxima?',
+          'Ex: Captação → colher nome, contato, necessidade, perfil',
+          'Isso elimina retrabalho de "voltar atrás" para buscar informação',
+        ]},
+      ]};
+    if(dor1.k==='fin') return {
+      titulo:'Criar o controle financeiro',
+      intro:`Com os números na mesa, essa semana você monta a estrutura que vai te dar clareza financeira toda semana — sem depender de contador para saber se está lucrando.`,
+      acoes:[
+        {t:'Revise e ajuste a precificação',passos:[
+          'Compare o preço atual de cada produto/serviço com o custo real calculado na Semana 1',
+          'O preço cobre: custo + pró-labore + margem de 30%? Se não: defina quando e quanto ajustar',
+          'Estabeleça uma data para comunicar o reajuste — não deixe para "quando der"',
+        ]},
+        {t:'Crie o ritual de acompanhamento semanal',passos:[
+          'Todo domingo: registre o faturamento da semana + principais gastos',
+          'Compare com a meta semanal — está acima, na meta ou abaixo?',
+          'Tabela simples: Semana / Receita / Meta / Diferença — 5 minutos por semana',
+        ]},
+        {t:'Separe definitivamente conta pessoal e do negócio',passos:[
+          'Se ainda mistura: abra uma conta separada (conta corrente ou poupança)',
+          'Todo faturamento entra nessa conta — todo gasto do negócio sai dela',
+          'Defina um valor fixo de pró-labore para transferir para a conta pessoal todo mês',
+        ]},
+      ]};
+    if(dor1.k==='mkt') return {
+      titulo:'Criar a estratégia de atração',
+      intro:`Com clareza de quem é seu cliente ideal e onde está a barreira, essa semana você monta o sistema que vai trazer clientes de forma consistente.`,
+      acoes:[
+        {t:'Defina 1 canal principal e 3 ações semanais fixas',passos:[
+          'Escolha o canal onde seu cliente ideal já está — não onde você acha que devia estar',
+          'Defina 3 ações semanais específicas: ex. 2 posts + 1 story + 5 contatos ativos',
+          'Coloque na agenda como compromisso fixo — não "quando tiver tempo"',
+        ]},
+        {t:'Crie ou atualize sua mensagem de posicionamento',passos:[
+          'Em 2 frases: o que você faz / para quem / qual resultado entrega',
+          'Use essa mensagem em todos os canais — perfil, bio, apresentação, mensagens',
+          'Clareza de posicionamento reduz objeções e acelera fechamento',
+        ]},
+        {t:'Estruture o pedido de indicação',passos:[
+          'Crie uma mensagem simples para pedir indicação aos clientes atuais',
+          'Ex: "Você conhece alguém que esteja passando pelo mesmo que você estava?"',
+          'Envie para os 5 melhores clientes ainda essa semana',
+        ]},
+      ]};
+    return {
+      titulo:`Criar a estrutura — ${dor1.l}`,
+      intro:`Com o diagnóstico da Semana 1, agora você monta a solução. Simples, prática, que você consegue manter.`,
+      acoes:[
+        {t:`Crie a estrutura básica para ${dor1.l.toLowerCase()}`,passos:[
+          'Com base no que mapeou: qual é a solução mais simples que resolve o principal gargalo?',
+          'Crie e documente — uma página, uma planilha, um checklist',
+          'Teste antes de considerar pronto',
+        ]},
+      ]};
+  }
+
+  function semanaTestar(){
+    return {
+      titulo:'Testar na prática',
+      intro:`Processos documentados só têm valor quando usados. Essa semana você coloca tudo para funcionar em situações reais — e registra o que precisa ajustar.`,
+      acoes:[
+        {t:'Use o processo documentado em todas as interações da semana',passos:[
+          'A regra é simples: sem improvisar',
+          'Se não tiver processo documentado para algo: improvise, mas anote para criar depois',
+          'Resista à tentação de fazer "do jeito que sempre fez" — o hábito muda na prática',
+        ]},
+        {t:'Registre os gaps em tempo real',passos:[
+          'Cada vez que saiu do processo: o que faltou? Por quê saiu?',
+          'Anote no momento — a memória não guarda os detalhes importantes',
+          'Não é falha — é dado. Cada registro melhora o processo',
+        ]},
+        {t:'Faça o balanço da semana',passos:[
+          'O processo funcionou? Em quais etapas travou mais?',
+          'O que estava claro demais / de menos?',
+          'Liste os 3 ajustes prioritários para a Semana 4',
+        ]},
+      ]};
+  }
+
+  function semanaConsolidar(){
+    return {
+      titulo:'Ajustar e consolidar',
+      intro:`Última semana: você refina o que testou e cria a estrutura definitiva — que vai continuar funcionando depois que a mentoria acabar.`,
+      acoes:[
+        {t:'Implemente os ajustes da Semana 3',passos:[
+          'Corrija o processo com base nos gaps identificados',
+          'Versão final: mais limpa, mais simples, mais fácil de manter',
+          'Se ficou complexo demais: simplifique. Processo simples que se usa > perfeito que não se usa',
+        ]},
+        {t:'Crie o ritual semanal de revisão',passos:[
+          'Escolha um dia e horário fixo: sugestão segunda-feira, 30 minutos',
+          'Três perguntas toda semana: O que fiz? / O que ficou? / O que ajusto?',
+          'Olhe os números: faturamento / clientes / o indicador principal da sua área de foco',
+        ]},
+        {t:'Responda: o negócio funciona sem você estar em tudo?',passos:[
+          'O processo existe fora da sua cabeça — em algum lugar que outra pessoa acessa?',
+          'Quantas vezes essa semana você improvisou vs. seguiu o processo?',
+          'Esse número vai diminuir toda semana — é o sinal de que está funcionando',
+        ]},
+      ]};
+  }
+
+  const s1=semanaMapear();
+  const s2=semanaPadronizar();
+  const s3=semanaTestar();
+  const s4=semanaConsolidar();
+
+  const CORES={s1:'nv',s2:'pu',s3:'go',s4:'gr'};
+  const PRAZOS={s1:'Semana 1 — Dias 1 a 5',s2:'Semana 2 — Dias 6 a 10',s3:'Semana 3 — Dias 11 a 15',s4:'Semana 4 — Dias 16 a 20'};
+
+  const fases=[
+    {...s1,num:'01',cor:CORES.s1,prazo:PRAZOS.s1},
+    {...s2,num:'02',cor:CORES.s2,prazo:PRAZOS.s2},
+    {...s3,num:'03',cor:CORES.s3,prazo:PRAZOS.s3},
+    {...s4,num:'04',cor:CORES.s4,prazo:PRAZOS.s4},
   ];
 
   return{nome,segmento,negocio:diag.negocio||segmento,raiz,dor,gargalo,oportunidade:op,fases,alerta,data:new Date().toLocaleDateString('pt-BR')};
