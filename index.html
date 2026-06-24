@@ -174,6 +174,18 @@ textarea{resize:vertical;min-height:75px;line-height:1.5}
 .cron-pfill{height:100%;border-radius:99px;transition:width .4s}
 @media(max-width:600px){.plano-card3{grid-template-columns:1fr}}
 
+/* CRONOGRAMA DIA A DIA */
+.cron-dia-hdr{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);padding:8px 0 4px;margin-top:8px;border-top:.3px solid var(--bd);display:flex;align-items:center;gap:6px}
+.cron-dia-hdr:first-child{border-top:none;margin-top:0}
+.cron-dia-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.como-fazer-btn{display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 8px;background:var(--sf2);border:none;border-radius:4px;font-size:10px;font-weight:700;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .15s}
+.como-fazer-btn:hover{background:var(--bd2)}
+.como-fazer-box{background:var(--sf2);border-radius:6px;padding:10px 12px;margin-top:6px;font-size:11px;color:var(--tx2);line-height:1.6;border-left:2px solid var(--bd2)}
+.como-fazer-passo{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
+.como-fazer-passo:last-child{margin-bottom:0}
+.cf-num{width:16px;height:16px;border-radius:50%;background:var(--nv2);color:white;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.cron-grupo-lbl{font-size:10px;font-weight:700;color:var(--nv2);margin-bottom:3px;margin-top:2px}
+
 @media(max-width:600px){
   .st3{grid-template-columns:repeat(3,1fr)}
   .enav{grid-template-columns:repeat(2,1fr)}
@@ -1389,37 +1401,109 @@ function bPlanoCli(){
 const COR_MAP={nv:'var(--nv2)',pu:'var(--pu)',go:'var(--go)',gr:'var(--gr)'};
 const BG_MAP={nv:'var(--nvf)',pu:'var(--puf)',go:'var(--gof)',gr:'var(--grf)'};
 
-// Gera cronograma PERSONALIZADO a partir do plano validado
+// Banco de como fazer — para passos comuns
+function gerarComoFazer(txt,grupo){
+  const t=(txt+' '+grupo).toLowerCase();
+  if(t.includes('whatsapp')||t.includes('mensagem')||t.includes('template'))
+    return{titulo:'Como criar templates no WhatsApp',passos:[
+      'Abra o WhatsApp e vá em Configurações → Mensagens Rápidas (ou use um bloco de notas)',
+      'Escreva a mensagem do zero, como se estivesse falando com um cliente real',
+      'Revise: está claro? Está no tom que você usa? Tem tudo que o cliente precisa saber?',
+      'Salve com um título como "Msg_boas_vindas" ou "Follow_up_1" para encontrar fácil',
+      'Teste enviando para você mesma antes de usar com clientes',
+    ]};
+  if(t.includes('checklist')||t.includes('passo a passo')||t.includes('documentar')||t.includes('processo'))
+    return{titulo:'Como documentar um processo',passos:[
+      'Abra um documento (Google Docs, Word ou Notion — o que você já usa)',
+      'Escreva o nome do processo no topo: ex. "Processo de Qualificação de Cliente"',
+      'Liste cada passo em ordem numérica, como se estivesse ensinando alguém do zero',
+      'Para cada passo: o que fazer / o que falar / qual ferramenta usar / quanto tempo leva',
+      'Revise imaginando que você está de férias e outra pessoa vai executar',
+    ]};
+  if(t.includes('etapa')||t.includes('mapear')||t.includes('fluxo')||t.includes('captação'))
+    return{titulo:'Como mapear seu fluxo atual',passos:[
+      'Pegue um papel ou abra uma planilha nova',
+      'Escreva o nome de cada etapa que você já faz — da captação até o pós-venda',
+      'Para cada etapa responda: O que faço? / O que uso? / Quanto tempo leva? / Onde registro?',
+      'Marque com uma cor diferente as etapas onde você repete trabalho ou fica perdida',
+      'Essas etapas marcadas são as prioridades para documentar primeiro',
+    ]};
+  if(t.includes('delegar')||t.includes('tarefa operacional'))
+    return{titulo:'Como identificar o que delegar',passos:[
+      'Olhe sua lista de tarefas da última semana',
+      'Marque cada uma: Precisa da minha expertise? (fica comigo) / Alguém pode aprender a fazer? (pode delegar)',
+      'Das que podem ser delegadas: qual gasta mais do seu tempo?',
+      'Essa é a primeira tarefa para documentar e ensinar',
+      'Documente o passo a passo antes de ensinar — nunca delegue sem processo escrito',
+    ]};
+  if(t.includes('ritual')||t.includes('revisão semanal')||t.includes('segunda'))
+    return{titulo:'Como criar o ritual de revisão semanal',passos:[
+      'Escolha um dia e horário fixo — sugestão: segunda-feira, 8h, 30 minutos',
+      'Coloque no calendário como uma reunião com você mesma — bloqueada',
+      'Na revisão, responda sempre as mesmas 3 perguntas: O que fiz? / O que ficou? / O que ajusto?',
+      'Olhe os números: faturamento da semana / clientes contatados / conversões',
+      'Anote as respostas — o registro cria o hábito e mostra a evolução',
+    ]};
+  if(t.includes('meta')||t.includes('faturamento')||t.includes('financeiro'))
+    return{titulo:'Como acompanhar o financeiro semanalmente',passos:[
+      'Crie uma planilha simples com 4 colunas: Semana / Receita / Meta / Diferença',
+      'Todo domingo, preencha a receita da semana (mesmo que seja zero)',
+      'Compare com a meta que você definiu — está acima, na meta ou abaixo?',
+      'Se abaixo por 2 semanas seguidas: o problema é captação, conversão ou preço? Identifique',
+      'Não precisa ser sofisticado — o hábito de olhar já muda o comportamento',
+    ]};
+  return null; // sem como fazer específico
+}
+
+// Gera cronograma PERSONALIZADO com dias da semana e como fazer
 function gerarCronDoPlano(plano){
+  const DIAS=['Segunda','Terça','Quarta','Quinta','Sexta'];
+
   return (plano.fases||[]).map((fase,fi)=>{
     const cor=fase.cor||'nv';
     const faseTit=(fase.titulo||'').split(' · ');
     const acoes=fase.acoes||[];
-    // Cada ação do plano vira itens no cronograma com seus passos
     const itens=[];
+    let diaIdx=0;
+
     acoes.forEach((acao,ai)=>{
       const passos=acao.passos||(acao.d?[acao.d]:[]);
+      // Distribuir passos nos dias: máx 2 passos por dia
       passos.forEach((p,pi)=>{
+        const dia=DIAS[Math.min(diaIdx,4)];
+        const comoFazer=gerarComoFazer(p,acao.t);
         itens.push({
           id:fi*1000+ai*10+pi,
-          txt:`${acao.t}: ${p}`,
+          dia,
+          txt:p,
+          grupo:acao.t,
+          comoFazer,
+          expandido:false,
           done:false,
           nota:'',
-          grupo:acao.t,
         });
+        // Avança dia a cada 2 passos
+        if((pi+1)%2===0) diaIdx=Math.min(diaIdx+1,4);
       });
+      // Avança dia entre ações
+      diaIdx=Math.min(diaIdx+1,4);
+
       if(acao.entrega){
         itens.push({
           id:fi*1000+ai*10+9,
-          txt:`📎 Entrega: ${acao.entrega}`,
-          done:false,nota:'',
+          dia:DIAS[Math.min(diaIdx,4)],
+          txt:`📎 ${acao.entrega}`,
           grupo:acao.t,
+          comoFazer:null,
+          expandido:false,
+          done:false,nota:'',
         });
       }
     });
+
     return{
       id:fi,
-      sem:(fase.prazo||'').replace('Semanas ','').replace('Semana ',''),
+      sem:(fase.prazo||'').replace('Semanas ','').replace('Semana ','').replace('Dias ',''),
       fase:faseTit[0]||('Fase '+(fi+1)),
       desc:faseTit[1]||'',
       cor,aberto:fi===0,itens,
@@ -1469,35 +1553,75 @@ function bCronBloco(b,cid,isMentor){
   const total=b.itens.length;
   const feitos=b.itens.filter(i=>i.done).length;
   const pct=total?Math.round(feitos/total*100):0;
+  const cor=COR_MAP[b.cor]||'var(--nv2)';
+  const bgCor=BG_MAP[b.cor]||'var(--nvf)';
+
+  // Agrupar itens por dia da semana
+  const DIAS=['Segunda','Terça','Quarta','Quinta','Sexta'];
+  const porDia={};
+  b.itens.forEach(item=>{
+    const dia=item.dia||'Segunda';
+    if(!porDia[dia])porDia[dia]=[];
+    porDia[dia].push(item);
+  });
+  // Dias que têm itens, na ordem certa
+  const diasComItens=DIAS.filter(d=>porDia[d]&&porDia[d].length>0);
+  // Se não tem dias definidos, agrupa tudo sem dia
+  const semDia=b.itens.filter(i=>!i.dia);
+
+  const renderItem=(item)=>`
+    <div class="cron-item">
+      <div class="cron-check ${item.done?'done':''}" onclick="toggleCronItem(${cid},${b.id},${item.id})">
+        ${item.done?`<svg width="10" height="10" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+      </div>
+      <div style="flex:1">
+        ${item.grupo&&!isMentor?`<div class="cron-grupo-lbl">${item.grupo}</div>`:''}
+        <div class="cron-txt ${item.done?'done':''}">${item.txt}</div>
+        ${item.comoFazer?`
+          <button class="como-fazer-btn" onclick="toggleComoFazer(${cid},${b.id},${item.id})">
+            ${item.expandido?'▲ Fechar':'▶ Como fazer'}
+          </button>
+          ${item.expandido?`<div class="como-fazer-box">
+            <div style="font-size:10px;font-weight:700;color:var(--nv2);margin-bottom:8px">${item.comoFazer.titulo}</div>
+            ${item.comoFazer.passos.map((p,pi)=>`
+              <div class="como-fazer-passo">
+                <div class="cf-num">${pi+1}</div>
+                <div>${p}</div>
+              </div>
+            `).join('')}
+          </div>`:''}
+        `:''}
+        ${item.nota?`<div class="cron-nota">📝 ${item.nota}</div>`:''}
+        ${!isMentor&&!item.done?`<input type="text" placeholder="Adicionar nota..." value="${item.nota||''}"
+          style="margin-top:5px;font-size:11px;padding:4px 8px;border-radius:5px;width:100%"
+          onblur="salvarNotaCron(${cid},${b.id},${item.id},this.value)"
+          onkeydown="if(event.key==='Enter')this.blur()"/>`:``}
+      </div>
+    </div>`;
+
   return`<div class="cron-semana">
     <div class="cron-hdr" onclick="toggleCronBloco(${cid},${b.id})">
-      <div class="cron-num" style="background:${BG_MAP[b.cor]};color:${COR_MAP[b.cor]}">${b.sem.replace('–','-')}</div>
+      <div class="cron-num" style="background:${bgCor};color:${cor}">${b.sem.replace('–','-')}</div>
       <div style="flex:1">
         <div class="cron-titulo">${b.fase} <span style="font-weight:400;color:var(--tx3)">· ${b.desc}</span></div>
-        <div class="cron-pbar" style="width:120px"><div class="cron-pfill" style="width:${pct}%;background:${COR_MAP[b.cor]}"></div></div>
+        <div class="cron-pbar" style="width:120px"><div class="cron-pfill" style="width:${pct}%;background:${cor}"></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-        <span style="font-size:11px;font-weight:700;color:${COR_MAP[b.cor]}">${feitos}/${total}</span>
+        <span style="font-size:11px;font-weight:700;color:${cor}">${feitos}/${total}</span>
         <span style="font-size:14px;color:var(--tx3)">${b.aberto?'▲':'▼'}</span>
       </div>
     </div>
     ${b.aberto?`<div class="cron-body">
-      ${b.itens.map(item=>`
-        <div class="cron-item">
-          <div class="cron-check ${item.done?'done':''}" onclick="toggleCronItem(${cid},${b.id},${item.id})">
-            ${item.done?`<svg width="10" height="10" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+      ${diasComItens.length>0
+        ? diasComItens.map(dia=>`
+          <div class="cron-dia-hdr">
+            <div class="cron-dia-dot" style="background:${cor}"></div>
+            ${dia}
           </div>
-          <div style="flex:1">
-            <div class="cron-txt ${item.done?'done':''}">${item.txt}</div>
-            ${item.nota?`<div class="cron-nota">📝 ${item.nota}</div>`:''}
-            ${!isMentor&&!item.done?`<input type="text" placeholder="Adicionar nota..." value="${item.nota||''}"
-              style="margin-top:5px;font-size:11px;padding:4px 8px;border-radius:5px"
-              onblur="salvarNotaCron(${cid},${b.id},${item.id},this.value)"
-              onkeydown="if(event.key==='Enter')this.blur()"/>`:
-              item.nota&&isMentor?'':''}
-          </div>
-        </div>
-      `).join('')}
+          ${porDia[dia].map(item=>renderItem(item)).join('')}
+        `).join('')
+        : semDia.map(item=>renderItem(item)).join('')
+      }
     </div>`:''}
   </div>`;
 }
@@ -1824,6 +1948,20 @@ window.liberarCron=async function(cid){
   localStorage.setItem('rxr-cron-lib-'+cid,'true');
   S.diags=S.diags.map(d=>d.cid===cid?{...d,cron_liberado:true}:d);
   try{const d=S.diags.find(x=>x.cid===cid);if(d)await svDiag(d);}catch(e){console.warn('Supabase cron:',e);}
+  R();
+};
+
+window.toggleComoFazer=function(cid,bid,iid){
+  const diag=S.diags.find(d=>d.cid===cid);
+  function lv(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
+  const cronStr=lv(diag?.cron_dados)||lv(localStorage.getItem('rxr-cron-'+cid));
+  if(!cronStr)return;
+  const cron=JSON.parse(cronStr);
+  const novo=JSON.stringify(cron.map(b=>b.id!==bid?b:{...b,
+    itens:b.itens.map(i=>i.id!==iid?i:{...i,expandido:!i.expandido})
+  }));
+  localStorage.setItem('rxr-cron-'+cid,novo);
+  S.diags=S.diags.map(d=>d.cid===cid?{...d,cron_dados:novo}:d);
   R();
 };
 
