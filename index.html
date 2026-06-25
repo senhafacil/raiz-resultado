@@ -1628,7 +1628,7 @@ function gerarComoFazer(txt,grupo){
   return null; // sem como fazer específico
 }
 
-// Gera cronograma: 1 item por AÇÃO do plano, distribuído por dia da semana
+// Gera cronograma: distribui os passos do plano pelos 5 dias da semana
 function gerarCronDoPlano(plano){
   const DIAS=['Segunda','Terça','Quarta','Quinta','Sexta'];
 
@@ -1637,38 +1637,42 @@ function gerarCronDoPlano(plano){
     const faseTit=(fase.titulo||'').split(' · ');
     const acoes=fase.acoes||[];
     const itens=[];
-    let diaIdx=0;
 
+    // Coleta todos os passos de todas as ações da fase, com contexto
+    const todos=[];
     acoes.forEach((acao,ai)=>{
-      const dia=DIAS[Math.min(diaIdx,4)];
+      const passos=acao.passos||(acao.d?[acao.d]:[]);
+      passos.forEach((p,pi)=>{
+        todos.push({passo:p,acao,isFirst:pi===0,ai,pi});
+      });
+    });
 
-      // Como fazer: usa personalizado do plano se existir
-      // Se não, usa os próprios passos da ação como instruções
-      // Se não tiver passos, usa keyword matching
-      let cf=null;
-      if(acao.comoFazer){
-        cf=acao.comoFazer;
-      } else if(acao.passos&&acao.passos.length>0){
-        cf={titulo:'Como fazer',passos:acao.passos};
-      } else if(acao.d){
-        cf=gerarComoFazer(acao.t,fase.titulo)||{titulo:'Como fazer',passos:[acao.d]};
-      } else {
-        cf=gerarComoFazer(acao.t,fase.titulo);
-      }
+    if(todos.length===0) return{id:fi,sem:'',fase:faseTit[0]||'',desc:faseTit[1]||'',cor,aberto:fi===0,itens:[]};
+
+    // Distribui pelos 5 dias da semana proporcionalmente
+    // Ex: 6 itens → dias 0,0,1,2,3,4 (2 na segunda, 1 em cada outro)
+    const total=todos.length;
+    todos.forEach((item,idx)=>{
+      // dia = floor(idx * 5 / total)  → distribui proporcionalmente
+      const diaIdx=Math.min(Math.floor(idx*5/total),4);
+      const dia=DIAS[diaIdx];
+
+      // Como fazer: só no primeiro passo de cada ação
+      // Usa personalizado do plano se existir, senão keyword matching
+      const cf=item.isFirst
+        ?(item.acao.comoFazer||gerarComoFazer(item.passo,item.acao.t))
+        :null;
 
       itens.push({
-        id:fi*1000+ai,
+        id:fi*1000+item.ai*10+item.pi,
         dia,
-        txt:acao.t,          // título da ação — o que fazer
-        grupo:faseTit[1]||fase.titulo,
-        comoFazer:cf,        // como fazer — instruções específicas
+        txt:item.passo,
+        grupo:item.acao.t,
+        comoFazer:cf,
         expandido:false,
         done:false,
         nota:'',
       });
-
-      // Avança 1 dia por ação
-      diaIdx=Math.min(diaIdx+1,4);
     });
 
     return{
