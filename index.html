@@ -1416,12 +1416,12 @@ function bPlanoMentor(){
   // Guard: Supabase pode retornar 'vazio' ou 'false' como string (default da coluna)
   function limpaVal(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
   const cronValidado=!!(limpaVal(diag.cron_dados)||limpaVal(localStorage.getItem('rxr-cron-'+cli.id)));
-  // Mostra botão de gerar cronograma se não tem cron OU se plano é rascunho (precisa regenerar)
-  const precisaGerarCron=!cronValidado||!liberado;
   // localStorage tem prioridade — permite seedPlano sobrescrever o Supabase
   let planoDados=limpaVal(localStorage.getItem('rxr-plano-'+cli.id));
   if(!planoDados) planoDados=limpaVal(diag.plano_dados);
   let liberado=(diag.plano_liberado===true||diag.plano_liberado==='true')||localStorage.getItem('rxr-plano-lib-'+cli.id)==='true';
+  // Mostra botão de gerar cron se não existe OU plano é rascunho (precisa regerado)
+  const precisaGerarCron=!cronValidado||!liberado;
   const plano=planoDados?JSON.parse(planoDados):null;
 
   if(!plano) return seletor+`<div style="text-align:center;padding:40px 20px">
