@@ -311,9 +311,23 @@ async function loadData(){
     S.ativs=avs||[];
     S.diags=(dgs||[]).map(d=>({...d,
       habilidades:typeof d.habilidades==='string'?JSON.parse(d.habilidades||'{}'):d.habilidades||{},
-      roda_negocio:typeof d.roda_negocio==='string'?JSON.parse(d.roda_negocio||'{}'):d.roda_negocio||{},
+      roda_negocio:typeof d.rota_negocio==='string'?JSON.parse(d.roda_negocio||'{}'):d.roda_negocio||{},
       sentimento:typeof d.sentimento==='string'&&d.sentimento.startsWith('[')?JSON.parse(d.sentimento):d.sentimento,
     }));
+    // Mescla planos do localStorage — localStorage sempre tem prioridade sobre Supabase
+    function _lsv(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
+    S.diags=S.diags.map(d=>{
+      const lsP=_lsv(localStorage.getItem('rxr-plano-'+d.cid));
+      const lsC=_lsv(localStorage.getItem('rxr-cron-'+d.cid));
+      const lsPL=localStorage.getItem('rxr-plano-lib-'+d.cid)==='true';
+      const lsCL=localStorage.getItem('rxr-cron-lib-'+d.cid)==='true';
+      return{...d,
+        plano_dados:lsP||_lsv(d.plano_dados)||null,
+        cron_dados:lsC||_lsv(d.cron_dados)||null,
+        plano_liberado:lsPL||d.plano_liberado===true||d.plano_liberado==='true',
+        cron_liberado:lsCL||d.cron_liberado===true||d.cron_liberado==='true',
+      };
+    });
   }catch(e){console.error('loadData erro',e);}
   R();
 }
@@ -2079,7 +2093,7 @@ window.validarEGerarCron=async function(cid){
   const diag=S.diags.find(d=>d.cid===cid);
   if(!cli||!diag){alert('Plano não encontrado.');return;}
   function lv(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
-  const planoDados=lv(diag.plano_dados)||lv(localStorage.getItem('rxr-plano-'+cid));
+  const planoDados=lv(localStorage.getItem('rxr-plano-'+cid))||lv(diag.plano_dados);
   if(!planoDados){alert('Gere o plano de ação primeiro.');return;}
   const plano=JSON.parse(planoDados);
   const cron=gerarCronDoPlano(plano);
