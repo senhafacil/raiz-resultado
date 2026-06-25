@@ -886,8 +886,7 @@ function bMentor(){
     <button class="tab ${S.tab==='c'?'on':''}" onclick="st('c')">Mentoradas</button>
     <button class="tab ${S.tab==='d'?'on':''}" onclick="st('d')">Diagnósticos</button>
     <button class="tab ${S.tab==='p'?'on':''}" onclick="st('p')">📄 Plano de Ação</button>
-    <button class="tab ${S.tab==='cr'?'on':''}" onclick="st('cr')">📅 Cronograma</button>
-  </div><div class="ct">${S.tab==='j'?bJornada():S.tab==='d'?bDiagsMentor():S.tab==='p'?safePlano():S.tab==='cr'?safeCron():bClientes()}</div>`;
+  </div><div class="ct">${S.tab==='j'?bJornada():S.tab==='d'?bDiagsMentor():S.tab==='p'?safePlano():bClientes()}</div>`;
 }
 
 function bJornada(){
@@ -1066,11 +1065,11 @@ function bCliente(){
     <button class="tab ${cTab==='jornada'?'on':''}" onclick="S.cliTab='jornada';R()">Jornada</button>
     <button class="tab ${cTab==='diag'?'on':''}" onclick="S.cliTab='diag';R()">📋 Diagnóstico</button>
     ${temPlano?`<button class="tab ${cTab==='plano'?'on':''}" onclick="S.cliTab='plano';R()">📄 Plano de Ação</button>`:''}
-    ${temCron?`<button class="tab ${cTab==='cron'?'on':''}" onclick="S.cliTab='cron';R()">📅 Cronograma</button>`:''}
+    
   </div>`;
   if(cTab==='diag') return tabHdr+bDiagCliente();
   if(cTab==='plano') return tabHdr+bPlanoCli();
-  if(cTab==='cron') return tabHdr+bCronCli();
+
   if(cTab==='jornada'&&cli.jornBloq){
     return tabHdr+`<div class="ct"><div style="text-align:center;padding:48px 20px">
 <div style="font-size:36px;margin-bottom:14px">🔒</div>
@@ -1338,62 +1337,78 @@ function gerarPlanoDados(cli, diag){
 }
 
 function bPlanoConteudo(plano){
+  const DIAS=['Segunda','Terça','Quarta','Quinta','Sexta'];
   const COR={nv:'var(--nv2)',pu:'var(--pu)',go:'var(--go)',gr:'var(--gr)'};
-  const BGCOR={nv:'var(--nvf)',pu:'var(--puf)',go:'var(--gof)',gr:'var(--grf)'};
-  // retrocompatibilidade com planos no formato antigo
   const raizTxt=plano.raiz||plano.diagnostico||'';
-  const fasesOk=(plano.fases||[]).map(f=>({...f,acoes:(f.acoes||[]).map(a=>({...a,passos:a.passos||(a.d?[a.d]:[])}))}) );
-  return`
-  <div style="background:var(--nvf);border-left:3px solid var(--nv2);border-radius:0 var(--rs) var(--rs) 0;padding:13px 15px;margin-bottom:10px">
+
+  // Achata todas as ações de todas as fases em sequência
+  const todas=[];
+  (plano.fases||[]).forEach(fase=>{
+    (fase.acoes||[]).forEach(acao=>{
+      todas.push({t:acao.t,comoFazer:acao.comoFazer,passos:acao.passos,d:acao.d,faseCor:fase.cor||'nv'});
+    });
+  });
+
+  const total=todas.length;
+  if(!total) return '<div class="empty">Plano sem ações cadastradas.</div>';
+
+  // Distribui pelos 5 dias: floor(idx*5/total)
+  const comDia=todas.map((acao,idx)=>({...acao,diaIdx:Math.min(Math.floor(idx*5/total),4)}));
+
+  // Agrupa por dia
+  const porDia=DIAS.map((dia,di)=>({dia,acoes:comDia.filter(a=>a.diaIdx===di)}));
+
+  let n=0;
+  const diasHtml=porDia.filter(d=>d.acoes.length>0).map(({dia,acoes})=>{
+    const acoesHtml=acoes.map(acao=>{
+      n++;
+      const cor=COR[acao.faseCor]||'var(--nv2)';
+      // Como fazer: usa personalizado → usa passos como instrução → keyword matching
+      const cf=acao.comoFazer
+        ||(acao.passos&&acao.passos.length?{titulo:'Como fazer',passos:acao.passos}:null)
+        ||(acao.d?{titulo:'Como fazer',passos:[acao.d]}:null);
+      const cfHtml=cf?
+        `<button onclick="togglePlanoCF(this)" style="margin-top:5px;font-size:10px;font-weight:700;color:${cor};background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;gap:4px"><span>▶</span> Como fazer</button>`+
+        `<div style="display:none;margin-top:7px;background:var(--sf2);border-radius:6px;padding:9px 11px">`+
+        cf.passos.map((p,pi)=>
+          `<div style="display:flex;gap:7px;align-items:flex-start;margin-bottom:5px">`+
+          `<div style="min-width:15px;height:15px;border-radius:50%;background:${cor};color:white;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${pi+1}</div>`+
+          `<div style="font-size:11px;color:var(--tx2);line-height:1.45;flex:1">${p}</div></div>`
+        ).join('')+`</div>`
+        :'';
+      return `<div style="display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:.5px solid var(--bd)">`+
+        `<div style="min-width:22px;height:22px;border-radius:50%;background:${cor};color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">${n}</div>`+
+        `<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--tx);line-height:1.4">${acao.t}</div>${cfHtml}</div></div>`;
+    }).join('');
+    return `<div style="margin-bottom:12px">`+
+      `<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--nv2);padding:5px 0 4px;border-bottom:1.5px solid var(--nv2);margin-bottom:6px">${dia}</div>`+
+      acoesHtml+`</div>`;
+  }).join('');
+
+  const alertaHtml=plano.alerta
+    ?`<div class="plano-alerta" style="background:var(--rdf)"><div class="plano-alerta-lbl">Atenção</div><div class="plano-alerta-txt">${plano.alerta}</div></div>`
+    :'';
+
+  return `
+  <div style="background:var(--nvf);border-left:3px solid var(--nv2);border-radius:0 var(--rs) var(--rs) 0;padding:12px 14px;margin-bottom:10px">
     <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--nv2);margin-bottom:5px">🌱 RAIZ — Onde você está</div>
     <div style="font-size:13px;color:var(--tx);line-height:1.6;font-weight:500">${raizTxt}</div>
   </div>
   <div class="plano-card3">
-    <div class="plano-mini" style="background:var(--gof)">
-      <div class="plano-mini-lbl" style="color:var(--go)">Dor principal</div>
-      <div class="plano-mini-txt">${plano.dor}</div>
-    </div>
-    <div class="plano-mini" style="background:var(--nvf)">
-      <div class="plano-mini-lbl" style="color:var(--nv2)">Gargalo</div>
-      <div class="plano-mini-txt">${plano.gargalo}</div>
-    </div>
-    <div class="plano-mini" style="background:var(--grf)">
-      <div class="plano-mini-lbl" style="color:var(--gr)">Oportunidade</div>
-      <div class="plano-mini-txt">${plano.oportunidade}</div>
-    </div>
+    <div class="plano-mini" style="background:var(--gof)"><div class="plano-mini-lbl" style="color:var(--go)">Dor principal</div><div class="plano-mini-txt">${plano.dor}</div></div>
+    <div class="plano-mini" style="background:var(--nvf)"><div class="plano-mini-lbl" style="color:var(--nv2)">Gargalo</div><div class="plano-mini-txt">${plano.gargalo}</div></div>
+    <div class="plano-mini" style="background:var(--grf)"><div class="plano-mini-lbl" style="color:var(--gr)">Oportunidade</div><div class="plano-mini-txt">${plano.oportunidade}</div></div>
   </div>
-  <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin:14px 0 8px">⚡ RESULTADO — Plano prático semana a semana</div>
-  ${fasesOk.map(fase=>`
-    <div style="border:.5px solid var(--bd2);border-radius:var(--r);overflow:hidden;margin-bottom:8px">
-      <div class="plano-fase-hdr" style="background:${COR[fase.cor]}">
-        <div class="plano-fase-num">${fase.num}</div>
-        <div style="flex:1"><div class="plano-fase-tit">${fase.titulo}</div><div class="plano-fase-pz">${fase.prazo}</div></div>
-      </div>
-      <div style="background:${BGCOR[fase.cor]};padding:9px 15px;font-size:11px;color:var(--tx2);line-height:1.5;border-bottom:.5px solid var(--bd);font-style:italic">${fase.raiz}</div>
-      <div class="plano-fase-body">
-        ${(fase.acoes||[]).map((a,ai)=>`
-          <div class="plano-acao">
-            <div class="plano-acao-num" style="background:${COR[fase.cor]}">${ai+1}</div>
-            <div style="flex:1">
-              <div class="plano-acao-tit">${a.t}</div>
-              <div style="margin-top:6px">
-                ${(a.passos||[]).map((p,pi)=>`<div style="display:flex;gap:7px;align-items:flex-start;margin-bottom:5px">
-                  <div style="width:16px;height:16px;border-radius:50%;background:${BGCOR[fase.cor]};color:${COR[fase.cor]};font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${pi+1}</div>
-                  <div style="font-size:11px;color:var(--tx2);line-height:1.45;flex:1">${p}</div>
-                </div>`).join('')}
-              </div>
-              ${a.entrega?`<div style="margin-top:7px;background:var(--grf);border-radius:5px;padding:5px 9px;font-size:10px;font-weight:700;color:var(--gr)">📎 ${a.entrega}</div>`:''}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('')}
-  <div class="plano-alerta" style="background:var(--rdf)">
-    <div class="plano-alerta-lbl">Atenção</div>
-    <div class="plano-alerta-txt">${plano.alerta}</div>
-  </div>`;
+  <div style="background:var(--gof);border-radius:var(--rs);padding:9px 13px;margin:10px 0 14px;font-size:11px;color:var(--go);font-weight:600;line-height:1.5">⚡ Esta semana você constrói o sistema. Na semana seguinte, você começa a usar.</div>
+  ${diasHtml}${alertaHtml}`;
 }
+
+window.togglePlanoCF=function(btn){
+  const box=btn.nextElementSibling;
+  const open=box.style.display!=='none';
+  box.style.display=open?'none':'block';
+  btn.querySelector('span').textContent=open?'▶':'▼';
+};
 
 function bPlanoMentor(){
   const cli=S.clients[S.curCli];
@@ -1415,13 +1430,11 @@ function bPlanoMentor(){
   // Tenta carregar do Supabase, senão usa localStorage
   // Guard: Supabase pode retornar 'vazio' ou 'false' como string (default da coluna)
   function limpaVal(v){return(!v||v==='vazio'||v==='false'||v==='null')?null:v;}
-  const cronValidado=!!(limpaVal(diag.cron_dados)||limpaVal(localStorage.getItem('rxr-cron-'+cli.id)));
   // localStorage tem prioridade — permite seedPlano sobrescrever o Supabase
   let planoDados=limpaVal(localStorage.getItem('rxr-plano-'+cli.id));
   if(!planoDados) planoDados=limpaVal(diag.plano_dados);
   let liberado=(diag.plano_liberado===true||diag.plano_liberado==='true')||localStorage.getItem('rxr-plano-lib-'+cli.id)==='true';
   // Mostra botão de gerar cron se não existe OU plano é rascunho (precisa regerado)
-  const precisaGerarCron=!cronValidado||!liberado;
   const plano=planoDados?JSON.parse(planoDados):null;
 
   if(!plano) return seletor+`<div style="text-align:center;padding:40px 20px">
@@ -1444,9 +1457,6 @@ function bPlanoMentor(){
     </div>
     <div class="row" style="gap:6px;flex-shrink:0">
       <button class="btn bsm" onclick="gerarPlano(${cli.id})">↺ Regerar</button>
-      ${precisaGerarCron?
-        `<button class="btn bsm" style="background:var(--pu);color:white;border-color:var(--pu)" onclick="validarEGerarCron(${cli.id})">✅ Validar e gerar cronograma</button>`
-        :`<span class="plano-status-ok">✓ Plano validado</span>`}
       ${liberado?'':`<button class="btn bgrn bsm" onclick="liberarTudo(${cli.id})">🔓 Liberar para ${cli.n.split(' ')[0]}</button>`}
     </div>
   </div>
@@ -1704,7 +1714,7 @@ function bCronMentor(){
     <div style="font-size:28px;margin-bottom:10px">📅</div>
     <div style="font-size:13px;font-weight:700;color:var(--nv);margin-bottom:6px">Cronograma ainda não gerado</div>
     <div style="font-size:12px;color:var(--tx3);max-width:280px;margin:0 auto 16px;line-height:1.6">Gere o cronograma de 10 semanas para ${cli.n.split(' ')[0]}. Ela poderá marcar o progresso e adicionar notas.</div>
-    <button class="btn bnav" onclick="validarEGerarCron(${cli.id})">✅ Validar plano e gerar cronograma</button>
+
   </div>`;
   const total=cron.reduce((s,b)=>s+b.itens.length,0);
   const feitos=cron.reduce((s,b)=>s+b.itens.filter(i=>i.done).length,0);
