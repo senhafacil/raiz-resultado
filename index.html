@@ -1537,6 +1537,94 @@ function gerarComoFazer(txt,grupo){
       'Se abaixo por 2 semanas seguidas: o problema é captação, conversão ou preço? Identifique',
       'Não precisa ser sofisticado — o hábito de olhar já muda o comportamento',
     ]};
+  if(t.includes('bloco')||t.includes('agenda')||t.includes('horário fixo')||t.includes('semana em'))
+    return{titulo:'Como criar blocos fixos na agenda',passos:[
+      'Abra Google Agenda (ou qualquer app de calendário que já usa)',
+      'Crie 3 blocos recorrentes toda semana: Prospecção/Produção | Atendimento/Fechamento | Gestão/Conteúdo',
+      'Defina dias e horários fixos — ex: Seg/Ter = prospecção, Qua/Qui = atendimento, Sex = gestão',
+      'Coloque alarme 15 minutos antes de cada bloco',
+      'Trate cada bloco como reunião que não pode cancelar — mesmo que só seja com você mesma',
+    ]};
+  if(t.includes('urgên')||t.includes('interrupção')||t.includes('responder')||t.includes('protocolo'))
+    return{titulo:'Como criar protocolo de urgências',passos:[
+      'Defina o que é urgência REAL: algo que causa dano real ao cliente se não for resolvido em 1h',
+      'Todo o resto: pode esperar seu bloco de atendimento do dia ou do próximo dia',
+      'Crie mensagem automática: "Recebi sua mensagem! Retorno em até [X horas] no horário de atendimento."',
+      'Informe aos clientes ativos qual é seu horário de suporte — uma mensagem simples resolve a expectativa',
+      'Primeira semana vai ser difícil resistir. Continue — clientes se adaptam à sua disponibilidade',
+    ]};
+  if(t.includes('custo')||t.includes('ingrediente')||t.includes('calcul')||t.includes('preço'))
+    return{titulo:'Como calcular o custo real de um produto ou serviço',passos:[
+      'Liste todos os insumos usados com quantidade e custo unitário (ex: farinha 200g = R$1,80)',
+      'Adicione embalagem, etiqueta e material de entrega',
+      'Adicione gás, energia ou tempo de máquina proporcional',
+      'Adicione SEU TEMPO: valor hora desejado × tempo de produção (ex: R$30/h × 45min = R$22,50)',
+      'Some tudo — esse é o custo real. O preço precisa ser pelo menos esse valor + 30% de margem',
+    ]};
+  if(t.includes('meta')||t.includes('faturamento')||t.includes('número')||t.includes('acompanhar'))
+    return{titulo:'Como definir e acompanhar a meta de faturamento',passos:[
+      'Meta mínima = todos os custos fixos + pró-labore desejado por mês',
+      'Meta ideal = meta mínima + 30% para reinvestimento',
+      'Divida por 4 semanas → quanto precisa faturar POR SEMANA para atingir a meta?',
+      'Crie uma planilha simples: Semana | Receita | Meta | Diferença — preencha todo domingo em 5 minutos',
+      'Se ficar abaixo por 2 semanas seguidas: o problema é captação, conversão ou preço? Identifique e corrija',
+    ]};
+  if(t.includes('canal')||t.includes('feira')||t.includes('rentabilidade')||t.includes('mais vende'))
+    return{titulo:'Como calcular qual canal é mais rentável',passos:[
+      'Para cada canal: some a receita total do mês',
+      'Para cada canal: some as horas investidas (produção + deslocamento + tempo na venda)',
+      'Calcule: Receita ÷ Horas = receita por hora trabalhada em cada canal',
+      'O canal com maior receita/hora é o mais rentável — não necessariamente o de maior faturamento bruto',
+      'Exemplo: Feira gera R$500 mas exige 8h totais = R$62/h. Instagram gera R$300 com 2h = R$150/h',
+    ]};
+  if(t.includes('conteúdo')||t.includes('reels')||t.includes('story')||t.includes('instagram')||t.includes('redes'))
+    return{titulo:'Como criar conteúdo que você reaproveita',passos:[
+      'Escolha 1 pergunta que seu cliente mais faz — responda em 60 segundos (video) ou 3 slides (carrossel)',
+      'Formato mais simples: grave um áudio no WhatsApp com a resposta e use a transcrição como legenda',
+      'Não precisa aparecer: tela do celular com texto + sua voz explicando já funciona bem',
+      'Após criar: salve em uma pasta "Conteúdos prontos" — pode repostar nos Stories na semana seguinte',
+      'Meta realista: 1 conteúdo novo por semana = 52 por ano. Mais do que o suficiente para presença consistente',
+    ]};
+  if(t.includes('consorci')||t.includes('médico')||t.includes('empresário')||t.includes('segmento'))
+    return{titulo:'Como criar mensagens por segmento de cliente',passos:[
+      'Defina 3 perfis que mais fecham com você (ex: médicos, empresários, autônomos)',
+      'Para cada perfil escreva 1 frase que conecta o que você oferece com o que ELE quer',
+      'Médico: patrimônio sem juros para consultório. Empresário: expandir sem banco. Autônomo: planejar com previsibilidade',
+      'Teste cada mensagem por 2 semanas antes de mudar — consistência gera mais resultado que variação',
+      'O que funciona para médico raramente funciona para autônomo — segmentar é o que faz diferença',
+    ]};
+  if(t.includes('produção')||t.includes('calendário')||t.includes('produzir')||t.includes('lote'))
+    return{titulo:'Como criar calendário de produção',passos:[
+      'Defina dias de produção fixos na semana — ex: Ter, Qua e Qui apenas',
+      'Nos dias de produção: produza sempre um lote a mais do que os pedidos da semana (vai para o estoque/freezer)',
+      'Defina a regra de pedidos: "Pedidos para o final de semana entram até [dia X]"',
+      'Comunique a regra no status do WhatsApp e para clientes recorrentes',
+      'Nos dias que não são de produção: não acende o forno, não aceita pedido urgente sem taxa extra',
+    ]};
+  if(t.includes('posicionamento')||t.includes('missão')||t.includes('1 frase')||t.includes('quem você'))
+    return{titulo:'Como escrever seu posicionamento em 1 frase',passos:[
+      'Responda separado: O que você faz? Para quem? Qual resultado entrega? O que te diferencia?',
+      'Monte: "Ajudo [público] a [resultado] através de [o que você faz] com [diferencial]"',
+      'Leia em voz alta — soa natural? Você falaria isso para um cliente? Se não, reescreva',
+      'Teste com 3 pessoas: elas entenderam imediatamente o que você faz? Se tiveram dúvida, simplifique',
+      'Use em todos os lugares: bio do Instagram, apresentação, assinatura do WhatsApp',
+    ]};
+  if(t.includes('delegar')||t.includes('ensinar')||t.includes('outra pessoa')||t.includes('equipe'))
+    return{titulo:'Como preparar algo para delegar',passos:[
+      'Escolha 1 tarefa: a que mais consome seu tempo e que outra pessoa pode aprender',
+      'Execute a tarefa uma vez prestando atenção em cada micro-passo — anote tudo em tempo real',
+      'Escreva o passo a passo em até 10 linhas, como se estivesse ensinando alguém do zero',
+      'Teste: entregue o documento para a pessoa e peça que execute sem você explicar nada',
+      'Se não conseguiu: o documento precisa de mais detalhes — simplifique a linguagem, não o processo',
+    ]};
+  if(t.includes('ritual')||t.includes('revisão semanal')||t.includes('toda segunda')||t.includes('30 minutos'))
+    return{titulo:'Como criar o ritual de revisão semanal',passos:[
+      'Escolha dia e horário fixo — sugestão: segunda-feira, primeiros 30 minutos do dia',
+      'Bloqueie na agenda como reunião com você mesma — não cancela nem adia',
+      'Responda sempre as mesmas 3 perguntas: O que fiz? / O que ficou? / O que ajusto essa semana?',
+      'Olhe 3 números: faturamento / clientes atendidos ou contatados / maior trava da semana',
+      'Anote — o registro cria o hábito e mostra a evolução mês a mês',
+    ]};
   return null; // sem como fazer específico
 }
 
@@ -1560,13 +1648,12 @@ function gerarCronDoPlano(plano){
 
       // Todos os passos desta ação no MESMO dia
       passos.forEach((p,pi)=>{
+        // comoFazer: usa personalizado do plano se existir, senão keyword matching
+        const cf=pi===0?(acao.comoFazer||gerarComoFazer(p,acao.t)):null;
         itens.push({
           id:fi*1000+i*10+pi,
-          dia,
-          txt:p,
-          grupo:acao.t,
-          // como fazer só no 1º passo, só se existir no plano (não gera automaticamente)
-          comoFazer:pi===0&&acao.comoFazer?acao.comoFazer:null,
+          dia,txt:p,grupo:acao.t,
+          comoFazer:cf,
           expandido:false,done:false,nota:'',
         });
       });
