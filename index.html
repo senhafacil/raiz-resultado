@@ -1174,35 +1174,51 @@ function gerarPlanoDados(cli, diag){
   const rodaArr=Object.entries(rodaMap).map(([k,l])=>({k,l,v:parseInt(roda[k])||0})).sort((a,b)=>a.v-b.v);
   const forca=rodaArr[rodaArr.length-1];
 
-  // Usa DOR DECLARADA pela mentorada, não o score mais baixo
-  const txt=((diag.mudanca_90||'')+(diag.motivo||'')+(diag.livre||'')+(diag.maior_desafio||'')+(diag.desafios||'')).toLowerCase();
-  let foco='proc'; // padrão sempre processo
-  if(/\btempo\b|urgên|agenda|rotina|horário|blocos/.test(txt)) foco='tempo';
-  else if(/financ|custo|preç|lucro|faturamento|separa/.test(txt)) foco='fin';
-  else if(/cliente|marketing|venda|atração|captar|prospec/.test(txt)) foco='mkt';
-  else if(/equipe|delegar|funcionário|sócia/.test(txt)) foco='eq';
-  // Se texto mencionar processo/estrutura: mantém proc
-  // Fallback para score mais baixo SOMENTE se texto não indicar nada
-  if(foco==='proc'&&!/process|fluxo|estrutur|organiz|padroniz|document|template|checklist/.test(txt)){
-    const maisfraco=rodaArr[0];
-    if(maisfraco.v<=3) foco=maisfraco.k;
+  // Usa DOR DECLARADA — mudanca_90 (objetivo explícito) tem prioridade máxima
+  const goal=(diag.mudanca_90||'').toLowerCase();
+  const txt=((diag.motivo||'')+(diag.livre||'')+(diag.maior_desafio||'')+(diag.desafios||'')).toLowerCase();
+
+  // 1º — objetivo declarado tem prioridade
+  let foco='proc';
+  if(/process|fluxo|estrutur|organiz|padroniz|funil|etapas|document|checklist/.test(goal)){
+    foco='proc'; // processo mencionado explicitamente como objetivo → sempre processo
+  } else if(/\btempo\b|urgên|agenda|rotina|blocos/.test(goal)){
+    foco='tempo';
+  } else if(/financ|custo|preç|lucro|faturamento/.test(goal)){
+    foco='fin';
+  } else if(/cliente|marketing|venda|atração|captar|prospec/.test(goal)){
+    foco='mkt';
+  } else if(/equipe|delegar|funcionário/.test(goal)){
+    foco='eq';
+  } else {
+    // 2º — texto secundário (motivo, desafios)
+    if(/\btempo\b|urgên|agenda|rotina/.test(txt)) foco='tempo';
+    else if(/financ|custo|preç|lucro/.test(txt)) foco='fin';
+    else if(/cliente|marketing|venda|atração/.test(txt)) foco='mkt';
+    else if(/equipe|delegar|funcionário/.test(txt)) foco='eq';
+    else {
+      // 3º — fallback: score mais baixo com nota ≤3
+      const maisfraco=rodaArr[0];
+      if(maisfraco.v<=3) foco=maisfraco.k;
+    }
   }
 
-  // RAIZ — curta, baseada no sentimento e no foco
+  // RAIZ — baseada no foco e no sentimento
   let raiz='';
-  if(sentimento.some(s=>s.includes('sobrecarregada')||s.includes('tudo sozinha')))
-    raiz+=`${nome}, você está carregando o negócio sozinha — e chegou a hora de mudar isso. `;
-  else if(sentimento.some(s=>s.includes('Travada')))
-    raiz+=`${nome}, você sabe que algo precisa mudar. Esse plano é o próximo passo. `;
-  else if(sentimento.some(s=>s.includes('Ansiosa')))
-    raiz+=`${nome}, a ansiedade que você sente tem endereço. Os próximos 30 dias vão resolver isso. `;
-  else raiz+=`${nome}, você tem potencial real. O que falta é estrutura, não esforço. `;
-
-  if(foco==='tempo') raiz+=`O foco dos próximos 30 dias é estruturar a semana e criar processos que protejam o seu tempo comercial.`;
-  else if(foco==='fin') raiz+=`O foco dos próximos 30 dias é ter clareza financeira real — custo, preço e meta de faturamento.`;
-  else if(foco==='mkt') raiz+=`O foco dos próximos 30 dias é criar um fluxo consistente de clientes — sem depender só de indicação.`;
-  else if(foco==='eq') raiz+=`O foco dos próximos 30 dias é começar a delegar com confiança — documentar e ensinar o que só você faz hoje.`;
-  else raiz+=`O foco dos próximos 30 dias é tirar o ${segmento} da sua cabeça e colocar em processos que funcionam.`;
+  if(foco==='proc'){
+    raiz=`${nome}, você tem um processo que funciona — mas ainda depende muito de você, do improviso e da memória. O problema não é o que você entrega: é que tudo está na sua cabeça. Os próximos 30 dias transformam isso em sistema.`;
+  } else if(foco==='tempo'){
+    if(sentimento.some(s=>s.includes('sobrecarregada')||s.includes('tudo sozinha')))
+      raiz=`${nome}, você está carregando o negócio sozinha — e o tempo nunca é suficiente. O foco dos próximos 30 dias é estruturar a semana e criar processos que protejam o seu tempo.`;
+    else
+      raiz=`${nome}, o seu tempo é o recurso mais escasso do negócio. Os próximos 30 dias são sobre organizar a semana para que o operacional pare de engolir o estratégico.`;
+  } else if(foco==='fin'){
+    raiz=`${nome}, sem saber o custo real, crescer é um risco. O foco dos próximos 30 dias é ter clareza financeira completa — custo, preço e meta de faturamento.`;
+  } else if(foco==='mkt'){
+    raiz=`${nome}, o negócio não pode depender só de indicação. Os próximos 30 dias são sobre criar um fluxo consistente de clientes novos chegando.`;
+  } else {
+    raiz=`${nome}, o negócio precisa funcionar sem depender só de você. Os próximos 30 dias são sobre documentar, ensinar e começar a delegar.`;
+  }
 
   // CARDS
   const dor=foco==='tempo'?'Gestão do tempo — urgências e operacional dominam a agenda.':
