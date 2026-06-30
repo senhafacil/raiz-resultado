@@ -1368,10 +1368,11 @@ function bCliente(){
     <button class="tab ${cTab==='jornada'?'on':''}" onclick="S.cliTab='jornada';R()">Jornada</button>
     <button class="tab ${cTab==='diag'?'on':''}" onclick="S.cliTab='diag';R()">📋 Diagnóstico</button>
     ${temPlano?`<button class="tab ${cTab==='plano'?'on':''}" onclick="S.cliTab='plano';R()">📄 Plano de Ação</button>`:''}
-    
+    <button class="tab ${cTab==='prementoria'?'on':''}" onclick="S.cliTab='prementoria';R()">🌱 Pré-Mentoria</button>
   </div>`;
   if(cTab==='diag') return tabHdr+bDiagCliente();
   if(cTab==='plano') return tabHdr+bPlanoCli();
+  if(cTab==='prementoria') return tabHdr+bDiagPreMentoriaMentor(cli);
 
   if(cTab==='jornada'&&cli.jornBloq){
     return tabHdr+`<div class="ct"><div style="text-align:center;padding:48px 20px">
