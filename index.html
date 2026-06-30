@@ -383,7 +383,7 @@ function sLS(){}
 
 let S={
   role:'login',tab:'j',etapa:0,modal:null,form:{},subId:null,fbId:null,addEt:null,curCli:0,
-  diagStep:0,diagRoda:{},diagData:{},diagEditando:false,
+  diagStep:0,diagRoda:{},diagData:{},diagEditando:false,diagTipo:'negocio',diagGData:{},
   loginCode:'',loginErr:'',
   clients:[],procs:[],ativs:[],diags:[],
 };
@@ -492,7 +492,19 @@ function bDiagsMentor(){
   if(S.diagEditando&&S.diagCid===cli?.id){
     return bDiagFormMentor(cli);
   }
+
+  // Sub-tabs: Negócio | Mentalidade Gestora
+  const tipo=S.diagTipo||'negocio';
+  const tabBar=`
+  <div style="display:flex;gap:4px;margin-bottom:16px">
+    <button onclick="S.diagTipo='negocio';R()" style="flex:1;padding:8px;font-size:11px;font-weight:700;border-radius:8px;border:none;cursor:pointer;background:${tipo==='negocio'?'var(--nv2)':'var(--sf2)'};color:${tipo==='negocio'?'white':'var(--tx3)'}">📋 Diagnóstico do Negócio</button>
+    <button onclick="S.diagTipo='gestora';R()" style="flex:1;padding:8px;font-size:11px;font-weight:700;border-radius:8px;border:none;cursor:pointer;background:${tipo==='gestora'?'var(--pu)':'var(--sf2)'};color:${tipo==='gestora'?'white':'var(--tx3)'}">🧠 Mentalidade & Gestão</button>
+  </div>`;
+
+  if(tipo==='gestora') return tabBar+bDiagGestoraMentor(cli);
+
   return`
+${tabBar}
 <div class="rwb" style="margin-bottom:14px">
   <div>
     <div style="font-size:15px;font-weight:800">Diagnósticos Raiz × Resultado</div>
@@ -516,6 +528,132 @@ function bDiagFormMentor(cli){
   <div style="font-size:15px;font-weight:800">Novo diagnóstico — ${cli.n}</div>
 </div>
 ${bDiagForm(cli)}
+</div>`;
+}
+
+// ── DIAGNÓSTICO MENTALIDADE & GESTÃO ──────────────────────────────────────
+function bDiagGestoraMentor(cli){
+  if(!cli) return`<div class="empty">Selecione uma mentorada.</div>`;
+  const cid=cli.id;
+  const saved=JSON.parse(localStorage.getItem('rxr-diag-gestora-'+cid)||'{}');
+  const g=Object.assign({},saved,S.diagGData);
+  const cor='var(--pu)';
+
+  function gta(id,ph,rows=2){
+    const v=g[id]||'';
+    return`<textarea rows="${rows}" placeholder="${ph}"
+      style="width:100%;font-size:12px;padding:8px 10px;border:.5px solid var(--bd2);border-radius:6px;resize:vertical;line-height:1.5;font-family:inherit"
+      oninput="S.diagGData['${id}']=this.value">${v}</textarea>`;
+  }
+  function gfl(id,ph){
+    const v=g[id]||'';
+    return`<input type="text" placeholder="${ph}" value="${v.replace(/"/g,'&quot;')}"
+      style="width:100%;font-size:12px;padding:8px 10px;border:.5px solid var(--bd2);border-radius:6px;font-family:inherit"
+      oninput="S.diagGData['${id}']=this.value"/>`;
+  }
+  function sec(num,titulo){
+    return`<div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:${cor};margin:18px 0 10px;padding:6px 10px;background:var(--puf,#EDE9FE);border-radius:6px">${num} — ${titulo}</div>`;
+  }
+  function perg(nr,txt,complemento=''){
+    return`<div style="margin-bottom:12px">
+      <div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:4px"><b>${nr}.</b> ${txt}</div>
+      ${complemento?`<div style="font-size:11px;color:var(--tx3);font-style:italic;margin-bottom:4px">${complemento}</div>`:''}`;
+  }
+
+  return`
+<div class="rwb" style="margin-bottom:14px">
+  <div>
+    <div style="font-size:15px;font-weight:800">🧠 Mentalidade & Gestão — ${cli.n}</div>
+    <div style="font-size:11px;color:var(--tx3);margin-top:2px">Da Funcionária à Gestora · Diagnóstico de Mentalidade</div>
+  </div>
+  <button class="btn" style="background:var(--pu);color:white;border-color:var(--pu)" onclick="salvarDiagGestora(${cid})">💾 Salvar</button>
+</div>
+
+${sec('PARTE 1','Onde você está hoje')}
+
+${perg(1,'Qual é a maior dificuldade que você sente na função de gerente agora?')}
+  ${gta('p1','Descreva com suas palavras...')}
+</div>
+
+${perg(2,'Complete:','\'Quando preciso orientar ou cobrar uma funcionária, eu me sinto...\'')}
+  ${gta('p2','Eu me sinto...')}
+</div>
+
+${perg(3,'Qual é o maior medo que você tem nessa nova posição?')}
+  ${gta('p3','Meu maior medo é...')}
+</div>
+
+${perg(4,'Hoje você age mais como funcionária, como gerente ou um pouco dos dois?','Explique por quê:')}
+  ${gta('p4','Ajo mais como...')}
+</div>
+
+${sec('PARTE 2','O que você acredita')}
+
+${perg(5,'Quando precisa tomar uma decisão importante sozinha, o que normalmente acontece?')}
+  ${gta('p5','Normalmente...')}
+</div>
+
+${perg(6,'Se uma funcionária não cumpre o que foi combinado, qual é a sua reação?')}
+  ${gta('p6','Minha reação costuma ser...')}
+</div>
+
+${perg(7,'Na sua visão, o que é diferente entre o papel de funcionária e o papel de gestora?')}
+  ${gta('p7','A diferença é...')}
+</div>
+
+${sec('PARTE 3','Para onde você quer ir')}
+
+${perg(8,'Complete:','\'Para eu me sentir uma gestora de verdade, eu preciso...\'')}
+  ${gta('p8','Eu preciso...')}
+</div>
+
+${perg(9,'De 0 a 10, o quanto você se sente preparada para liderar hoje?','O que falta para chegar ao 10?')}
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+    <span style="font-size:11px;color:var(--tx3);white-space:nowrap">Nota (0–10):</span>
+    <input type="number" min="0" max="10" placeholder="0" value="${g.p9_nota||''}"
+      style="width:64px;font-size:14px;font-weight:800;text-align:center;padding:6px;border:.5px solid var(--bd2);border-radius:6px"
+      oninput="S.diagGData['p9_nota']=this.value"/>
+  </div>
+  ${gta('p9_falta','O que falta para chegar ao 10?')}
+</div>
+
+${perg(10,'Daqui a seis meses, como você quer estar? Como essa gestora age, decide e lidera?')}
+  ${gta('p10','Daqui a seis meses...',3)}
+</div>
+
+${sec('ATIVIDADE','Quem sou eu, quem quero ser')}
+
+<div style="margin-bottom:12px">
+  <div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:4px">Quem sou eu hoje? <span style="font-weight:400;color:var(--tx3)">(3 características honestas)</span></div>
+  ${['ativ_hoje_1','ativ_hoje_2','ativ_hoje_3'].map((id,i)=>`
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+    <div style="min-width:20px;height:20px;border-radius:50%;background:${cor};color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center">${i+1}</div>
+    ${gfl(id,'Característica '+(i+1)+'...')}
+  </div>`).join('')}
+</div>
+
+<div style="margin-bottom:12px">
+  <div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:4px">Quem preciso me tornar? <span style="font-weight:400;color:var(--tx3)">(3 características da gestora que quero ser)</span></div>
+  ${['ativ_ser_1','ativ_ser_2','ativ_ser_3'].map((id,i)=>`
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+    <div style="min-width:20px;height:20px;border-radius:50%;background:${cor};color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center">${i+1}</div>
+    ${gfl(id,'Característica '+(i+1)+'...')}
+  </div>`).join('')}
+</div>
+
+<div style="margin-bottom:16px">
+  <div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:4px">O que existe entre as duas? <span style="font-weight:400;color:var(--tx3)">O que precisa deixar de fazer? O que precisa começar?</span></div>
+  ${gta('ativ_entre','Entre quem sou e quem quero ser...',2)}
+</div>
+
+<div style="background:var(--puf,#EDE9FE);border-radius:8px;padding:12px 14px;margin-bottom:20px">
+  <div style="font-size:11px;font-weight:800;color:${cor};margin-bottom:6px">COMPROMISSO</div>
+  <div style="font-size:11px;color:var(--tx3);font-style:italic;margin-bottom:8px">"A partir de hoje, eu deixo de agir como funcionária e assumo a responsabilidade de ser a gestora que esta empresa precisa. Meu primeiro compromisso será:"</div>
+  ${gta('compromisso','Meu compromisso é...',2)}
+</div>
+
+<div style="display:flex;justify-content:flex-end">
+  <button class="btn" style="background:var(--pu);color:white;border-color:var(--pu);padding:10px 20px" onclick="salvarDiagGestora(${cid})">💾 Salvar diagnóstico</button>
 </div>`;
 }
 
@@ -875,6 +1013,19 @@ window.abrirDiagForm=function(cid){
   S.tab='d';R();
 };
 
+window.salvarDiagGestora=async function(cid){
+  const key='rxr-diag-gestora-'+cid;
+  const prev=JSON.parse(localStorage.getItem(key)||'{}');
+  const dados=Object.assign({},prev,S.diagGData,{ts:Date.now()});
+  localStorage.setItem(key,JSON.stringify(dados));
+  S.diagGData={};
+  // Tenta salvar no Supabase em background (coluna diag_gestora)
+  try{
+    await SB('rxr_diags').upsert({cid,diag_gestora:JSON.stringify(dados)},{onConflict:'cid'});
+  }catch(e){console.log('Supabase diag_gestora:',e);}
+  alert('✅ Diagnóstico de mentalidade salvo!');
+  R();
+};
 
 
 function safePlano(){try{return bPlanoMentor();}catch(e){console.error('bPlanoMentor:',e);return`<div class="empty"><div style="font-size:28px;margin-bottom:8px">⚠️</div><div style="font-weight:700;margin-bottom:4px">Erro ao carregar o plano</div><div style="font-size:12px;color:var(--tx3)">${e.message}</div></div>`;}}
