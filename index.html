@@ -498,11 +498,9 @@ function bDiagsMentor(){
   const tabBar=`
   <div style="display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap">
     <button onclick="S.diagTipo='negocio';R()" style="flex:1;min-width:100px;padding:8px;font-size:11px;font-weight:700;border-radius:8px;border:none;cursor:pointer;background:${tipo==='negocio'?'var(--nv2)':'var(--sf2)'};color:${tipo==='negocio'?'white':'var(--tx3)'}">📋 Diagnóstico do Negócio</button>
-    <button onclick="S.diagTipo='gestora';R()" style="flex:1;min-width:100px;padding:8px;font-size:11px;font-weight:700;border-radius:8px;border:none;cursor:pointer;background:${tipo==='gestora'?'var(--pu)':'var(--sf2)'};color:${tipo==='gestora'?'white':'var(--tx3)'}">🧠 Mentalidade & Gestão</button>
-    <button onclick="S.diagTipo='prementoria';R()" style="flex:1;min-width:100px;padding:8px;font-size:11px;font-weight:700;border-radius:8px;border:none;cursor:pointer;background:${tipo==='prementoria'?'var(--go)':'var(--sf2)'};color:${tipo==='prementoria'?'white':'var(--tx3)'}">🌱 Pré-Mentoria Gestora</button>
+    <button onclick="S.diagTipo='prementoria';R()" style="flex:1;min-width:100px;padding:8px;font-size:11px;font-weight:700;border-radius:8px;border:none;cursor:pointer;background:${tipo==='prementoria'?'var(--go)':'var(--sf2)'};color:${tipo==='prementoria'?'white':'var(--tx3)'}">🌱 Pré-Mentoria</button>
   </div>`;
 
-  if(tipo==='gestora') return tabBar+bDiagGestoraMentor(cli);
   if(tipo==='prementoria') return tabBar+bDiagPreMentoriaMentor(cli);
 
   return`
@@ -572,8 +570,8 @@ function bDiagPreMentoriaMentor(cli){
   return`
 <div class="rwb" style="margin-bottom:14px">
   <div>
-    <div style="font-size:15px;font-weight:800">🌱 Pré-Mentoria Gestora — ${cli.n}</div>
-    <div style="font-size:11px;color:var(--tx3);margin-top:2px">Da Funcionária à Gestora · Diagnóstico de Mentalidade</div>
+    <div style="font-size:15px;font-weight:800">🌱 Pré-Mentoria — ${cli.n}</div>
+    <div style="font-size:11px;color:var(--tx3);margin-top:2px">Diagnóstico de Mentalidade</div>
   </div>
   <button class="btn" style="background:${cor};color:white;border-color:${cor}" onclick="salvarDiagPre(${cid})">💾 Salvar</button>
 </div>
@@ -708,7 +706,7 @@ function bDiagGestoraMentor(cli){
 <div class="rwb" style="margin-bottom:14px">
   <div>
     <div style="font-size:15px;font-weight:800">🧠 Mentalidade & Gestão — ${cli.n}</div>
-    <div style="font-size:11px;color:var(--tx3);margin-top:2px">Da Funcionária à Gestora · Diagnóstico de Mentalidade</div>
+    <div style="font-size:11px;color:var(--tx3);margin-top:2px">Diagnóstico de Mentalidade</div>
   </div>
   <button class="btn" style="background:var(--pu);color:white;border-color:var(--pu)" onclick="salvarDiagGestora(${cid})">💾 Salvar</button>
 </div>
